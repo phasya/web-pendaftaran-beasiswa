@@ -72,7 +72,7 @@
                                    class="form-control @error('tanggal_buka') is-invalid @enderror" 
                                    id="tanggal_buka" 
                                    name="tanggal_buka" 
-                                   value="{{ old('tanggal_buka', $beasiswa->tanggal_buka->format('Y-m-d')) }}" 
+                                   value="{{ old('tanggal_buka', \Carbon\Carbon::parse($beasiswa->tanggal_buka)->format('Y-m-d')) }}" 
                                    required>
                             @error('tanggal_buka')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -87,7 +87,7 @@
                                    class="form-control @error('tanggal_tutup') is-invalid @enderror" 
                                    id="tanggal_tutup" 
                                    name="tanggal_tutup" 
-                                   value="{{ old('tanggal_tutup', $beasiswa->tanggal_tutup->format('Y-m-d')) }}" 
+                                   value="{{ old('tanggal_tutup', \Carbon\Carbon::parse($beasiswa->tanggal_tutup)->format('Y-m-d')) }}" 
                                    required>
                             @error('tanggal_tutup')
                                 <div class="invalid-feedback">{{ $message }}</div>
