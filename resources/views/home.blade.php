@@ -4,22 +4,104 @@
 
 @section('content')
 <div class="container">
-    <!-- Hero Section -->
+    <!-- Hero Carousel Section -->
     <div class="row mb-5">
         <div class="col-12">
-            <div class="jumbotron bg-primary text-white p-5 rounded">
-                <h1 class="display-4">
-                    <i class="fas fa-graduation-cap"></i> Sistem Pendaftaran Beasiswa
-                </h1>
-                <p class="lead">Temukan dan daftarkan diri Anda untuk berbagai program beasiswa yang tersedia</p>
-                <hr class="my-4">
-                <p>Jangan lewatkan kesempatan emas untuk meraih pendidikan yang lebih baik!</p>
+            <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+
+                <!-- Carousel Inner -->
+                <div class="carousel-inner rounded">
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <div class="container">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h1 class="display-4 fw-bold mb-3">
+                                            <i class="fas fa-graduation-cap"></i> Sistem Pendaftaran Beasiswa
+                                        </h1>
+                                        <p class="lead mb-4">Temukan dan daftarkan diri Anda untuk berbagai program beasiswa yang tersedia</p>
+                                        <p class="mb-4">Jangan lewatkan kesempatan emas untuk meraih pendidikan yang lebih baik!</p>
+                                        <a href="#beasiswa-list" class="btn btn-light btn-lg">
+                                            <i class="fas fa-search"></i> Lihat Beasiswa
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <i class="fas fa-graduation-cap fa-5x opacity-75"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                            <div class="container">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h1 class="display-4 fw-bold mb-3">
+                                            <i class="fas fa-trophy"></i> Raih Beasiswa Impianmu
+                                        </h1>
+                                        <p class="lead mb-4">Berbagai program beasiswa dengan dana jutaan rupiah menanti Anda</p>
+                                        <p class="mb-4">Mulai dari beasiswa akademik hingga beasiswa prestasi khusus</p>
+                                        <a href="#beasiswa-list" class="btn btn-light btn-lg">
+                                            <i class="fas fa-paper-plane"></i> Daftar Sekarang
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <i class="fas fa-trophy fa-5x opacity-75"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="carousel-item">
+                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);">
+                            <div class="container">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h1 class="display-4 fw-bold mb-3">
+                                            <i class="fas fa-star"></i> Wujudkan Masa Depan Cerah
+                                        </h1>
+                                        <p class="lead mb-4">Dengan beasiswa, pendidikan berkualitas bukan lagi impian</p>
+                                        <p class="mb-4">Bergabunglah dengan ribuan mahasiswa yang telah merasakan manfaatnya</p>
+                                        <a href="#beasiswa-list" class="btn btn-light btn-lg">
+                                            <i class="fas fa-rocket"></i> Mulai Perjalanan
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <i class="fas fa-star fa-5x opacity-75"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carousel Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
         </div>
     </div>
 
     <!-- Beasiswa List -->
-    <div class="row">
+    <div class="row" id="beasiswa-list">
         <div class="col-12">
             <h2 class="mb-4">
                 <i class="fas fa-list"></i> Beasiswa Tersedia
@@ -88,4 +170,52 @@
         </div>
     </div>
 </div>
+
+<style>
+    .carousel-item {
+        transition: transform 0.6s ease-in-out;
+    }
+    
+    .carousel-slide {
+        min-height: 400px;
+        height: 400px;
+        padding: 3rem 1.5rem;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .carousel-indicators button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin: 0 5px;
+    }
+    
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 5%;
+    }
+    
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    @media (max-width: 768px) {
+        .carousel-slide {
+            min-height: 300px;
+            height: 300px;
+            padding: 2rem 1rem;
+        }
+        
+        .display-4 {
+            font-size: 2rem !important;
+        }
+        
+        .fa-5x {
+            font-size: 3rem !important;
+        }
+    }
+</style>
 @endsection
