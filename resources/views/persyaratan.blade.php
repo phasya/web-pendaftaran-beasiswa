@@ -224,6 +224,10 @@
                     </div>
                 </div>
             </div>
+
+            <a href="{{ route('home') }}" class="btn btn-primary">
+                Pendaftaran Beasiswa
+            </a>
         </div>
     </div>
 

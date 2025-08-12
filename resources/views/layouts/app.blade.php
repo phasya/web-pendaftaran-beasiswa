@@ -265,14 +265,11 @@
     <footer class="bg-dark text-white text-center py-4 mt-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 text-md-start">
-                    <p class="mb-0">
+                <div class="col-12">
+                    <p class="mb-0 d-flex justify-content-center align-items-center">
                         <i class="fas fa-graduation-cap me-2"></i>
                         &copy; 2025 Sistem Pendaftaran Beasiswa
                     </p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0">Made with <i class="fas fa-heart text-danger"></i> for Education</p>
                 </div>
             </div>
         </div>
