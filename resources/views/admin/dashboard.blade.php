@@ -4,230 +4,190 @@
 
 @section('content')
 <!-- Welcome Header -->
-<div class="dashboard-header mb-4">
-    <div class="row align-items-center">
-        <div class="col-lg-8">
-            <div class="welcome-section p-4 rounded-3 bg-gradient-primary text-white shadow">
-                <h1 class="h3 mb-2">
-                    <i class="fas fa-tachometer-alt me-2"></i>
-                    Selamat Datang, {{ auth()->user()->name }}!
-                </h1>
-                <p class="mb-0 opacity-90">
-                    <i class="fas fa-calendar me-2"></i>{{ \Carbon\Carbon::now()->format('l, d F Y') }}
-                </p>
-                <p class="mb-0 opacity-75">Kelola sistem beasiswa dengan mudah dan efisien</p>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="quick-actions text-center">
-                <div class="floating-icon">
-                    <i class="fas fa-user-tie fa-4x text-primary opacity-75"></i>
-                </div>
-            </div>
-        </div>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div>
+        <h1 class="h2"><i class="fas fa-tachometer-alt"></i> Dashboard Admin</h1>
+        <p class="text-muted mb-0">
+            <i class="fas fa-user me-2"></i>Selamat datang, <strong>{{ auth()->user()->name }}</strong>
+            <span class="mx-2">•</span>
+            <i class="fas fa-calendar me-1"></i>{{ \Carbon\Carbon::now()->format('l, d F Y') }}
+        </p>
     </div>
 </div>
 
 <!-- Statistics Cards -->
 <div class="row mb-4">
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="stats-card card border-0 shadow-lg h-100">
-            <div class="card-body p-4">
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-0 bg-primary text-white shadow-sm">
+            <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="stats-content">
-                        <div class="stats-label text-muted text-uppercase fw-bold mb-1">
-                            Total Beasiswa
-                        </div>
-                        <div class="stats-number h2 mb-0 fw-bold text-primary">
+                    <div>
+                        <h6 class="card-title mb-1 text-white-50">Total Beasiswa</h6>
+                        <h3 class="mb-0 fw-bold">
                             <span class="counter" data-target="{{ $totalBeasiswa ?? 0 }}">0</span>
-                        </div>
-                        <div class="stats-trend mt-2">
-                            <span class="badge bg-primary bg-opacity-10 text-primary">
-                                <i class="fas fa-arrow-up me-1"></i>Program Aktif
-                            </span>
-                        </div>
+                        </h3>
+                        <small class="text-white-50">
+                            <i class="fas fa-arrow-up me-1"></i>Program Tersedia
+                        </small>
                     </div>
-                    <div class="stats-icon">
-                        <div class="icon-wrapper bg-primary bg-opacity-10 rounded-circle p-3">
-                            <i class="fas fa-graduation-cap fa-2x text-primary"></i>
-                        </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-graduation-cap fa-2x opacity-75"></i>
                     </div>
-                </div>
-            </div>
-            <div class="card-footer bg-transparent border-0 pt-0">
-                <div class="progress progress-sm">
-                    <div class="progress-bar bg-primary" style="width: 75%"></div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="stats-card card border-0 shadow-lg h-100">
-            <div class="card-body p-4">
+    
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-0 bg-success text-white shadow-sm">
+            <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="stats-content">
-                        <div class="stats-label text-muted text-uppercase fw-bold mb-1">
-                            Beasiswa Aktif
-                        </div>
-                        <div class="stats-number h2 mb-0 fw-bold text-success">
+                    <div>
+                        <h6 class="card-title mb-1 text-white-50">Beasiswa Aktif</h6>
+                        <h3 class="mb-0 fw-bold">
                             <span class="counter" data-target="{{ $beasiswaAktif ?? 0 }}">0</span>
-                        </div>
-                        <div class="stats-trend mt-2">
-                            <span class="badge bg-success bg-opacity-10 text-success">
-                                <i class="fas fa-check-circle me-1"></i>Tersedia
-                            </span>
-                        </div>
+                        </h3>
+                        <small class="text-white-50">
+                            <i class="fas fa-check-circle me-1"></i>Bisa Dilamar
+                        </small>
                     </div>
-                    <div class="stats-icon">
-                        <div class="icon-wrapper bg-success bg-opacity-10 rounded-circle p-3">
-                            <i class="fas fa-check-circle fa-2x text-success"></i>
-                        </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-check-circle fa-2x opacity-75"></i>
                     </div>
-                </div>
-            </div>
-            <div class="card-footer bg-transparent border-0 pt-0">
-                <div class="progress progress-sm">
-                    <div class="progress-bar bg-success" style="width: 85%"></div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="stats-card card border-0 shadow-lg h-100">
-            <div class="card-body p-4">
+    
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-0 bg-info text-white shadow-sm">
+            <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="stats-content">
-                        <div class="stats-label text-muted text-uppercase fw-bold mb-1">
-                            Total Pendaftar
-                        </div>
-                        <div class="stats-number h2 mb-0 fw-bold text-info">
+                    <div>
+                        <h6 class="card-title mb-1 text-white-50">Total Pendaftar</h6>
+                        <h3 class="mb-0 fw-bold">
                             <span class="counter" data-target="{{ $totalPendaftar ?? 0 }}">0</span>
-                        </div>
-                        <div class="stats-trend mt-2">
-                            <span class="badge bg-info bg-opacity-10 text-info">
-                                <i class="fas fa-users me-1"></i>Terdaftar
-                            </span>
-                        </div>
+                        </h3>
+                        <small class="text-white-50">
+                            <i class="fas fa-users me-1"></i>Mahasiswa Terdaftar
+                        </small>
                     </div>
-                    <div class="stats-icon">
-                        <div class="icon-wrapper bg-info bg-opacity-10 rounded-circle p-3">
-                            <i class="fas fa-users fa-2x text-info"></i>
-                        </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-2x opacity-75"></i>
                     </div>
-                </div>
-            </div>
-            <div class="card-footer bg-transparent border-0 pt-0">
-                <div class="progress progress-sm">
-                    <div class="progress-bar bg-info" style="width: 60%"></div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="stats-card card border-0 shadow-lg h-100">
-            <div class="card-body p-4">
+    
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-0 bg-warning text-white shadow-sm">
+            <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="stats-content">
-                        <div class="stats-label text-muted text-uppercase fw-bold mb-1">
-                            Menunggu Review
-                        </div>
-                        <div class="stats-number h2 mb-0 fw-bold text-warning">
+                    <div>
+                        <h6 class="card-title mb-1 text-white-50">Menunggu Review</h6>
+                        <h3 class="mb-0 fw-bold">
                             <span class="counter" data-target="{{ $pendaftarPending ?? 0 }}">0</span>
-                        </div>
-                        <div class="stats-trend mt-2">
-                            <span class="badge bg-warning bg-opacity-10 text-warning">
-                                <i class="fas fa-clock me-1"></i>Pending
-                            </span>
-                        </div>
+                        </h3>
+                        <small class="text-white-50">
+                            <i class="fas fa-clock me-1"></i>Perlu Ditinjau
+                        </small>
                     </div>
-                    <div class="stats-icon">
-                        <div class="icon-wrapper bg-warning bg-opacity-10 rounded-circle p-3">
-                            <i class="fas fa-clock fa-2x text-warning"></i>
-                        </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-clock fa-2x opacity-75"></i>
                     </div>
-                </div>
-            </div>
-            <div class="card-footer bg-transparent border-0 pt-0">
-                <div class="progress progress-sm">
-                    <div class="progress-bar bg-warning" style="width: 45%"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Main Content Row -->
-<div class="row mb-4">
-    <!-- Status Chart -->
+<!-- Main Content Cards -->
+<div class="row">
+    <!-- Status Overview -->
     <div class="col-lg-8 mb-4">
-        <div class="card border-0 shadow-lg h-100">
-            <div class="card-header bg-white border-0 py-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 fw-bold text-dark">
-                        <i class="fas fa-chart-pie text-primary me-2"></i>Status Pendaftar
-                    </h6>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i>Export Data</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-refresh me-2"></i>Refresh</a></li>
-                        </ul>
+        <div class="card shadow-sm">
+            <div class="card-header bg-white py-3">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="card-title mb-0">
+                            <i class="fas fa-chart-pie text-primary me-2"></i>Status Pendaftar Overview
+                        </h6>
+                    </div>
+                    <div class="col-auto">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i>Export Data</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-sync-alt me-2"></i>Refresh</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ route('admin.pendaftar.index') }}"><i class="fas fa-eye me-2"></i>Lihat Semua</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="card-body">
                 <div class="row text-center">
-                    <div class="col-md-4 mb-4">
-                        <div class="status-item p-4 rounded-3 bg-warning bg-opacity-10 h-100">
+                    <div class="col-md-4 mb-3">
+                        <div class="status-card bg-warning-soft p-4 rounded-3 h-100">
                             <div class="status-icon mb-3">
-                                <i class="fas fa-clock fa-3x text-warning"></i>
-                            </div>
-                            <div class="status-info">
-                                <h3 class="fw-bold text-warning mb-1">
-                                    <span class="counter" data-target="{{ $pendaftarPending ?? 0 }}">0</span>
-                                </h3>
-                                <p class="text-muted mb-0">Menunggu Review</p>
-                                <div class="progress progress-sm mt-2">
-                                    <div class="progress-bar bg-warning" style="width: {{ $totalPendaftar > 0 ? (($pendaftarPending ?? 0) / $totalPendaftar) * 100 : 0 }}%"></div>
+                                <div class="icon-circle bg-warning text-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                    <i class="fas fa-clock fa-xl"></i>
                                 </div>
                             </div>
+                            <h3 class="fw-bold text-warning mb-1">
+                                <span class="counter" data-target="{{ $pendaftarPending ?? 0 }}">0</span>
+                            </h3>
+                            <p class="text-muted mb-2">Menunggu Review</p>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-warning" style="width: {{ $totalPendaftar > 0 ? (($pendaftarPending ?? 0) / $totalPendaftar) * 100 : 0 }}%"></div>
+                            </div>
+                            <small class="text-muted">
+                                {{ $totalPendaftar > 0 ? number_format((($pendaftarPending ?? 0) / $totalPendaftar) * 100, 1) : 0 }}% dari total
+                            </small>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-4">
-                        <div class="status-item p-4 rounded-3 bg-success bg-opacity-10 h-100">
+                    
+                    <div class="col-md-4 mb-3">
+                        <div class="status-card bg-success-soft p-4 rounded-3 h-100">
                             <div class="status-icon mb-3">
-                                <i class="fas fa-check-circle fa-3x text-success"></i>
-                            </div>
-                            <div class="status-info">
-                                <h3 class="fw-bold text-success mb-1">
-                                    <span class="counter" data-target="{{ $pendaftarDiterima ?? 0 }}">0</span>
-                                </h3>
-                                <p class="text-muted mb-0">Diterima</p>
-                                <div class="progress progress-sm mt-2">
-                                    <div class="progress-bar bg-success" style="width: {{ $totalPendaftar > 0 ? (($pendaftarDiterima ?? 0) / $totalPendaftar) * 100 : 0 }}%"></div>
+                                <div class="icon-circle bg-success text-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                    <i class="fas fa-check-circle fa-xl"></i>
                                 </div>
                             </div>
+                            <h3 class="fw-bold text-success mb-1">
+                                <span class="counter" data-target="{{ $pendaftarDiterima ?? 0 }}">0</span>
+                            </h3>
+                            <p class="text-muted mb-2">Diterima</p>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-success" style="width: {{ $totalPendaftar > 0 ? (($pendaftarDiterima ?? 0) / $totalPendaftar) * 100 : 0 }}%"></div>
+                            </div>
+                            <small class="text-muted">
+                                {{ $totalPendaftar > 0 ? number_format((($pendaftarDiterima ?? 0) / $totalPendaftar) * 100, 1) : 0 }}% dari total
+                            </small>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-4">
-                        <div class="status-item p-4 rounded-3 bg-danger bg-opacity-10 h-100">
+                    
+                    <div class="col-md-4 mb-3">
+                        <div class="status-card bg-danger-soft p-4 rounded-3 h-100">
                             <div class="status-icon mb-3">
-                                <i class="fas fa-times-circle fa-3x text-danger"></i>
-                            </div>
-                            <div class="status-info">
-                                <h3 class="fw-bold text-danger mb-1">
-                                    <span class="counter" data-target="{{ $pendaftarDitolak ?? 0 }}">0</span>
-                                </h3>
-                                <p class="text-muted mb-0">Ditolak</p>
-                                <div class="progress progress-sm mt-2">
-                                    <div class="progress-bar bg-danger" style="width: {{ $totalPendaftar > 0 ? (($pendaftarDitolak ?? 0) / $totalPendaftar) * 100 : 0 }}%"></div>
+                                <div class="icon-circle bg-danger text-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                    <i class="fas fa-times-circle fa-xl"></i>
                                 </div>
                             </div>
+                            <h3 class="fw-bold text-danger mb-1">
+                                <span class="counter" data-target="{{ $pendaftarDitolak ?? 0 }}">0</span>
+                            </h3>
+                            <p class="text-muted mb-2">Ditolak</p>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-danger" style="width: {{ $totalPendaftar > 0 ? (($pendaftarDitolak ?? 0) / $totalPendaftar) * 100 : 0 }}%"></div>
+                            </div>
+                            <small class="text-muted">
+                                {{ $totalPendaftar > 0 ? number_format((($pendaftarDitolak ?? 0) / $totalPendaftar) * 100, 1) : 0 }}% dari total
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -237,54 +197,54 @@
 
     <!-- Quick Actions -->
     <div class="col-lg-4 mb-4">
-        <div class="card border-0 shadow-lg h-100">
-            <div class="card-header bg-white border-0 py-3">
-                <h6 class="m-0 fw-bold text-dark">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h6 class="card-title mb-0">
                     <i class="fas fa-bolt text-primary me-2"></i>Menu Cepat
                 </h6>
             </div>
             <div class="card-body">
                 <div class="d-grid gap-3">
-                    <a href="{{ route('admin.beasiswa.create') }}" class="quick-action-btn btn btn-success btn-lg rounded-3 text-start">
+                    <a href="{{ route('admin.beasiswa.create') }}" class="btn btn-success btn-lg text-start text-decoration-none">
                         <div class="d-flex align-items-center">
-                            <div class="btn-icon me-3">
-                                <i class="fas fa-plus-circle fa-lg"></i>
+                            <div class="me-3">
+                                <i class="fas fa-plus-circle fa-xl"></i>
                             </div>
-                            <div class="btn-content">
-                                <div class="btn-title fw-bold">Tambah Beasiswa</div>
-                                <div class="btn-subtitle small opacity-75">Buat program beasiswa baru</div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">Tambah Beasiswa</div>
+                                <small class="opacity-75">Buat program beasiswa baru</small>
                             </div>
-                            <div class="btn-arrow ms-auto">
+                            <div>
                                 <i class="fas fa-arrow-right"></i>
                             </div>
                         </div>
                     </a>
                     
-                    <a href="{{ route('admin.beasiswa.index') }}" class="quick-action-btn btn btn-primary btn-lg rounded-3 text-start">
+                    <a href="{{ route('admin.beasiswa.index') }}" class="btn btn-primary btn-lg text-start text-decoration-none">
                         <div class="d-flex align-items-center">
-                            <div class="btn-icon me-3">
-                                <i class="fas fa-graduation-cap fa-lg"></i>
+                            <div class="me-3">
+                                <i class="fas fa-graduation-cap fa-xl"></i>
                             </div>
-                            <div class="btn-content">
-                                <div class="btn-title fw-bold">Kelola Beasiswa</div>
-                                <div class="btn-subtitle small opacity-75">Edit dan monitor beasiswa</div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">Kelola Beasiswa</div>
+                                <small class="opacity-75">Edit dan monitor beasiswa</small>
                             </div>
-                            <div class="btn-arrow ms-auto">
+                            <div>
                                 <i class="fas fa-arrow-right"></i>
                             </div>
                         </div>
                     </a>
                     
-                    <a href="{{ route('admin.pendaftar.index') }}" class="quick-action-btn btn btn-info btn-lg rounded-3 text-start">
+                    <a href="{{ route('admin.pendaftar.index') }}" class="btn btn-info btn-lg text-start text-decoration-none">
                         <div class="d-flex align-items-center">
-                            <div class="btn-icon me-3">
-                                <i class="fas fa-users fa-lg"></i>
+                            <div class="me-3">
+                                <i class="fas fa-users fa-xl"></i>
                             </div>
-                            <div class="btn-content">
-                                <div class="btn-title fw-bold">Kelola Pendaftar</div>
-                                <div class="btn-subtitle small opacity-75">Review aplikasi beasiswa</div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">Kelola Pendaftar</div>
+                                <small class="opacity-75">Review aplikasi beasiswa</small>
                             </div>
-                            <div class="btn-arrow ms-auto">
+                            <div>
                                 <i class="fas fa-arrow-right"></i>
                             </div>
                         </div>
@@ -295,168 +255,184 @@
     </div>
 </div>
 
-
+<!-- Recent Activities & System Status -->
+<div class="row">
+    <!-- Recent Applications -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-history text-primary me-2"></i>Pendaftar Terbaru
+                    </h6>
+                    <a href="{{ route('admin.pendaftar.index') }}" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                @if(isset($recentPendaftar) && $recentPendaftar->count() > 0)
+                    @foreach($recentPendaftar->take(5) as $pendaftar)
+                    <div class="d-flex align-items-center p-3 border-bottom">
+                        <div class="avatar-initial rounded-circle bg-primary text-white me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; font-size: 12px;">
+                            {{ strtoupper(substr($pendaftar->nama_lengkap, 0, 2)) }}
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0 fw-semibold">{{ $pendaftar->nama_lengkap }}</h6>
+                            <small class="text-muted">{{ $pendaftar->beasiswa->nama_beasiswa ?? 'Beasiswa Tidak Diketahui' }}</small>
+                        </div>
+                        <div class="text-end">
+                            @if($pendaftar->status == 'pending')
+                                <span class="badge bg-warning-soft text-warning">Pending</span>
+                            @elseif($pendaftar->status == 'diterima')
+                                <span class="badge bg-success-soft text-success">Diterima</span>
+                            @else
+                                <span class="badge bg-danger-soft text-danger">Ditolak</span>
+                            @endif
+                            <br><small class="text-muted">{{ $pendaftar->created_at->diffForHumans() }}</small>
+                        </div>
+                    </div>
+                    @endforeach
+                @else
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
+                        <p class="text-muted mb-0">Belum ada pendaftar baru</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
 
 <!-- Welcome Message if no data -->
-@if($totalBeasiswa == 0)
+@if(($totalBeasiswa ?? 0) == 0)
 <div class="row">
     <div class="col-12">
-        <div class="empty-state text-center py-5">
-            <div class="empty-state-icon mb-4">
-                <i class="fas fa-graduation-cap fa-4x text-muted opacity-50"></i>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="empty-state-icon bg-light rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
+                    <i class="fas fa-graduation-cap fa-3x text-muted"></i>
+                </div>
+                <h4 class="text-muted mb-3">Selamat Datang di Sistem Beasiswa!</h4>
+                <p class="text-muted mb-4">
+                    Belum ada data beasiswa dalam sistem. Mari mulai dengan menambahkan program beasiswa pertama Anda.
+                </p>
+                <a href="{{ route('admin.beasiswa.create') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i>Tambah Beasiswa Pertama
+                </a>
             </div>
-            <h3 class="empty-state-title mb-3">Selamat Datang di Admin Panel!</h3>
-            <p class="empty-state-text text-muted mb-4">
-                Belum ada data beasiswa. Mari mulai dengan menambahkan program beasiswa pertama Anda.
-            </p>
-            <a href="{{ route('admin.beasiswa.create') }}" class="btn btn-primary btn-lg rounded-3">
-                <i class="fas fa-plus me-2"></i>Tambah Beasiswa Pertama
-            </a>
         </div>
     </div>
 </div>
 @endif
-@endsection
 
-@section('scripts')
+<!-- Custom CSS -->
 <style>
-/* Dashboard Styles */
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
+/* Status Badge Colors */
+.bg-warning-soft { background-color: #fff3cd !important; }
+.bg-success-soft { background-color: #d1edff !important; }
+.bg-danger-soft { background-color: #f8d7da !important; }
+.bg-info-soft { background-color: #d1ecf1 !important; }
 
-.stats-card {
+/* Stats Cards */
+.card.bg-primary, .card.bg-success, .card.bg-info, .card.bg-warning {
+    background: var(--bs-primary) !important;
     transition: all 0.3s ease;
-    overflow: hidden;
 }
 
-.stats-card:hover {
-    transform: translateY(-5px);
+.card.bg-primary:hover, .card.bg-success:hover, .card.bg-info:hover, .card.bg-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.icon-wrapper {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.card.bg-success {
+    background: var(--bs-success) !important;
 }
 
-.progress-sm {
-    height: 4px;
+.card.bg-info {
+    background: var(--bs-info) !important;
 }
 
-.floating-icon {
-    animation: float 6s ease-in-out infinite;
+.card.bg-warning {
+    background: var(--bs-warning) !important;
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-}
-
-.quick-action-btn {
+/* Status Cards */
+.status-card {
     transition: all 0.3s ease;
-    border: none;
-    position: relative;
-    overflow: hidden;
+    border: 1px solid #e9ecef;
 }
 
-.quick-action-btn:hover {
+.status-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Quick Action Buttons */
+.btn-lg {
+    transition: all 0.3s ease;
+}
+
+.btn-lg:hover {
     transform: translateX(5px);
 }
 
-.quick-action-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-}
-
-.quick-action-btn:hover::before {
-    left: 100%;
-}
-
-.timeline {
-    position: relative;
-    padding-left: 30px;
-}
-
-.timeline::before {
-    content: '';
-    position: absolute;
-    left: 15px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: #e9ecef;
-}
-
-.timeline-item {
-    position: relative;
-    margin-bottom: 30px;
-}
-
-.timeline-marker {
-    position: absolute;
-    left: -23px;
-    top: 5px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.timeline-content {
-    background: #f8f9fa;
-    padding: 15px 20px;
-    border-radius: 8px;
-    border-left: 3px solid #007bff;
-}
-
-.status-item {
+/* Counter Animation */
+.counter {
+    display: inline-block;
     transition: all 0.3s ease;
 }
 
-.status-item:hover {
-    transform: scale(1.02);
+/* Avatar Initial */
+.avatar-initial {
+    font-weight: 600;
 }
 
-.empty-state {
-    padding: 60px 20px;
+/* Progress bars */
+.progress {
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-/* Counter Animation */
-@keyframes countUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.progress-bar {
+    border-radius: 10px;
 }
 
-.counter {
-    animation: countUp 1s ease;
+/* Info Items */
+.info-item {
+    transition: background-color 0.2s ease;
+}
+
+.info-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Empty State */
+.empty-state-icon {
+    transition: all 0.3s ease;
+}
+
+.empty-state-icon:hover {
+    transform: scale(1.05);
+}
+
+/* Badge improvements */
+.badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.375rem 0.75rem;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .stats-card {
+    .card {
         margin-bottom: 1rem;
     }
     
-    .quick-action-btn .btn-content {
-        font-size: 0.9rem;
+    .btn-lg {
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
     }
     
-    .timeline {
-        padding-left: 20px;
-    }
-    
-    .timeline-marker {
-        left: -18px;
+    .status-card {
+        margin-bottom: 1rem;
     }
 }
 </style>
@@ -467,6 +443,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function animateCounter(element, target) {
         let current = 0;
         const increment = target / 50;
+        const duration = 1000;
+        const stepTime = duration / 50;
+        
         const timer = setInterval(() => {
             current += increment;
             if (current >= target) {
@@ -475,25 +454,42 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 element.textContent = Math.floor(current);
             }
-        }, 30);
+        }, stepTime);
     }
 
-    // Initialize counters
-    document.querySelectorAll('.counter').forEach(counter => {
-        const target = parseInt(counter.getAttribute('data-target'));
-        animateCounter(counter, target);
-    });
+    // Initialize counters with delay for better effect
+    setTimeout(() => {
+        document.querySelectorAll('.counter').forEach((counter, index) => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            setTimeout(() => {
+                animateCounter(counter, target);
+            }, index * 200);
+        });
+    }, 300);
 
-    // Add hover effects to cards
-    document.querySelectorAll('.stats-card').forEach(card => {
+    // Add hover effects to stats cards
+    document.querySelectorAll('.card.bg-primary, .card.bg-success, .card.bg-info, .card.bg-warning').forEach(card => {
         card.addEventListener('mouseenter', function() {
-            this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+            this.style.transform = 'translateY(-3px)';
+            this.style.boxShadow = '0 6px 20px rgba(0,0,0,0.15)';
         });
         
         card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
             this.style.boxShadow = '';
         });
     });
+    
+    // Real-time clock update
+    function updateClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('id-ID');
+        const clockElements = document.querySelectorAll('.system-clock');
+        clockElements.forEach(el => el.textContent = timeString);
+    }
+    
+    setInterval(updateClock, 1000);
+    updateClock();
 });
 </script>
 @endsection

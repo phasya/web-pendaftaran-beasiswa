@@ -7,10 +7,20 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Custom mint-blue colors */
+        :root {
+            --mint-primary: #00c9a7;
+            --mint-secondary: #00bcd4;
+            --mint-dark: #00a693;
+            --mint-light: #4dd0e1;
+            --mint-blue: #0891b2;
+        }
+
         /* Sticky Navbar Styles */
         .navbar {
             transition: all 0.3s ease-in-out;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, var(--mint-primary), var(--mint-secondary), var(--mint-blue)) !important;
         }
         
         .navbar.sticky {
@@ -19,7 +29,7 @@
             left: 0;
             right: 0;
             z-index: 1030;
-            background: rgba(13, 110, 253, 0.95) !important;
+            background: rgba(0, 201, 167, 0.95) !important;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
@@ -38,16 +48,21 @@
         /* Enhanced navbar brand animation */
         .navbar-brand {
             transition: transform 0.2s ease;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
         
         .navbar-brand:hover {
             transform: scale(1.05);
+            color: #ffffff !important;
         }
         
         /* Nav links hover effect */
         .navbar-nav .nav-link {
             position: relative;
             transition: color 0.3s ease;
+            font-weight: 500;
+            color: #ffffff !important;
         }
         
         .navbar-nav .nav-link::after {
@@ -57,14 +72,20 @@
             height: 2px;
             bottom: 0;
             left: 50%;
-            background-color: #fff;
+            background: linear-gradient(90deg, #fff, var(--mint-light));
             transition: all 0.3s ease;
             transform: translateX(-50%);
+            box-shadow: 0 0 8px rgba(255,255,255,0.8);
         }
         
         .navbar-nav .nav-link:hover::after,
         .navbar-nav .nav-link.active::after {
             width: 80%;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #f8f9fa !important;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
         
         /* Dropdown menu enhancement */
@@ -81,19 +102,34 @@
         }
         
         .dropdown-item:hover {
-            background: linear-gradient(45deg, #0d6efd, #6f42c1);
+            background: linear-gradient(45deg, var(--mint-primary), var(--mint-blue));
             color: white;
             transform: translateX(5px);
+        }
+        
+        /* Navbar toggler for mobile */
+        .navbar-toggler {
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255,255,255,0.25);
+        }
+
+        .navbar-toggler-icon {
+            filter: brightness(0) invert(1);
         }
         
         /* Mobile navbar improvements */
         @media (max-width: 991.98px) {
             .navbar-collapse {
-                background: rgba(13, 110, 253, 0.98);
+                background: rgba(0, 201, 167, 0.96);
                 margin-top: 1rem;
                 padding: 1rem;
                 border-radius: 8px;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                border: 1px solid rgba(255,255,255,0.2);
             }
             
             body.navbar-fixed {
@@ -110,7 +146,7 @@
         }
         
         .alert-success {
-            background: linear-gradient(45deg, #198754, #20c997);
+            background: linear-gradient(45deg, var(--mint-dark), var(--mint-secondary));
             color: white;
         }
         
@@ -123,10 +159,23 @@
         footer {
             background: linear-gradient(45deg, #212529, #495057) !important;
         }
+
+        /* Additional mint-blue theme elements */
+        .btn-primary {
+            background: linear-gradient(45deg, var(--mint-primary), var(--mint-blue));
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, var(--mint-dark), var(--mint-secondary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 201, 167, 0.4);
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="mainNavbar">
+    <nav class="navbar navbar-expand-lg navbar-dark" id="mainNavbar">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
                 <i class="fas fa-graduation-cap"></i> Sistem Beasiswa

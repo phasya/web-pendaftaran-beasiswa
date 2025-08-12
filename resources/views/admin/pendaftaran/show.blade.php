@@ -36,26 +36,10 @@
                                 <td><strong>No. HP:</strong></td>
                                 <td>{{ $pendaftar->no_hp }}</td>
                             </tr>
-                            <tr>
-                                <td><strong>Fakultas:</strong></td>
-                                <td>{{ $pendaftar->fakultas }}</td>
-                            </tr>
                         </table>
                     </div>
                     <div class="col-md-6">
                         <table class="table table-borderless">
-                            <tr>
-                                <td><strong>Jurusan:</strong></td>
-                                <td>{{ $pendaftar->jurusan }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Semester:</strong></td>
-                                <td>{{ $pendaftar->semester }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>IPK:</strong></td>
-                                <td><span class="badge bg-info">{{ $pendaftar->ipk }}</span></td>
-                            </tr>
                             <tr>
                                 <td><strong>Tanggal Daftar:</strong></td>
                                 <td>{{ $pendaftar->created_at->format('d M Y H:i') }}</td>

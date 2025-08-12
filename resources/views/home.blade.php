@@ -19,7 +19,7 @@
                 <div class="carousel-inner rounded">
                     <!-- Slide 1 -->
                     <div class="carousel-item active">
-                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #7FFFD4 0%, #40E0D0 30%, #4682B4 100%);">
                             <div class="container">
                                 <div class="row align-items-center">
                                     <div class="col-md-8">
@@ -42,7 +42,7 @@
 
                     <!-- Slide 2 -->
                     <div class="carousel-item">
-                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #98FB98 0%, #20B2AA 50%, #5F9EA0 100%);">
                             <div class="container">
                                 <div class="row align-items-center">
                                     <div class="col-md-8">
@@ -65,7 +65,7 @@
 
                     <!-- Slide 3 -->
                     <div class="carousel-item">
-                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);">
+                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #AFEEEE 0%, #48CAE4 40%, #0077B6 100%);">
                             <div class="container">
                                 <div class="row align-items-center">
                                     <div class="col-md-8">
@@ -141,7 +141,7 @@
                                 <div class="card-footer">
                                     @if($beasiswa->isActive())
                                         <a href="{{ route('pendaftar.create', $beasiswa) }}" 
-                                           class="btn btn-primary btn-sm w-100">
+                                            class="btn btn-primary btn-sm w-100">
                                             <i class="fas fa-paper-plane"></i> Daftar Sekarang
                                         </a>
                                         <small class="text-success mt-2 d-block">
