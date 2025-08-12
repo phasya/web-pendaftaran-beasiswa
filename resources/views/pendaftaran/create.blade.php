@@ -112,7 +112,7 @@
                                     <i class="fas fa-graduation-cap"></i> Jurusan *
                                 </label>
                                 <input type="text" 
-                                       class="form-control @error('jurusan') is-invalid @enderror" 
+                                            class="form-control @error('jurusan') is-invalid @enderror" 
                                        id="jurusan" 
                                        name="jurusan" 
                                        value="{{ old('jurusan') }}" 

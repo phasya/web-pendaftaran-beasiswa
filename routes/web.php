@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PendaftarController as AdminPendaftarController;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/persyaratan', [HomeController::class, 'persyaratan'])->name('persyaratan');
 
 // Auth Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

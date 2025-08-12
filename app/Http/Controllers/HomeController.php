@@ -16,4 +16,9 @@ class HomeController extends Controller
                             
         return view('home', compact('beasiswas'));
     }
+
+    public function persyaratan()
+    {
+        return view('persyaratan');
+    }
 }
