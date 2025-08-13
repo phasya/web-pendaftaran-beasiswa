@@ -22,11 +22,11 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="card-title mb-1 text-white-50">Total Beasiswa</h6>
-                        <h3 class="mb-0 fw-bold">
+                        <h6 class="card-title mb-1">Total Beasiswa</h6>
+                        <h4 class="mb-0 fw-bold">
                             <span class="counter" data-target="{{ $totalBeasiswa ?? 0 }}">0</span>
-                        </h3>
-                        <small class="text-white-50">
+                        </h4>
+                        <small class="opacity-75">
                             <i class="fas fa-arrow-up me-1"></i>Program Tersedia
                         </small>
                     </div>
@@ -43,12 +43,12 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="card-title mb-1 text-white-50">Beasiswa Aktif</h6>
-                        <h3 class="mb-0 fw-bold">
+                        <h6 class="card-title mb-1">Beasiswa Aktif</h6>
+                        <h4 class="mb-0 fw-bold">
                             <span class="counter" data-target="{{ $beasiswaAktif ?? 0 }}">0</span>
-                        </h3>
-                        <small class="text-white-50">
-                            <i class="fas fa-check-circle me-1"></i>Bisa Dilamar
+                        </h4>
+                        <small class="opacity-75">
+                            <i class="fas fa-check-circle me-1"></i>Aktif Saat Ini
                         </small>
                     </div>
                     <div class="align-self-center">
@@ -64,11 +64,11 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="card-title mb-1 text-white-50">Total Pendaftar</h6>
-                        <h3 class="mb-0 fw-bold">
+                        <h6 class="card-title mb-1">Total Pendaftar</h6>
+                        <h4 class="mb-0 fw-bold">
                             <span class="counter" data-target="{{ $totalPendaftar ?? 0 }}">0</span>
-                        </h3>
-                        <small class="text-white-50">
+                        </h4>
+                        <small class="opacity-75">
                             <i class="fas fa-users me-1"></i>Mahasiswa Terdaftar
                         </small>
                     </div>
@@ -85,11 +85,11 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="card-title mb-1 text-white-50">Menunggu Review</h6>
-                        <h3 class="mb-0 fw-bold">
+                        <h6 class="card-title mb-1">Menunggu Review</h6>
+                        <h4 class="mb-0 fw-bold">
                             <span class="counter" data-target="{{ $pendaftarPending ?? 0 }}">0</span>
-                        </h3>
-                        <small class="text-white-50">
+                        </h4>
+                        <small class="opacity-75">
                             <i class="fas fa-clock me-1"></i>Perlu Ditinjau
                         </small>
                     </div>
@@ -114,78 +114,65 @@
                             <i class="fas fa-chart-pie text-primary me-2"></i>Status Pendaftar Overview
                         </h6>
                     </div>
-                    <div class="col-auto">
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i>Export Data</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-sync-alt me-2"></i>Refresh</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.pendaftar.index') }}"><i class="fas fa-eye me-2"></i>Lihat Semua</a></li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="card-body">
                 <div class="row text-center">
                     <div class="col-md-4 mb-3">
-                        <div class="status-card bg-warning-soft p-4 rounded-3 h-100">
+                        <div class="status-card bg-warning-soft p-4 rounded-3 h-100 border">
                             <div class="status-icon mb-3">
-                                <div class="icon-circle bg-warning text-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <div class="icon-circle bg-warning text-white rounded-circle mx-auto d-flex align-items-center justify-content-center shadow-sm" style="width: 60px; height: 60px;">
                                     <i class="fas fa-clock fa-xl"></i>
                                 </div>
                             </div>
                             <h3 class="fw-bold text-warning mb-1">
                                 <span class="counter" data-target="{{ $pendaftarPending ?? 0 }}">0</span>
                             </h3>
-                            <p class="text-muted mb-2">Menunggu Review</p>
-                            <div class="progress" style="height: 6px;">
+                            <p class="text-muted mb-2 fw-semibold">Menunggu Review</p>
+                            <div class="progress mb-2" style="height: 8px;">
                                 <div class="progress-bar bg-warning" style="width: {{ $totalPendaftar > 0 ? (($pendaftarPending ?? 0) / $totalPendaftar) * 100 : 0 }}%"></div>
                             </div>
-                            <small class="text-muted">
+                            <small class="text-muted fw-medium">
                                 {{ $totalPendaftar > 0 ? number_format((($pendaftarPending ?? 0) / $totalPendaftar) * 100, 1) : 0 }}% dari total
                             </small>
                         </div>
                     </div>
                     
                     <div class="col-md-4 mb-3">
-                        <div class="status-card bg-success-soft p-4 rounded-3 h-100">
+                        <div class="status-card bg-success-soft p-4 rounded-3 h-100 border">
                             <div class="status-icon mb-3">
-                                <div class="icon-circle bg-success text-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <div class="icon-circle bg-success text-white rounded-circle mx-auto d-flex align-items-center justify-content-center shadow-sm" style="width: 60px; height: 60px;">
                                     <i class="fas fa-check-circle fa-xl"></i>
                                 </div>
                             </div>
                             <h3 class="fw-bold text-success mb-1">
                                 <span class="counter" data-target="{{ $pendaftarDiterima ?? 0 }}">0</span>
                             </h3>
-                            <p class="text-muted mb-2">Diterima</p>
-                            <div class="progress" style="height: 6px;">
+                            <p class="text-muted mb-2 fw-semibold">Diterima</p>
+                            <div class="progress mb-2" style="height: 8px;">
                                 <div class="progress-bar bg-success" style="width: {{ $totalPendaftar > 0 ? (($pendaftarDiterima ?? 0) / $totalPendaftar) * 100 : 0 }}%"></div>
                             </div>
-                            <small class="text-muted">
+                            <small class="text-muted fw-medium">
                                 {{ $totalPendaftar > 0 ? number_format((($pendaftarDiterima ?? 0) / $totalPendaftar) * 100, 1) : 0 }}% dari total
                             </small>
                         </div>
                     </div>
                     
                     <div class="col-md-4 mb-3">
-                        <div class="status-card bg-danger-soft p-4 rounded-3 h-100">
+                        <div class="status-card bg-danger-soft p-4 rounded-3 h-100 border">
                             <div class="status-icon mb-3">
-                                <div class="icon-circle bg-danger text-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <div class="icon-circle bg-danger text-white rounded-circle mx-auto d-flex align-items-center justify-content-center shadow-sm" style="width: 60px; height: 60px;">
                                     <i class="fas fa-times-circle fa-xl"></i>
                                 </div>
                             </div>
                             <h3 class="fw-bold text-danger mb-1">
                                 <span class="counter" data-target="{{ $pendaftarDitolak ?? 0 }}">0</span>
                             </h3>
-                            <p class="text-muted mb-2">Ditolak</p>
-                            <div class="progress" style="height: 6px;">
+                            <p class="text-muted mb-2 fw-semibold">Ditolak</p>
+                            <div class="progress mb-2" style="height: 8px;">
                                 <div class="progress-bar bg-danger" style="width: {{ $totalPendaftar > 0 ? (($pendaftarDitolak ?? 0) / $totalPendaftar) * 100 : 0 }}%"></div>
                             </div>
-                            <small class="text-muted">
+                            <small class="text-muted fw-medium">
                                 {{ $totalPendaftar > 0 ? number_format((($pendaftarDitolak ?? 0) / $totalPendaftar) * 100, 1) : 0 }}% dari total
                             </small>
                         </div>
@@ -208,7 +195,9 @@
                     <a href="{{ route('admin.beasiswa.create') }}" class="btn btn-success btn-lg text-start text-decoration-none">
                         <div class="d-flex align-items-center">
                             <div class="me-3">
-                                <i class="fas fa-plus-circle fa-xl"></i>
+                                <div class="quick-action-icon bg-white text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-plus-circle"></i>
+                                </div>
                             </div>
                             <div class="flex-grow-1">
                                 <div class="fw-bold">Tambah Beasiswa</div>
@@ -223,7 +212,9 @@
                     <a href="{{ route('admin.beasiswa.index') }}" class="btn btn-primary btn-lg text-start text-decoration-none">
                         <div class="d-flex align-items-center">
                             <div class="me-3">
-                                <i class="fas fa-graduation-cap fa-xl"></i>
+                                <div class="quick-action-icon bg-white text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
                             </div>
                             <div class="flex-grow-1">
                                 <div class="fw-bold">Kelola Beasiswa</div>
@@ -238,7 +229,9 @@
                     <a href="{{ route('admin.pendaftar.index') }}" class="btn btn-info btn-lg text-start text-decoration-none">
                         <div class="d-flex align-items-center">
                             <div class="me-3">
-                                <i class="fas fa-users fa-xl"></i>
+                                <div class="quick-action-icon bg-white text-info rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-users"></i>
+                                </div>
                             </div>
                             <div class="flex-grow-1">
                                 <div class="fw-bold">Kelola Pendaftar</div>
@@ -255,60 +248,14 @@
     </div>
 </div>
 
-<!-- Recent Activities & System Status -->
-<div class="row">
-    <!-- Recent Applications -->
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow-sm">
-            <div class="card-header bg-white py-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="card-title mb-0">
-                        <i class="fas fa-history text-primary me-2"></i>Pendaftar Terbaru
-                    </h6>
-                    <a href="{{ route('admin.pendaftar.index') }}" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                @if(isset($recentPendaftar) && $recentPendaftar->count() > 0)
-                    @foreach($recentPendaftar->take(5) as $pendaftar)
-                    <div class="d-flex align-items-center p-3 border-bottom">
-                        <div class="avatar-initial rounded-circle bg-primary text-white me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; font-size: 12px;">
-                            {{ strtoupper(substr($pendaftar->nama_lengkap, 0, 2)) }}
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="mb-0 fw-semibold">{{ $pendaftar->nama_lengkap }}</h6>
-                            <small class="text-muted">{{ $pendaftar->beasiswa->nama_beasiswa ?? 'Beasiswa Tidak Diketahui' }}</small>
-                        </div>
-                        <div class="text-end">
-                            @if($pendaftar->status == 'pending')
-                                <span class="badge bg-warning-soft text-warning">Pending</span>
-                            @elseif($pendaftar->status == 'diterima')
-                                <span class="badge bg-success-soft text-success">Diterima</span>
-                            @else
-                                <span class="badge bg-danger-soft text-danger">Ditolak</span>
-                            @endif
-                            <br><small class="text-muted">{{ $pendaftar->created_at->diffForHumans() }}</small>
-                        </div>
-                    </div>
-                    @endforeach
-                @else
-                    <div class="text-center py-4">
-                        <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
-                        <p class="text-muted mb-0">Belum ada pendaftar baru</p>
-                    </div>
-                @endif
-            </div>
-        </div>
-    </div>
-
 <!-- Welcome Message if no data -->
 @if(($totalBeasiswa ?? 0) == 0)
 <div class="row">
     <div class="col-12">
         <div class="card border-0 shadow-sm">
             <div class="card-body text-center py-5">
-                <div class="empty-state-icon bg-light rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
-                    <i class="fas fa-graduation-cap fa-3x text-muted"></i>
+                <div class="empty-state-icon bg-light rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+                    <i class="fas fa-graduation-cap fa-4x text-muted"></i>
                 </div>
                 <h4 class="text-muted mb-3">Selamat Datang di Sistem Beasiswa!</h4>
                 <p class="text-muted mb-4">
@@ -325,39 +272,41 @@
 
 <!-- Custom CSS -->
 <style>
-/* Status Badge Colors */
-.bg-warning-soft { background-color: #fff3cd !important; }
+/* Status Badge Colors - Same as kelola beasiswa */
 .bg-success-soft { background-color: #d1edff !important; }
+.bg-warning-soft { background-color: #fff3cd !important; }
 .bg-danger-soft { background-color: #f8d7da !important; }
 .bg-info-soft { background-color: #d1ecf1 !important; }
+.bg-secondary-soft { background-color: #e2e3e5 !important; }
 
-/* Stats Cards */
+/* Stats Cards - Same gradient style as kelola beasiswa */
 .card.bg-primary, .card.bg-success, .card.bg-info, .card.bg-warning {
-    background: var(--bs-primary) !important;
-    transition: all 0.3s ease;
-}
-
-.card.bg-primary:hover, .card.bg-success:hover, .card.bg-info:hover, .card.bg-warning:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary) 100%);
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
 }
 
 .card.bg-success {
-    background: var(--bs-success) !important;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
 }
 
 .card.bg-info {
-    background: var(--bs-info) !important;
+    background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%) !important;
 }
 
 .card.bg-warning {
-    background: var(--bs-warning) !important;
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%) !important;
+}
+
+.card:hover {
+    transform: translateY(-2px);
 }
 
 /* Status Cards */
 .status-card {
     transition: all 0.3s ease;
-    border: 1px solid #e9ecef;
+    border: 1px solid #e9ecef !important;
 }
 
 .status-card:hover {
@@ -365,13 +314,23 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.icon-circle {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 /* Quick Action Buttons */
 .btn-lg {
     transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-lg:hover {
     transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.quick-action-icon {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Counter Animation */
@@ -380,15 +339,17 @@
     transition: all 0.3s ease;
 }
 
-/* Avatar Initial */
+/* Avatar Initial - Same style as kelola beasiswa */
 .avatar-initial {
     font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Progress bars */
 .progress {
     border-radius: 10px;
     overflow: hidden;
+    background-color: rgba(0,0,0,0.1);
 }
 
 .progress-bar {
@@ -397,30 +358,55 @@
 
 /* Info Items */
 .info-item {
-    transition: background-color 0.2s ease;
-}
-
-.info-item:hover {
+    transition: all 0.2s ease;
     background-color: #f8f9fa;
 }
 
-/* Empty State */
+.info-item:hover {
+    background-color: #e9ecef;
+    transform: translateX(2px);
+}
+
+/* Recent Items */
+.recent-item {
+    transition: all 0.2s ease;
+}
+
+.recent-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Empty State - Same as kelola beasiswa */
 .empty-state-icon {
     transition: all 0.3s ease;
 }
 
-.empty-state-icon:hover {
+.empty-state:hover .empty-state-icon {
     transform: scale(1.05);
 }
 
-/* Badge improvements */
+/* Badge improvements - Same as kelola beasiswa */
 .badge {
     font-size: 0.75rem;
     font-weight: 500;
-    padding: 0.375rem 0.75rem;
 }
 
-/* Responsive */
+.badge.fs-6 {
+    font-size: 0.9rem !important;
+}
+
+/* Card Header consistency */
+.card-header {
+    border-bottom: 2px solid #dee2e6;
+}
+
+.card-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #495057;
+}
+
+/* Responsive adjustments - Same as kelola beasiswa */
 @media (max-width: 768px) {
     .card {
         margin-bottom: 1rem;
@@ -434,16 +420,32 @@
     .status-card {
         margin-bottom: 1rem;
     }
+    
+    .avatar-initial {
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 12px;
+    }
+    
+    .icon-circle {
+        width: 45px !important;
+        height: 45px !important;
+    }
+    
+    .quick-action-icon {
+        width: 35px !important;
+        height: 35px !important;
+    }
 }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Counter animation
+    // Counter animation - Enhanced version
     function animateCounter(element, target) {
         let current = 0;
-        const increment = target / 50;
-        const duration = 1000;
+        const increment = Math.max(1, target / 50);
+        const duration = 1500;
         const stepTime = duration / 50;
         
         const timer = setInterval(() => {
@@ -457,27 +459,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }, stepTime);
     }
 
-    // Initialize counters with delay for better effect
+    // Initialize counters with staggered delay
     setTimeout(() => {
         document.querySelectorAll('.counter').forEach((counter, index) => {
             const target = parseInt(counter.getAttribute('data-target'));
             setTimeout(() => {
                 animateCounter(counter, target);
-            }, index * 200);
+            }, index * 150);
         });
     }, 300);
 
-    // Add hover effects to stats cards
-    document.querySelectorAll('.card.bg-primary, .card.bg-success, .card.bg-info, .card.bg-warning').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-3px)';
-            this.style.boxShadow = '0 6px 20px rgba(0,0,0,0.15)';
+    // Tooltip initialization - Same as kelola beasiswa
+    if (typeof bootstrap !== 'undefined') {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-            this.style.boxShadow = '';
-        });
+    }
+    
+    // Add smooth animations to all cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.style.transition = 'all 0.3s ease';
     });
     
     // Real-time clock update
@@ -490,6 +493,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     setInterval(updateClock, 1000);
     updateClock();
+    
+    // Enhanced hover effects for stats cards
+    document.querySelectorAll('.card.bg-primary, .card.bg-success, .card.bg-info, .card.bg-warning').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px)';
+            this.style.boxShadow = '0 6px 20px rgba(0,0,0,0.15)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+        });
+    });
 });
 </script>
 @endsection
