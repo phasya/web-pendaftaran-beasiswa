@@ -4,98 +4,120 @@
 
 @section('content')
 <div class="container">
-  <!-- Hero Carousel Section -->
+  <!-- Dynamic Hero Carousel Section -->
     <div class="row mb-5">
         <div class="col-12">
             <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
                 <!-- Carousel Indicators -->
                 <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    @if($beasiswas->count() > 0)
+                        @foreach($beasiswas as $index => $beasiswa)
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $index }}" 
+                                    @if($index == 0) class="active" aria-current="true" @endif 
+                                    aria-label="Slide {{ $index + 1 }}"></button>
+                        @endforeach
+                    @else
+                        <!-- Default indicators if no scholarships -->
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    @endif
                 </div>
 
                 <!-- Carousel Inner -->
                 <div class="carousel-inner rounded">
-                    <!-- Slide 1 -->
-                    <div class="carousel-item active">
-                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #7FFFD4 0%, #40E0D0 30%, #4682B4 100%);">
-                            <div class="container">
-                                <div class="row align-items-center">
-                                    <div class="col-md-8">
-                                        <h1 class="display-4 fw-bold mb-3">
-                                            <i class="fas fa-graduation-cap"></i> Sistem Pendaftaran Beasiswa
-                                        </h1>
-                                        <p class="lead mb-4">Temukan dan daftarkan diri Anda untuk berbagai program beasiswa yang tersedia</p>
-                                        <p class="mb-4">Jangan lewatkan kesempatan emas untuk meraih pendidikan yang lebih baik!</p>
-                                        <a href="#beasiswa-list" class="btn btn-light btn-lg">
-                                            <i class="fas fa-search"></i> Lihat Beasiswa
-                                        </a>
-                                    </div>
-                                    <div class="col-md-4 text-center">
-                                        <i class="fas fa-graduation-cap fa-5x opacity-75"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @if($beasiswas->count() > 0)
+                        @foreach($beasiswas as $index => $beasiswa)
+                            <div class="carousel-item @if($index == 0) active @endif">
+                                <div class="carousel-slide d-flex align-items-center scholarship-slide" 
+                                     style="background: {{ $beasiswa->isActive() ? 'linear-gradient(135deg, #7FFFD4 0%, #40E0D0 30%, #4682B4 100%)' : 'linear-gradient(135deg, #FFB6C1 0%, #FFA07A 30%, #CD5C5C 100%)' }};"
+                                     data-scholarship-id="{{ $beasiswa->id }}">
+                                    <div class="container">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-8">
+                                                <!-- Status Badge -->
+                                                <div class="mb-3">
+                                                    @if($beasiswa->isActive())
+                                                        <span class="badge bg-success fs-6 px-3 py-2">
+                                                            <i class="fas fa-circle me-1"></i>Pendaftaran Dibuka
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-danger fs-6 px-3 py-2">
+                                                            <i class="fas fa-circle me-1"></i>Pendaftaran Ditutup
+                                                        </span>
+                                                    @endif
+                                                </div>
 
-                    <!-- Slide 2 -->
-                    <div class="carousel-item">
-                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #98FB98 0%, #20B2AA 50%, #5F9EA0 100%);">
-                            <div class="container">
-                                <div class="row align-items-center">
-                                    <div class="col-md-8">
-                                        <h1 class="display-4 fw-bold mb-3">
-                                            <i class="fas fa-trophy"></i> Raih Beasiswa Impianmu
-                                        </h1>
-                                        <p class="lead mb-4">Berbagai program beasiswa dengan dana jutaan rupiah menanti Anda</p>
-                                        <p class="mb-4">Mulai dari beasiswa akademik hingga beasiswa prestasi khusus</p>
-                                        <a href="#beasiswa-list" class="btn btn-light btn-lg">
-                                            <i class="fas fa-paper-plane"></i> Daftar Sekarang
-                                        </a>
-                                    </div>
-                                    <div class="col-md-4 text-center">
-                                        <i class="fas fa-trophy fa-5x opacity-75"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                                <h1 class="display-4 fw-bold mb-3">
+                                                    <i class="fas fa-graduation-cap"></i> {{ $beasiswa->nama_beasiswa }}
+                                                </h1>
+                                                
+                                                <p class="lead mb-3">{{ Str::limit($beasiswa->deskripsi, 150) }}</p>
+                                                
+                                                <!-- Quick Info -->
+                                                <div class="row mb-4">
+                                                    <div class="col-md-6">
+                                                        <p class="mb-2"><i class="fas fa-money-bill-wave me-2"></i><strong>Dana:</strong> Rp {{ number_format($beasiswa->jumlah_dana, 0, ',', '.') }}</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p class="mb-2"><i class="fas fa-calendar me-2"></i><strong>Batas:</strong> {{ \Carbon\Carbon::parse($beasiswa->tanggal_tutup)->format('d M Y') }}</p>
+                                                    </div>
+                                                </div>
 
-                    <!-- Slide 3 -->
-                    <div class="carousel-item">
-                        <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #AFEEEE 0%, #48CAE4 40%, #0077B6 100%);">
-                            <div class="container">
-                                <div class="row align-items-center">
-                                    <div class="col-md-8">
-                                        <h1 class="display-4 fw-bold mb-3">
-                                            <i class="fas fa-star"></i> Wujudkan Masa Depan Cerah
-                                        </h1>
-                                        <p class="lead mb-4">Dengan beasiswa, pendidikan berkualitas bukan lagi impian</p>
-                                        <p class="mb-4">Bergabunglah dengan ribuan mahasiswa yang telah merasakan manfaatnya</p>
-                                        <a href="#beasiswa-list" class="btn btn-light btn-lg">
-                                            <i class="fas fa-rocket"></i> Mulai Perjalanan
-                                        </a>
+                                                @if($beasiswa->isActive())
+                                                    <a href="{{ route('pendaftar.create', $beasiswa) }}" class="btn btn-light btn-lg carousel-cta-btn">
+                                                        <i class="fas fa-paper-plane me-2"></i>Daftar Sekarang
+                                                    </a>
+                                                @else
+                                                    <button class="btn btn-outline-light btn-lg" disabled>
+                                                        <i class="fas fa-lock me-2"></i>Pendaftaran Ditutup
+                                                    </button>
+                                                @endif
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <div class="carousel-icon-container">
+                                                    <i class="fas fa-trophy fa-5x opacity-75"></i>
+                                                    <div class="icon-decoration"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 text-center">
-                                        <i class="fas fa-star fa-5x opacity-75"></i>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <!-- Default slide if no scholarships -->
+                        <div class="carousel-item active">
+                            <div class="carousel-slide d-flex align-items-center" style="background: linear-gradient(135deg, #7FFFD4 0%, #40E0D0 30%, #4682B4 100%);">
+                                <div class="container">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <h1 class="display-4 fw-bold mb-3">
+                                                <i class="fas fa-graduation-cap"></i> Sistem Pendaftaran Beasiswa
+                                            </h1>
+                                            <p class="lead mb-4">Temukan dan daftarkan diri Anda untuk berbagai program beasiswa yang tersedia</p>
+                                            <p class="mb-4">Saat ini belum ada beasiswa yang tersedia. Silakan cek kembali nanti!</p>
+                                            
+                                        </div>
+                                        <div class="col-md-4 text-center">
+                                            <i class="fas fa-graduation-cap fa-5x opacity-75"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
 
                 <!-- Carousel Controls -->
-                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+                @if($beasiswas->count() > 1)
+                    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                @endif
             </div>
         </div>
     </div>
@@ -229,9 +251,6 @@
                         Saat ini belum ada program beasiswa yang dibuka. 
                         Silakan cek kembali nanti atau hubungi admin untuk informasi lebih lanjut.
                     </p>
-                    <button class="btn btn-primary btn-lg mt-3">
-                        <i class="fas fa-bell me-2"></i>Berlangganan Notifikasi
-                    </button>
                 </div>
             @endif
         </div>
@@ -259,51 +278,139 @@
     box-shadow: 0 10px 40px rgba(0,0,0,0.15);
 }
 
-    .carousel-item {
-        transition: transform 0.6s ease-in-out;
-    }
-    
+.carousel-item {
+    transition: transform 0.6s ease-in-out;
+    cursor: pointer;
+}
+
+.carousel-slide {
+    min-height: 450px;
+    height: 450px;
+    padding: 3rem 1.5rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Scholarship slide specific styling */
+.scholarship-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.1);
+    transition: background 0.3s ease;
+}
+
+.scholarship-slide:hover::before {
+    background: rgba(0,0,0,0.05);
+}
+
+/* Carousel icon container */
+.carousel-icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+.icon-decoration {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.7; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* Carousel CTA button */
+.carousel-cta-btn {
+    background: rgba(255,255,255,0.95) !important;
+    color: #2c3e50 !important;
+    border: none !important;
+    padding: 15px 30px;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.carousel-cta-btn:hover {
+    background: white !important;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    color: var(--mint-primary) !important;
+}
+
+.carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+    background-color: rgba(255,255,255,0.5);
+    border: 2px solid white;
+}
+
+.carousel-indicators .active {
+    background-color: white;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 30px;
+    height: 30px;
+    background-color: rgba(255,255,255,0.8);
+    border-radius: 50%;
+}
+
+/* Click to register functionality */
+.scholarship-slide[data-scholarship-id] {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.scholarship-slide[data-scholarship-id]:hover {
+    transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
     .carousel-slide {
-        min-height: 400px;
-        height: 400px;
-        padding: 3rem 1.5rem;
-        color: white;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        min-height: 350px;
+        height: 350px;
+        padding: 2rem 1rem;
     }
     
-    .carousel-indicators button {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin: 0 5px;
+    .display-4 {
+        font-size: 2rem !important;
     }
     
-    .carousel-control-prev,
-    .carousel-control-next {
-        width: 5%;
+    .fa-5x {
+        font-size: 3rem !important;
     }
     
-    .carousel-control-prev-icon,
-    .carousel-control-next-icon {
-        width: 30px;
-        height: 30px;
+    .icon-decoration {
+        width: 80px;
+        height: 80px;
     }
-    
-    @media (max-width: 768px) {
-        .carousel-slide {
-            min-height: 300px;
-            height: 300px;
-            padding: 2rem 1rem;
-        }
-        
-        .display-4 {
-            font-size: 2rem !important;
-        }
-        
-        .fa-5x {
-            font-size: 3rem !important;
-        }
-    }
+}
+
 /* Section Header */
 .section-header {
     margin-bottom: 3rem;
@@ -554,30 +661,6 @@
     left: 100%;
 }
 
-/* CTA Section */
-.cta-section {
-    margin-top: 4rem;
-}
-
-.cta-card {
-    background: linear-gradient(135deg, var(--mint-primary), var(--mint-blue));
-    color: white;
-    padding: 3rem;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 201, 167, 0.3);
-}
-
-.cta-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
-.cta-description {
-    font-size: 1.1rem;
-    opacity: 0.9;
-}
-
 /* Empty State */
 .empty-state {
     text-align: center;
@@ -607,20 +690,6 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .carousel-slide {
-        min-height: 350px;
-        height: 350px;
-        padding: 2rem 1rem;
-    }
-    
-    .slide-title {
-        font-size: 2.5rem;
-    }
-    
-    .hero-icon {
-        font-size: 5rem;
-    }
-    
     .section-title {
         font-size: 2rem;
     }
@@ -634,15 +703,6 @@
     
     .scholarship-info {
         grid-template-columns: 1fr;
-    }
-    
-    .cta-card {
-        padding: 2rem;
-        text-align: center;
-    }
-    
-    .cta-title {
-        font-size: 1.5rem;
     }
 }
 
@@ -709,6 +769,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Carousel click to register functionality
+    document.querySelectorAll('.scholarship-slide[data-scholarship-id]').forEach(slide => {
+        slide.addEventListener('click', function(e) {
+            // Avoid triggering when clicking on the button itself
+            if (!e.target.closest('.carousel-cta-btn') && !e.target.closest('.btn')) {
+                const scholarshipId = this.getAttribute('data-scholarship-id');
+                
+                // Check if the slide is for an active scholarship
+                const ctaButton = this.querySelector('.carousel-cta-btn');
+                if (ctaButton) {
+                    // Add visual feedback
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                        window.location.href = ctaButton.href;
+                    }, 150);
+                }
+            }
+        });
+    });
+
     // Add loading animation to scholarship cards
     const observerOptions = {
         threshold: 0.1,
@@ -740,13 +821,62 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Add click analytics (optional)
+    // Add click analytics and visual feedback
     document.querySelectorAll('.btn-scholarship.active').forEach(btn => {
         btn.addEventListener('click', function(e) {
+            // Add loading state
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memproses...';
+            
+            // Reset after a short delay (in case of slow navigation)
+            setTimeout(() => {
+                if (this.innerHTML.includes('Memproses')) {
+                    this.innerHTML = originalText;
+                }
+            }, 3000);
+            
             // Track scholarship application clicks
             console.log('Scholarship application clicked:', this.closest('.scholarship-card').querySelector('.scholarship-title').textContent);
         });
     });
+
+    // Add visual feedback for carousel interactions
+    document.querySelectorAll('.carousel-indicators button').forEach(indicator => {
+        indicator.addEventListener('click', function() {
+            // Add ripple effect
+            this.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+    });
+
+    // Auto-update carousel indicators when new scholarships are added
+    const updateCarouselIndicators = () => {
+        const indicators = document.querySelector('.carousel-indicators');
+        const slides = document.querySelectorAll('.carousel-item');
+        
+        if (indicators && slides.length > 0) {
+            indicators.innerHTML = '';
+            slides.forEach((slide, index) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.setAttribute('data-bs-target', '#heroCarousel');
+                button.setAttribute('data-bs-slide-to', index);
+                button.setAttribute('aria-label', `Slide ${index + 1}`);
+                
+                if (index === 0) {
+                    button.className = 'active';
+                    button.setAttribute('aria-current', 'true');
+                }
+                
+                indicators.appendChild(button);
+            });
+        }
+    };
+
+    // Call update function on page load
+    updateCarouselIndicators();
 });
 </script>
 @endsection
