@@ -113,14 +113,6 @@
                     </div>
                     <p class="footer-tagline">Membangun masa depan melalui pendidikan</p>
                 </div>
-                <div class="footer-right">
-                    <div class="footer-links">
-                        <a href="{{ route('home') }}" class="footer-link">
-                            <i class="fas fa-home"></i>
-                            <span>Beranda</span>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </footer>
