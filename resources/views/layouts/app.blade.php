@@ -178,7 +178,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark" id="mainNavbar">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
-                <i class="fas fa-graduation-cap"></i> Sistem Beasiswa
+                <i class="fas fa-graduation-cap"></i> Pendaftaran Beasiswa
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

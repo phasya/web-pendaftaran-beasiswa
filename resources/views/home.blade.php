@@ -1,14 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Sistem Pendaftaran Beasiswa')
+@section('title', 'Pendaftaran Beasiswa')
 
 @section('content')
 <div class="container">
-  <!-- Dynamic Hero Carousel Section -->
     <div class="row mb-5">
         <div class="col-12">
             <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-                <!-- Carousel Indicators -->
                 <div class="carousel-indicators">
                     @if($beasiswas->count() > 0)
                         @foreach($beasiswas as $index => $beasiswa)
