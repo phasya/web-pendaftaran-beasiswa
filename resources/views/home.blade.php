@@ -55,13 +55,16 @@
                                                 <!-- Quick Info -->
                                                 <div class="row mb-4">
                                                     <div class="col-md-6">
+                                                        <p class="mb-2"><i class="fas fa-calendar me-2"></i><strong>Di Buka:</strong> {{ \Carbon\Carbon::parse($beasiswa->tanggal_buka)->format('d M Y') }}</p>
+                                                    </div>
+                                                    <div class="col-md-6">
                                                         <p class="mb-2"><i class="fas fa-money-bill-wave me-2"></i><strong>Dana:</strong> Rp {{ number_format($beasiswa->jumlah_dana, 0, ',', '.') }}</p>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <p class="mb-2"><i class="fas fa-calendar me-2"></i><strong>Batas:</strong> {{ \Carbon\Carbon::parse($beasiswa->tanggal_tutup)->format('d M Y') }}</p>
                                                     </div>
                                                 </div>
-
+                                                 
                                                 @if($beasiswa->isActive())
                                                     <a href="{{ route('pendaftar.create', $beasiswa) }}" class="btn btn-light btn-lg carousel-cta-btn">
                                                         <i class="fas fa-paper-plane me-2"></i>Daftar Sekarang
