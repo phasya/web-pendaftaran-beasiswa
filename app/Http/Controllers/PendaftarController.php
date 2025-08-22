@@ -32,9 +32,9 @@ class PendaftarController extends Controller
             'email' => 'required|email|max:255',
             'no_hp' => 'required|string|max:15',
             'alasan_mendaftar' => 'required|string',
-            'file_transkrip' => 'required|file|mimes:pdf|max:2048',
-            'file_ktp' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'file_kk' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'file_transkrip' => 'required|file|mimes:pdf|max:5048',
+            'file_ktp' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5048',
+            'file_kk' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5048',
         ]);
 
         // Upload files

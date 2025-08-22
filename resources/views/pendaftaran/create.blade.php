@@ -195,7 +195,7 @@
                                                     </div>
                                                     <div class="file-info">
                                                         <h6 class="file-title">Transkrip Nilai *</h6>
-                                                        <small class="file-desc">Format: PDF, Max: 2MB</small>
+                                                        <small class="file-desc">Format: PDF, Max: 5MB</small>
                                                     </div>
                                                 </label>
                                                 <input type="file" 
@@ -218,7 +218,7 @@
                                                     </div>
                                                     <div class="file-info">
                                                         <h6 class="file-title">KTP *</h6>
-                                                        <small class="file-desc">PDF/JPG/PNG, Max: 2MB</small>
+                                                        <small class="file-desc">PDF/JPG/PNG, Max: 5MB</small>
                                                     </div>
                                                 </label>
                                                 <input type="file" 
@@ -241,7 +241,7 @@
                                                     </div>
                                                     <div class="file-info">
                                                         <h6 class="file-title">Kartu Keluarga *</h6>
-                                                        <small class="file-desc">PDF/JPG/PNG, Max: 2MB</small>
+                                                        <small class="file-desc">PDF/JPG/PNG, Max: 5MB</small>
                                                     </div>
                                                 </label>
                                                 <input type="file" 
@@ -815,7 +815,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fileInputs.forEach(input => {
         input.addEventListener('change', function() {
             const file = this.files[0];
-            const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+            const maxSize = 5 * 1024 * 1024; // 5MB in bytes
             const card = this.closest('.file-upload-card');
             
             if (file && file.size > maxSize) {
