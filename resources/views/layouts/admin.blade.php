@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Custom mint-blue colors - Same as main layout */
         :root {
             --mint-primary: #00c9a7;
             --mint-secondary: #00bcd4;
@@ -16,7 +15,6 @@
             --mint-blue: #0891b2;
         }
 
-        /* Sticky Navbar Styles - Same as main layout */
         .navbar {
             transition: all 0.3s ease-in-out;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -35,17 +33,14 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
         
-        /* Body padding to compensate for fixed navbar */
         body.navbar-fixed {
             padding-top: 76px;
         }
         
-        /* Smooth scrolling */
         html {
             scroll-behavior: smooth;
         }
         
-        /* Enhanced navbar brand animation - Same as main layout */
         .navbar-brand {
             transition: transform 0.2s ease;
             font-weight: 600;
@@ -57,7 +52,6 @@
             color: #ffffff !important;
         }
         
-        /* Nav links hover effect - Same as main layout */
         .navbar-nav .nav-link {
             position: relative;
             transition: color 0.3s ease;
@@ -87,7 +81,6 @@
             text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
         
-        /* Dropdown menu enhancement - Same as main layout */
         .dropdown-menu {
             border: none;
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
@@ -106,7 +99,6 @@
             transform: translateX(5px);
         }
 
-        /* Sidebar Styling */
         .sidebar {
             background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%) !important;
             box-shadow: 2px 0 4px rgba(0,0,0,0.1);
@@ -154,14 +146,12 @@
             margin-right: 10px;
         }
         
-        /* Main content area */
         main {
             background: #f8f9fa;
             min-height: calc(100vh - 56px);
             padding: 1.5rem;
         }
 
-        /* Alert improvements - Same as main layout */
         .alert {
             border: none;
             border-radius: 10px;
@@ -179,7 +169,6 @@
             color: white;
         }
 
-        /* Button improvements - Same as main layout */
         .btn-primary {
             background: linear-gradient(45deg, var(--mint-primary), var(--mint-blue));
             border: none;
@@ -192,7 +181,17 @@
             box-shadow: 0 4px 15px rgba(0, 201, 167, 0.4);
         }
 
-        /* Mobile responsive improvements */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1019;
+            display: none;
+        }
+
         @media (max-width: 767.98px) {
             .sidebar {
                 position: fixed;
@@ -228,7 +227,6 @@
             }
         }
 
-        /* Card enhancements for consistency */
         .card {
             border: none;
             border-radius: 10px;
@@ -246,7 +244,6 @@
             border-bottom: 1px solid rgba(0, 201, 167, 0.1);
         }
 
-        /* Scrollbar styling */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -304,7 +301,6 @@
 
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
             <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
@@ -327,19 +323,6 @@
                             </a>
                         </li>
                     </ul>
-                    
-                    <!-- Additional info section -->
-                    <div class="mt-4 px-3">
-                        <div class="card border-0 bg-white shadow-sm">
-                            <div class="card-body text-center p-3">
-                                <div class="mb-2">
-                                    <i class="fas fa-shield-alt text-success fa-2x"></i>
-                                </div>
-                                <h6 class="text-muted mb-1">Admin Mode</h6>
-                                <small class="text-muted">Sistem Beasiswa</small>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </nav>
 
@@ -364,19 +347,16 @@
         </div>
     </div>
 
-    <!-- Mobile sidebar overlay -->
     <div class="sidebar-overlay d-md-none" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Sticky Navbar & Mobile Sidebar Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const navbar = document.getElementById('mainNavbar');
             const body = document.body;
             let lastScrollTop = 0;
             
-            // Function to handle scroll behavior - Same as main layout
             function handleScroll() {
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 
@@ -391,7 +371,6 @@
                 lastScrollTop = scrollTop;
             }
             
-            // Add scroll event listener with throttling
             let ticking = false;
             function requestTick() {
                 if (!ticking) {
@@ -404,7 +383,6 @@
             window.addEventListener('scroll', requestTick);
         });
 
-        // Mobile sidebar toggle function
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
@@ -418,7 +396,6 @@
             }
         }
 
-        // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(e) {
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.querySelector('.navbar-toggler');
@@ -432,18 +409,8 @@
         });
     </script>
     
-    <!-- Additional overlay styles -->
     <style>
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1019;
-            display: none;
-        }
+
     </style>
     
     @yield('scripts')

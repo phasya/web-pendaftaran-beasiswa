@@ -94,8 +94,7 @@
                 <!-- Action Buttons -->
                 <div class="error-actions">
                     <a href="{{ route('home') }}" class="btn btn-home">
-                        <i class="fas fa-home me-2"></i>
-                        Beranda
+                        Kembali ke Beranda
                     </a>
                 </div>
             </div>
@@ -119,23 +118,6 @@
 
     <!-- Error Layout Specific JavaScript -->
     <script>
-        // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            // Press 'H' to go home
-            if (e.key.toLowerCase() === 'h' && !e.ctrlKey && !e.altKey && !e.shiftKey) {
-                window.location.href = '{{ route("home") }}';
-            }
-            
-            // Press 'B' to go back
-            if (e.key.toLowerCase() === 'b' && !e.ctrlKey && !e.altKey && !e.shiftKey) {
-                history.back();
-            }
-            
-            // Press 'R' to refresh
-            if (e.key.toLowerCase() === 'r' && !e.ctrlKey && !e.altKey && !e.shiftKey) {
-                location.reload();
-            }
-        });
 
         // Add click animation to buttons (ripple effect)
         document.querySelectorAll('.btn').forEach(btn => {
@@ -194,14 +176,6 @@
                 element.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
             });
         });
-
-        // Auto redirect after 30 seconds (optional)
-        setTimeout(() => {
-            const autoRedirect = confirm('Halaman tidak ditemukan. Apakah Anda ingin kembali ke beranda?');
-            if (autoRedirect) {
-                window.location.href = '/';
-            }
-        }, 30000);
         
         // Track 404 error for analytics (optional)
         console.log('404 Error tracked:', {
@@ -210,20 +184,6 @@
             timestamp: new Date().toISOString()
         });
         
-        // Console easter egg
-        console.log(`
-        ╔══════════════════════════════════════╗
-        ║          SISTEM BEASISWA             ║
-        ║                                      ║
-        ║  Keyboard Shortcuts:                 ║
-        ║  • Press 'H' to go Home              ║
-        ║  • Press 'B' to go Back              ║
-        ║  • Press 'R' to Refresh              ║
-        ║                                      ║
-        ║  Need help? Contact: admin@beasiswa.com ║
-        ╚══════════════════════════════════════╝
-        `);
-
         // Page load animation
         window.addEventListener('load', function() {
             document.body.style.opacity = '0';
@@ -1051,47 +1011,6 @@ body {
     .float-element {
         font-size: 1.5rem;
         opacity: 0.1;
-    }
-}
-
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-    .animated-bg {
-        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-    }
-}
-
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-    
-    .shape {
-        animation: none;
-    }
-}
-
-/* Print Styles */
-@media print {
-    .glass-header,
-    .glass-footer,
-    .animated-bg {
-        display: none !important;
-    }
-    
-    body {
-        background: white !important;
-        color: black !important;
-    }
-    
-    .error-main {
-        min-height: auto;
-        padding: 2rem 0;
     }
 }
 </style>
