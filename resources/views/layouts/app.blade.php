@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,56 +8,60 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Custom mint-blue colors */
+        /* Updated color palette - Yellow/Orange theme */
         :root {
-            --mint-primary: #00c9a7;
-            --mint-secondary: #00bcd4;
-            --mint-dark: #00a693;
-            --mint-light: #4dd0e1;
-            --mint-blue: #0891b2;
+            --primary-orange: #FF9B00;
+            --primary-yellow: #FFE100;
+            --secondary-yellow: #FFC900;
+            --light-yellow: #EBE389;
+            --dark-orange: #e8890a;
+            --gradient-warm: linear-gradient(135deg, #FF9B00, #FFE100, #FFC900);
+            --gradient-warm-hover: linear-gradient(135deg, #e8890a, #e6cb00, #e6b800);
         }
 
         /* Sticky Navbar Styles */
         .navbar {
             transition: all 0.3s ease-in-out;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            background: linear-gradient(135deg, var(--mint-primary), var(--mint-secondary), var(--mint-blue)) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: var(--gradient-warm) !important;
         }
-        
+
         .navbar.sticky {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1030;
-            background: rgba(0, 201, 167, 0.95) !important;
+            background: var(--gradient-warm) !important;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 20px rgba(255, 155, 0, 0.3);
         }
-        
+
         /* Body padding to compensate for fixed navbar */
         body.navbar-fixed {
-            padding-top: 76px; /* Adjust based on navbar height */
+            padding-top: 76px;
+            /* Adjust based on navbar height */
         }
-        
+
         /* Smooth scrolling */
         html {
             scroll-behavior: smooth;
         }
-        
+
         /* Enhanced navbar brand animation */
         .navbar-brand {
             transition: transform 0.2s ease;
             font-weight: 600;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            color: #ffffff !important;
         }
-        
+
         .navbar-brand:hover {
             transform: scale(1.05);
             color: #ffffff !important;
         }
-        
+
         /* Nav links hover effect */
         .navbar-nav .nav-link {
             position: relative;
@@ -64,7 +69,7 @@
             font-weight: 500;
             color: #ffffff !important;
         }
-        
+
         .navbar-nav .nav-link::after {
             content: '';
             position: absolute;
@@ -72,12 +77,12 @@
             height: 2px;
             bottom: 0;
             left: 50%;
-            background: linear-gradient(90deg, #fff, var(--mint-light));
+            background: linear-gradient(90deg, #fff, var(--light-yellow));
             transition: all 0.3s ease;
             transform: translateX(-50%);
-            box-shadow: 0 0 8px rgba(255,255,255,0.8);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
         }
-        
+
         .navbar-nav .nav-link:hover::after,
         .navbar-nav .nav-link.active::after {
             width: 80%;
@@ -85,106 +90,198 @@
 
         .navbar-nav .nav-link:hover {
             color: #f8f9fa !important;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
-        
+
         /* Dropdown menu enhancement */
         .dropdown-menu {
             border: none;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             border-radius: 8px;
             margin-top: 8px;
         }
-        
+
         .dropdown-item {
             transition: all 0.2s ease;
             padding: 0.7rem 1.5rem;
         }
-        
+
         .dropdown-item:hover {
-            background: linear-gradient(45deg, var(--mint-primary), var(--mint-blue));
+            background: var(--gradient-warm);
             color: white;
             transform: translateX(5px);
         }
-        
+
         /* Navbar toggler for mobile */
         .navbar-toggler {
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 6px;
         }
 
         .navbar-toggler:focus {
-            box-shadow: 0 0 0 0.2rem rgba(255,255,255,0.25);
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
         }
 
         .navbar-toggler-icon {
             filter: brightness(0) invert(1);
         }
-        
+
         /* Mobile navbar improvements */
         @media (max-width: 991.98px) {
             .navbar-collapse {
-                background: rgba(0, 201, 167, 0.96);
+                background: var(--gradient-warm);
                 margin-top: 1rem;
                 padding: 1rem;
                 border-radius: 8px;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-                border: 1px solid rgba(255,255,255,0.2);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
             }
-            
+
             body.navbar-fixed {
                 padding-top: 66px;
             }
         }
-        
+
         /* Alert improvements */
         .alert {
             border: none;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             margin-bottom: 1.5rem;
         }
-        
+
         .alert-success {
-            background: linear-gradient(45deg, var(--mint-dark), var(--mint-secondary));
+            background: linear-gradient(45deg, #28a745, var(--secondary-yellow));
             color: white;
         }
-        
+
         .alert-danger {
-            background: linear-gradient(45deg, #dc3545, #fd7e14);
+            background: linear-gradient(45deg, #dc3545, var(--primary-orange));
             color: white;
         }
-        
+
         /* Footer enhancement */
         footer {
             background: linear-gradient(45deg, #212529, #495057) !important;
         }
 
-        /* Additional mint-blue theme elements */
+        /* Updated button styles with yellow/orange theme */
         .btn-primary {
-            background: linear-gradient(45deg, var(--mint-primary), var(--mint-blue));
+            background: var(--gradient-warm);
             border: none;
             transition: all 0.3s ease;
+            color: white;
+            font-weight: 500;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(45deg, var(--mint-dark), var(--mint-secondary));
+            background: var(--gradient-warm-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 201, 167, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 155, 0, 0.4);
+            color: white;
+        }
+
+        .btn-primary:focus,
+        .btn-primary:active {
+            background: var(--gradient-warm-hover);
+            box-shadow: 0 0 0 0.2rem rgba(255, 193, 0, 0.5);
+            color: white;
+        }
+
+        /* Additional accent colors for various elements */
+        .text-primary {
+            color: var(--primary-orange) !important;
+        }
+
+        .bg-primary {
+            background: var(--gradient-warm) !important;
+        }
+
+        .border-primary {
+            border-color: var(--primary-orange) !important;
+        }
+
+        /* Link colors */
+        a {
+            color: var(--primary-orange);
+        }
+
+        a:hover {
+            color: var(--dark-orange);
+        }
+
+        /* Form focus states */
+        .form-control:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(255, 155, 0, 0.25);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-orange);
+            border-color: var(--primary-orange);
+        }
+
+        .form-check-input:focus {
+            box-shadow: 0 0 0 0.25rem rgba(255, 155, 0, 0.25);
+        }
+
+        /* Card enhancements */
+        .card {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 10px;
+        }
+
+        .card-header {
+            background: var(--gradient-warm);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+        }
+
+        /* Badge styles */
+        .badge.bg-primary {
+            background: var(--gradient-warm) !important;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            background: var(--gradient-warm);
+        }
+
+        /* Table striped rows */
+        .table-striped>tbody>tr:nth-of-type(odd)>td {
+            background-color: rgba(255, 193, 0, 0.05);
+        }
+
+        /* Pagination */
+        .page-item.active .page-link {
+            background-color: var(--primary-orange);
+            border-color: var(--primary-orange);
+        }
+
+        .page-link {
+            color: var(--primary-orange);
+        }
+
+        .page-link:hover {
+            color: var(--dark-orange);
+            background-color: rgba(255, 155, 0, 0.1);
+            border-color: var(--primary-orange);
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark" id="mainNavbar">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
                 <i class="fas fa-graduation-cap"></i> Pendaftaran Beasiswa
             </a>
-            
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
@@ -198,7 +295,7 @@
                         </a>
                     </li>
                 </ul>
-                
+
                 <ul class="navbar-nav">
                     @auth
                         @if(auth()->user()->isAdmin())
@@ -276,18 +373,18 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Sticky Navbar Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const navbar = document.getElementById('mainNavbar');
             const body = document.body;
             let lastScrollTop = 0;
-            
+
             // Function to handle scroll behavior
             function handleScroll() {
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                
+
                 if (scrollTop > 100) {
                     // Add sticky class when scrolled down
                     navbar.classList.add('sticky');
@@ -297,10 +394,10 @@
                     navbar.classList.remove('sticky');
                     body.classList.remove('navbar-fixed');
                 }
-                
+
                 lastScrollTop = scrollTop;
             }
-            
+
             // Add scroll event listener with throttling for better performance
             let ticking = false;
             function requestTick() {
@@ -310,19 +407,19 @@
                     setTimeout(() => ticking = false, 16); // ~60fps
                 }
             }
-            
+
             window.addEventListener('scroll', requestTick);
-            
+
             // Add active class to current page nav link
             const currentLocation = location.pathname;
             const menuItems = document.querySelectorAll('.navbar-nav .nav-link');
-            
+
             menuItems.forEach(item => {
                 if (item.getAttribute('href') === currentLocation) {
                     item.classList.add('active');
                 }
             });
-            
+
             // Smooth scroll for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
@@ -339,7 +436,8 @@
             });
         });
     </script>
-    
+
     @yield('scripts')
 </body>
+
 </html>

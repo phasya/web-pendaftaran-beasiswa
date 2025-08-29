@@ -131,7 +131,7 @@
                             </td>
                             <td>
                                 <div class="d-flex align-items-start">
-                                    <div class="scholarship-icon rounded-circle bg-gradient-primary text-white me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                    <div class="scholarship-icon rounded-circle bg-gradient-primary text-white me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; background: linear-gradient(135deg, #ffcc00 0%, #ffc400 100%);">
                                         <i class="fas fa-graduation-cap"></i>
                                     </div>
                                     <div>

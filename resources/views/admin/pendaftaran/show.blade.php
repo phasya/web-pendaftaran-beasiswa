@@ -1,163 +1,260 @@
 @extends('layouts.admin')
 
-@section('title', 'Detail Pendaftar')
+@section('title', 'Detail Beasiswa')
 
 @section('content')
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <div>
-        <h1 class="h2"><i class="fas fa-user-graduate"></i> Detail Pendaftar</h1>
-        <p class="text-muted mb-0">
-            <i class="fas fa-info-circle me-2"></i>Informasi lengkap tentang pendaftar beasiswa
-        </p>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div>
+            <h1 class="h2"><i class="fas fa-graduation-cap text-primary"></i> Detail Beasiswa</h1>
+            <p class="text-muted mb-0">
+                <i class="fas fa-info-circle me-2"></i>Informasi lengkap tentang program beasiswa
+            </p>
+        </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-lg-8">
-        <!-- Main Detail Card -->
-        <div class="card shadow-sm">
-            <div class="card-header bg-white py-3">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <h5 class="card-title mb-1">
-                            <i class="fas fa-user text-primary me-2"></i>{{ $pendaftar->nama_lengkap }}
-                        </h5>
-                        <small class="text-muted">
-                            <i class="fas fa-calendar me-1"></i>Mendaftar pada {{ $pendaftar->created_at->format('d M Y H:i') }}
-                        </small>
-                    </div>
-                    <div class="col-auto">
-                        @if($pendaftar->status == 'pending')
-                            <span class="badge bg-warning-soft text-warning px-3 py-2">
-                                <i class="fas fa-clock me-1"></i>Pending
-                            </span>
-                        @elseif($pendaftar->status == 'diterima')
-                            <span class="badge bg-success-soft text-success px-3 py-2">
-                                <i class="fas fa-check-circle me-1"></i>Diterima
-                            </span>
-                        @else
-                            <span class="badge bg-danger-soft text-danger px-3 py-2">
-                                <i class="fas fa-times-circle me-1"></i>Ditolak
-                            </span>
-                        @endif
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Main Detail Card -->
+            <div class="card shadow-sm">
+                <div class="card-header py-3">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="card-title mb-1 text-white">
+                                <i class="fas fa-trophy me-2"></i>{{ $beasiswa->nama_beasiswa }}
+                            </h5>
+                            <small class="text-white-50">
+                                <i class="fas fa-calendar me-1"></i>Dibuat pada
+                                {{ \Carbon\Carbon::parse($beasiswa->created_at)->format('d M Y') }}
+                            </small>
+                        </div>
+                        <div class="col-auto">
+                            @if ($beasiswa->status == 'aktif')
+                                <span class="badge bg-success-soft text-success px-3 py-2">
+                                    <i class="fas fa-check-circle me-1"></i>Aktif
+                                </span>
+                            @else
+                                <span class="badge bg-secondary-soft text-secondary px-3 py-2">
+                                    <i class="fas fa-times-circle me-1"></i>Nonaktif
+                                </span>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body p-4">
-                <!-- Personal Info Section -->
-                <div class="detail-section mb-4">
-                    <h6 class="section-title mb-3">
-                        <i class="fas fa-user-circle text-info me-2"></i>Data Personal
-                    </h6>
-                    <div class="content-box">
+                <div class="card-body p-4">
+                    <!-- Deskripsi Section -->
+                    <div class="detail-section mb-4">
+                        <h6 class="section-title mb-3">
+                            <i class="fas fa-align-left text-primary me-2"></i>Deskripsi Beasiswa
+                        </h6>
+                        <div class="content-box">
+                            <p class="mb-0">{{ $beasiswa->deskripsi }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Financial & Schedule Section -->
+                    <div class="detail-section mb-4">
+                        <h6 class="section-title mb-3">
+                            <i class="fas fa-calendar-dollar text-success me-2"></i>Dana & Jadwal
+                        </h6>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="info-item">
-                                    <label class="info-label">Nama Lengkap</label>
-                                    <p class="info-value">{{ $pendaftar->nama_lengkap }}</p>
+                            <div class="col-md-4 mb-3">
+                                <div class="info-card h-100">
+                                    <div class="info-icon">
+                                        <i class="fas fa-money-bill-wave text-success"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <h6 class="info-title">Jumlah Dana</h6>
+                                        <p class="info-value text-success fw-bold">
+                                            Rp {{ number_format($beasiswa->jumlah_dana, 0, ',', '.') }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="info-item">
-                                    <label class="info-label">NIM</label>
-                                    <p class="info-value">{{ $pendaftar->nim }}</p>
+                            <div class="col-md-4 mb-3">
+                                <div class="info-card h-100">
+                                    <div class="info-icon">
+                                        <i class="fas fa-calendar-plus text-primary"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <h6 class="info-title">Tanggal Buka</h6>
+                                        <p class="info-value text-primary fw-bold">
+                                            {{ \Carbon\Carbon::parse($beasiswa->tanggal_buka)->format('d M Y') }}
+                                        </p>
+                                        <small class="text-muted">
+                                            {{ \Carbon\Carbon::parse($beasiswa->tanggal_buka)->diffForHumans() }}
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="info-item">
-                                    <label class="info-label">Email</label>
-                                    <p class="info-value">{{ $pendaftar->email }}</p>
+                            <div class="col-md-4 mb-3">
+                                <div class="info-card h-100">
+                                    <div class="info-icon">
+                                        <i class="fas fa-calendar-times text-danger"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <h6 class="info-title">Tanggal Tutup</h6>
+                                        <p class="info-value text-danger fw-bold">
+                                            {{ \Carbon\Carbon::parse($beasiswa->tanggal_tutup)->format('d M Y') }}
+                                        </p>
+                                        <small class="text-muted">
+                                            {{ \Carbon\Carbon::parse($beasiswa->tanggal_tutup)->diffForHumans() }}
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="info-item">
-                                    <label class="info-label">No. HP</label>
-                                    <p class="info-value">{{ $pendaftar->no_hp }}</p>
+                        </div>
+
+                        <!-- Period Status -->
+                        <div class="period-status mt-3">
+                            @php
+                                $today = now();
+                                $openDate = \Carbon\Carbon::parse($beasiswa->tanggal_buka);
+                                $closeDate = \Carbon\Carbon::parse($beasiswa->tanggal_tutup);
+                                $totalDays = $openDate->diffInDays($closeDate);
+                            @endphp
+
+                            @if ($today < $openDate)
+                                <div class="alert alert-info-soft">
+                                    <i class="fas fa-clock me-2"></i>
+                                    Pendaftaran akan dibuka dalam <strong>{{ $today->diffInDays($openDate) }} hari</strong>
+                                    (Durasi: {{ $totalDays }} hari)
+                                </div>
+                            @elseif ($today >= $openDate && $today <= $closeDate)
+                                <div class="alert alert-success-soft">
+                                    <i class="fas fa-calendar-check me-2"></i>
+                                    Pendaftaran <strong>sedang berlangsung</strong> -
+                                    Tersisa <strong>{{ $today->diffInDays($closeDate) }} hari</strong>
+                                </div>
+                            @else
+                                <div class="alert alert-danger-soft">
+                                    <i class="fas fa-calendar-times me-2"></i>
+                                    Pendaftaran telah <strong>berakhir</strong> sejak {{ $today->diffInDays($closeDate) }} hari
+                                    yang lalu
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Requirements Section -->
+                    <div class="detail-section mb-4">
+                        <h6 class="section-title mb-3">
+                            <i class="fas fa-list-check text-warning me-2"></i>Persyaratan Pendaftaran
+                        </h6>
+                        <div class="content-box">
+                            <div class="requirements-text">
+                                {!! nl2br(e($beasiswa->persyaratan)) !!}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Section (if data available) -->
+                    @if(isset($statistik))
+                        <div class="detail-section mb-4">
+                            <h6 class="section-title mb-3">
+                                <i class="fas fa-chart-bar text-primary me-2"></i>Statistik Pendaftaran
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="stat-card">
+                                        <div class="stat-number text-primary">{{ $statistik['total_pendaftar'] ?? 0 }}</div>
+                                        <div class="stat-label">Total Pendaftar</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-card">
+                                        <div class="stat-number text-warning">{{ $statistik['pending'] ?? 0 }}</div>
+                                        <div class="stat-label">Menunggu Review</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-card">
+                                        <div class="stat-number text-success">{{ $statistik['diterima'] ?? 0 }}</div>
+                                        <div class="stat-label">Diterima</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-card">
+                                        <div class="stat-number text-danger">{{ $statistik['ditolak'] ?? 0 }}</div>
+                                        <div class="stat-label">Ditolak</div>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Action Buttons Card -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-body">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                        <div class="d-flex align-items-center text-muted">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small>Detail beasiswa dapat diubah melalui menu edit</small>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('admin.beasiswa.index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Kembali
+                            </a>
+                            <a href="{{ route('admin.beasiswa.edit', $beasiswa) }}" class="btn btn-warning">
+                                <i class="fas fa-edit me-2"></i>Edit Beasiswa
+                            </a>
+                            @if($beasiswa->status == 'aktif')
+                                <a href="#" class="btn btn-primary" onclick="copyLink()">
+                                    <i class="fas fa-share me-2"></i>Bagikan Link
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Cards -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-start border-primary border-4">
+                        <div class="card-body">
+                            <h6 class="card-title text-primary">
+                                <i class="fas fa-lightbulb me-2"></i>Tips untuk Admin
+                            </h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <small>Monitor pendaftaran secara berkala</small>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <small>Pastikan informasi selalu up-to-date</small>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <small>Berikan feedback cepat kepada pendaftar</small>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
 
-                <!-- Scholarship Info Section -->
-                <div class="detail-section mb-4">
-                    <h6 class="section-title mb-3">
-                        <i class="fas fa-graduation-cap text-success me-2"></i>Beasiswa yang Dilamar
-                    </h6>
-                    <div class="scholarship-card">
-                        <div class="scholarship-header">
-                            <h6 class="scholarship-name">{{ $pendaftar->beasiswa->nama_beasiswa }}</h6>
-                            <div class="scholarship-amount">
-                                <i class="fas fa-money-bill-wave text-success me-2"></i>
-                                Rp {{ number_format($pendaftar->beasiswa->jumlah_dana, 0, ',', '.') }}
-                            </div>
-                        </div>
-                        <p class="scholarship-desc">{{ $pendaftar->beasiswa->deskripsi }}</p>
-                    </div>
-                </div>
-
-                <!-- Reason Section -->
-                <div class="detail-section mb-4">
-                    <h6 class="section-title mb-3">
-                        <i class="fas fa-comment-alt text-warning me-2"></i>Alasan Mendaftar
-                    </h6>
-                    <div class="content-box">
-                        <div class="reason-text">
-                            {{ $pendaftar->alasan_mendaftar }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Documents Section -->
-                <div class="detail-section mb-4">
-                    <h6 class="section-title mb-3">
-                        <i class="fas fa-folder-open text-info me-2"></i>Dokumen Pendukung
-                    </h6>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <div class="document-card">
-                                <div class="document-icon">
-                                    <i class="fas fa-file-pdf text-danger"></i>
-                                </div>
-                                <div class="document-info">
-                                    <h6 class="document-title">Transkrip Nilai</h6>
-                                    <a href="{{ asset('storage/documents/' . $pendaftar->file_transkrip) }}" 
-                                       target="_blank" 
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-eye me-1"></i>Lihat
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="document-card">
-                                <div class="document-icon">
-                                    <i class="fas fa-id-card text-primary"></i>
-                                </div>
-                                <div class="document-info">
-                                    <h6 class="document-title">KTP</h6>
-                                    <a href="{{ asset('storage/documents/' . $pendaftar->file_ktp) }}" 
-                                       target="_blank" 
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-eye me-1"></i>Lihat
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="document-card">
-                                <div class="document-icon">
-                                    <i class="fas fa-users text-success"></i>
-                                </div>
-                                <div class="document-info">
-                                    <h6 class="document-title">Kartu Keluarga</h6>
-                                    <a href="{{ asset('storage/documents/' . $pendaftar->file_kk) }}" 
-                                       target="_blank" 
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-eye me-1"></i>Lihat
-                                    </a>
-                                </div>
-                            </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-start border-warning border-4">
+                        <div class="card-body">
+                            <h6 class="card-title text-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Perhatian
+                            </h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-info text-info me-2"></i>
+                                    <small>Perubahan status akan mempengaruhi visibilitas</small>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-info text-info me-2"></i>
+                                    <small>Backup data sebelum melakukan perubahan besar</small>
+                                </li>
+                                <li>
+                                    <i class="fas fa-info text-info me-2"></i>
+                                    <small>Koordinasi dengan tim terkait perubahan jadwal</small>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -165,453 +262,369 @@
         </div>
     </div>
 
-    <div class="col-lg-4">
-        <!-- Action Card -->
-        <div class="card shadow-sm">
-            <div class="card-header bg-white py-3">
-                <h6 class="card-title mb-0">
-                    <i class="fas fa-cogs text-warning me-2"></i>Aksi Pendaftar
-                </h6>
-            </div>
-            <div class="card-body p-4">
-                <form action="{{ route('admin.pendaftar.update-status', $pendaftar) }}" method="POST">
-                    @csrf
-                    @method('PATCH')
-                    
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">
-                            <i class="fas fa-edit me-2"></i>Update Status
-                        </label>
-                        <select name="status" class="form-select modern-select" required>
-                            <option value="pending" {{ $pendaftar->status == 'pending' ? 'selected' : '' }}>
-                                <i class="fas fa-clock"></i> Pending
-                            </option>
-                            <option value="diterima" {{ $pendaftar->status == 'diterima' ? 'selected' : '' }}>
-                                <i class="fas fa-check"></i> Diterima
-                            </option>
-                            <option value="ditolak" {{ $pendaftar->status == 'ditolak' ? 'selected' : '' }}>
-                                <i class="fas fa-times"></i> Ditolak
-                            </option>
-                        </select>
-                    </div>
-                    
-                    <div class="d-grid mb-3">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>Update Status
-                        </button>
-                    </div>
-                </form>
+    <!-- Custom CSS -->
+    <style>
+        /* Updated Color Palette - Orange/Yellow Theme */
+        :root {
+            --primary-orange: #FF9B00;
+            --primary-yellow: #FFE100;
+            --secondary-yellow: #FFC900;
+            --light-yellow: #EBE389;
+            --dark-orange: #e8890a;
+            --gradient-warm: linear-gradient(135deg, #FF9B00, #FFE100, #FFC900);
+            --gradient-warm-hover: linear-gradient(135deg, #e8890a, #e6cb00, #e6b800);
+        }
 
-                <hr class="my-4">
+        /* Status Badge Colors with warm theme */
+        .bg-success-soft {
+            background-color: #d4edda !important;
+            color: #155724 !important;
+        }
 
-                <div class="d-grid">
-                    <form action="{{ route('admin.pendaftar.destroy', $pendaftar) }}" 
-                          method="POST" 
-                          onsubmit="return confirm('Yakin ingin menghapus data pendaftar ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash me-2"></i>Hapus Data
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
+        .bg-warning-soft {
+            background-color: #fff3cd !important;
+            color: #856404 !important;
+        }
 
-        <!-- Statistics Card -->
-        <div class="card shadow-sm mt-4">
-            <div class="card-header bg-white py-3">
-                <h6 class="card-title mb-0">
-                    <i class="fas fa-chart-bar text-info me-2"></i>Statistik
-                </h6>
-            </div>
-            <div class="card-body p-4">
-                <div class="stat-item">
-                    <div class="stat-icon">
-                        <i class="fas fa-users text-primary"></i>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number">{{ $pendaftar->beasiswa->pendaftars->count() }}</div>
-                        <div class="stat-label">Total pendaftar untuk beasiswa ini</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        .bg-danger-soft {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+        }
 
-        <!-- Action Buttons Card -->
-        <div class="card shadow-sm mt-4">
-            <div class="card-body">
-                <div class="d-flex flex-column gap-2">
-                    <a href="{{ route('admin.pendaftar.index') }}" 
-                       class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar
-                    </a>
-                    <a href="#" class="btn btn-info" onclick="printData()">
-                        <i class="fas fa-print me-2"></i>Cetak Data
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+        .bg-info-soft {
+            background-color: #d1ecf1 !important;
+            color: #0c5460 !important;
+        }
 
-<!-- Custom CSS -->
-<style>
-/* Status Badge Colors - Same as beasiswa detail */
-.bg-success-soft { background-color: #d1edff !important; }
-.bg-warning-soft { background-color: #fff3cd !important; }
-.bg-danger-soft { background-color: #f8d7da !important; }
-.bg-info-soft { background-color: #d1ecf1 !important; }
-.bg-secondary-soft { background-color: #e2e3e5 !important; }
+        .bg-secondary-soft {
+            background-color: #e2e3e5 !important;
+            color: #383d41 !important;
+        }
 
-/* Detail sections - Same structure */
-.detail-section {
-    border-left: 4px solid var(--mint-primary, #00c9a7);
-    padding-left: 1rem;
-    margin-left: 0.5rem;
-}
+        /* Alert styling with warm colors */
+        .alert-info-soft {
+            background: linear-gradient(45deg, #d1ecf1, var(--light-yellow));
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-orange) !important;
+        }
 
-.section-title {
-    font-weight: 600;
-    color: #495057;
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #e9ecef;
-}
+        .alert-success-soft {
+            background: linear-gradient(45deg, #d1f2eb, var(--light-yellow));
+            border: 1px solid #a7e5d0;
+            color: #0f5132;
+            border-radius: 8px;
+            border-left: 4px solid #28a745 !important;
+        }
 
-/* Content boxes */
-.content-box {
-    background: linear-gradient(45deg, #f8f9fa, #ffffff);
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
+        .alert-danger-soft {
+            background: linear-gradient(45deg, #f8d7da, #ffe6e6);
+            border: 1px solid #f1aeb5;
+            color: #842029;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545 !important;
+        }
 
-/* Info items for personal data */
-.info-item {
-    margin-bottom: 1rem;
-}
+        /* Detail sections with warm accent */
+        .detail-section {
+            border-left: 4px solid var(--primary-orange);
+            padding-left: 1rem;
+            margin-left: 0.5rem;
+        }
 
-.info-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #6c757d;
-    margin-bottom: 0.25rem;
-    display: block;
-}
+        .section-title {
+            font-weight: 600;
+            color: #495057;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-yellow);
+        }
 
-.info-value {
-    font-size: 1rem;
-    color: #495057;
-    margin-bottom: 0;
-    font-weight: 500;
-}
+        /* Content boxes with warm gradient */
+        .content-box {
+            background: linear-gradient(45deg, #fefefe, var(--light-yellow));
+            border: 1px solid var(--secondary-yellow);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(255, 155, 0, 0.1);
+        }
 
-/* Scholarship card styling */
-.scholarship-card {
-    background: linear-gradient(135deg, #e3f2fd, #ffffff);
-    border: 1px solid #bbdefb;
-    border-radius: 10px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
-}
+        /* Info cards with warm theme */
+        .info-card {
+            background: linear-gradient(135deg, #ffffff, #fffcf0);
+            border: 1px solid var(--light-yellow);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(255, 155, 0, 0.15);
+        }
 
-.scholarship-header {
-    display: flex;
-    justify-content: between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 155, 0, 0.25);
+            border-color: var(--primary-orange);
+        }
 
-.scholarship-name {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1565c0;
-    margin-bottom: 0;
-    flex: 1;
-}
+        .info-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
 
-.scholarship-amount {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #2e7d32;
-    white-space: nowrap;
-}
+        .info-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
 
-.scholarship-desc {
-    color: #546e7a;
-    margin-bottom: 0;
-    line-height: 1.6;
-}
+        .info-value {
+            font-size: 1.25rem;
+            margin-bottom: 0;
+        }
 
-/* Reason text styling */
-.reason-text {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #495057;
-    font-style: italic;
-}
+        /* Statistics cards with warm colors */
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff, #fffcf0);
+            border: 1px solid var(--light-yellow);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
 
-/* Document cards */
-.document-card {
-    background: white;
-    border: 1px solid #e9ecef;
-    border-radius: 10px;
-    padding: 1.5rem;
-    text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    height: 100%;
-}
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 155, 0, 0.2);
+        }
 
-.document-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-}
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
 
-.document-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-}
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
 
-.document-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #495057;
-    margin-bottom: 1rem;
-}
+        /* Requirements styling */
+        .requirements-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #495057;
+        }
 
-/* Statistics styling */
-.stat-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
+        /* Button enhancements with warm colors */
+        .btn {
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
 
-.stat-icon {
-    font-size: 2rem;
-    color: var(--mint-primary, #00c9a7);
-    min-width: 60px;
-    text-align: center;
-}
+        .btn-primary {
+            background: var(--gradient-warm);
+            border: none;
+            color: white;
+        }
 
-.stat-number {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #495057;
-    line-height: 1;
-}
+        .btn-primary:hover {
+            background: var(--gradient-warm-hover);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 155, 0, 0.4);
+        }
 
-.stat-label {
-    font-size: 0.875rem;
-    color: #6c757d;
-    font-weight: 500;
-    margin-top: 0.25rem;
-}
+        .btn-warning {
+            background: linear-gradient(45deg, var(--secondary-yellow), var(--primary-orange));
+            border: none;
+            color: white;
+        }
 
-/* Form styling */
-.modern-select {
-    border-radius: 8px;
-    border: 2px solid #e9ecef;
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
-}
+        .btn-warning:hover {
+            background: linear-gradient(45deg, var(--dark-orange), #e6b800);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 201, 0, 0.4);
+        }
 
-.modern-select:focus {
-    border-color: var(--mint-primary, #00c9a7);
-    box-shadow: 0 0 0 0.25rem rgba(0, 201, 167, 0.1);
-}
+        .btn-outline-secondary:hover {
+            transform: translateY(-1px);
+            background: var(--light-yellow);
+            border-color: var(--primary-orange);
+            color: #495057;
+        }
 
-/* Button enhancements - Same as beasiswa detail */
-.btn {
-    border-radius: 0.375rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    padding: 0.625rem 1.25rem;
-}
+        /* Card consistency with warm theme */
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(255, 155, 0, 0.1);
+        }
 
-.btn-primary {
-    background: linear-gradient(45deg, var(--mint-primary, #00c9a7), var(--mint-blue, #0891b2));
-    border: none;
-}
+        .card-header {
+            border-bottom: 2px solid var(--light-yellow);
+            background: var(--gradient-warm);
+            color: white;
+        }
 
-.btn-primary:hover {
-    background: linear-gradient(45deg, var(--mint-dark, #00a693), #0671a6);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 201, 167, 0.4);
-}
+        .card-title {
+            font-weight: 600;
+            color: inherit;
+        }
 
-.btn-danger:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
-}
+        /* Text colors with warm theme */
+        .text-primary {
+            color: var(--primary-orange) !important;
+        }
 
-.btn-info {
-    background: linear-gradient(45deg, #0dcaf0, #0891b2);
-    border: none;
-    color: white;
-}
+        .text-warning {
+            color: var(--dark-orange) !important;
+        }
 
-.btn-info:hover {
-    background: linear-gradient(45deg, #0aa2c0, #0671a6);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(13, 202, 240, 0.4);
-}
+        /* Border colors */
+        .border-primary {
+            border-color: var(--primary-orange) !important;
+        }
 
-.btn-outline-secondary:hover {
-    transform: translateY(-1px);
-}
+        .border-warning {
+            border-color: var(--secondary-yellow) !important;
+        }
 
-.btn-outline-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
-}
+        /* Responsive */
+        @media (max-width: 768px) {
+            .detail-section {
+                border-left: none;
+                border-top: 3px solid var(--primary-orange);
+                padding-left: 0;
+                padding-top: 1rem;
+                margin-left: 0;
+            }
 
-/* Card consistency - Same as beasiswa detail */
-.card {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
+            .info-card {
+                margin-bottom: 1rem;
+            }
 
-.card-header {
-    border-bottom: 2px solid #dee2e6;
-    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-}
+            .d-flex.gap-2 {
+                flex-direction: column;
+                width: 100%;
+            }
 
-.card-title {
-    font-weight: 600;
-    color: #495057;
-}
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .detail-section {
-        border-left: none;
-        border-top: 3px solid var(--mint-primary, #00c9a7);
-        padding-left: 0;
-        padding-top: 1rem;
-        margin-left: 0;
-    }
-    
-    .scholarship-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    
-    .document-card {
-        margin-bottom: 1rem;
-    }
-    
-    .stat-item {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.5rem;
-    }
-}
+        /* Scrollable content styling with warm theme */
+        .scrollable-content {
+            border: 2px solid var(--light-yellow);
+        }
 
-/* Custom mint-blue variables */
-:root {
-    --mint-primary: #00c9a7;
-    --mint-secondary: #00bcd4;
-    --mint-dark: #00a693;
-    --mint-light: #4dd0e1;
-    --mint-blue: #0891b2;
-}
-</style>
+        .scrollable-content::-webkit-scrollbar {
+            width: 6px;
+        }
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Print functionality
-    window.printData = function() {
-        window.print();
-    }
-    
-    // Enhanced form submission with loading state
-    const statusForm = document.querySelector('form[method="POST"]');
-    if (statusForm && !statusForm.querySelector('input[name="_method"][value="DELETE"]')) {
-        statusForm.addEventListener('submit', function(e) {
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memproses...';
-            
-            // Re-enable button after 3 seconds as fallback
-            setTimeout(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-            }, 3000);
+        .scrollable-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background: var(--primary-orange);
+            border-radius: 3px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-orange);
+        }
+
+        /* Enhanced hover effects */
+        .card:hover {
+            box-shadow: 0 4px 15px rgba(255, 155, 0, 0.15);
+        }
+
+        /* Badge enhancements */
+        .badge {
+            border-radius: 20px;
+            font-weight: 500;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Copy link functionality
+            window.copyLink = function () {
+                const url = window.location.href.replace('/admin/', '/');
+                navigator.clipboard.writeText(url).then(function () {
+                    // Show success message
+                    const btn = event.target.closest('.btn');
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check me-2"></i>Tersalin!';
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-success');
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.classList.remove('btn-success');
+                        btn.classList.add('btn-primary');
+                    }, 2000);
+                }).catch(function () {
+                    alert('Gagal menyalin link. Silakan copy manual: ' + url);
+                });
+            }
+
+            // Smooth scroll for long content
+            document.querySelectorAll('.content-box').forEach(box => {
+                if (box.scrollHeight > 300) {
+                    box.style.maxHeight = '300px';
+                    box.style.overflowY = 'auto';
+                    box.classList.add('scrollable-content');
+                }
+            });
+
+            // Auto-refresh status if needed
+            setInterval(function () {
+                const periodStatus = document.querySelector('.period-status');
+                if (periodStatus) {
+                    // This could be enhanced to auto-update the status
+                    // without full page reload if needed
+                }
+            }, 60000); // Check every minute
+
+            // Tooltip initialization
+            if (typeof bootstrap !== 'undefined') {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            }
+
+            // Add subtle animations to cards
+            const cards = document.querySelectorAll('.card');
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                },
+                { threshold: 0.1 }
+            );
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
         });
-    }
-    
-    // Tooltip initialization
-    if (typeof bootstrap !== 'undefined') {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-    }
-    
-    // Auto-resize reason text if too long
-    const reasonText = document.querySelector('.reason-text');
-    if (reasonText && reasonText.scrollHeight > 150) {
-        reasonText.style.maxHeight = '150px';
-        reasonText.style.overflowY = 'auto';
-        reasonText.classList.add('scrollable-content');
-    }
-});
-</script>
-
-<style>
-/* Print styles */
-@media print {
-    .card-body .btn,
-    .card-header .btn,
-    .d-grid form,
-    hr {
-        display: none !important;
-    }
-    
-    .card {
-        box-shadow: none !important;
-        border: 1px solid #ddd !important;
-    }
-    
-    .detail-section {
-        break-inside: avoid;
-    }
-}
-
-/* Scrollable content styling */
-.scrollable-content {
-    border: 1px solid #e9ecef;
-    border-radius: 4px;
-    padding: 0.5rem;
-}
-
-.scrollable-content::-webkit-scrollbar {
-    width: 6px;
-}
-
-.scrollable-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.scrollable-content::-webkit-scrollbar-thumb {
-    background: var(--mint-primary, #00c9a7);
-    border-radius: 3px;
-}
-
-.scrollable-content::-webkit-scrollbar-thumb:hover {
-    background: var(--mint-dark, #00a693);
-}
-</style>
+    </script>
 @endsection

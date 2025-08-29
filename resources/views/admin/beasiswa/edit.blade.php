@@ -365,7 +365,7 @@
 }
 
 .btn-primary {
-    background: linear-gradient(45deg, var(--mint-primary, #00c9a7), var(--mint-blue, #0891b2));
+    background: linear-gradient(45deg, var(--mint-primary, #FF9B00), var(--mint-blue, #FF9B00);
     border: none;
 }
 

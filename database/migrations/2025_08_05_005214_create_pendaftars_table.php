@@ -30,6 +30,9 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('pendaftars');
+      Schema::table('pendaftar', function (Blueprint $table) {
+            $table->dropColumn(['dokumen_pendukung', 'catatan_admin']);
+        });
     }
 };
+    
