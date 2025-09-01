@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use App\Models\Pendaftar;
 
 class Beasiswa extends Model
 {
     use HasFactory;
 
-    protected $table = 'beasiswa';
-    
+    /**
+     * The attributes that are mass assignable.
+     */
     protected $fillable = [
         'nama_beasiswa',
         'deskripsi',
@@ -21,168 +21,389 @@ class Beasiswa extends Model
         'tanggal_tutup',
         'status',
         'persyaratan',
-        'dokumen_pendukung'
+        'dokumen_pendukung',
     ];
 
+    /**
+     * The attributes that should be cast.
+     */
     protected $casts = [
         'tanggal_buka' => 'date',
         'tanggal_tutup' => 'date',
-        'dokumen_pendukung' => 'array', // Cast ke array otomatis
-        'jumlah_dana' => 'decimal:0'
+        'jumlah_dana' => 'decimal:2',
+        'dokumen_pendukung' => 'array',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
-    // Mutator untuk memastikan dokumen_pendukung selalu berupa array
-    public function setDokumenPendukungAttribute($value)
+    /**
+     * The attributes that should be hidden for serialization.
+     */
+    protected $hidden = [];
+
+    /**
+     * Boot the model
+     */
+    protected static function boot()
     {
-        // Jika sudah array, langsung assign
-        if (is_array($value)) {
-            $this->attributes['dokumen_pendukung'] = json_encode(array_values($value));
-        } 
-        // Jika string JSON, decode dulu lalu encode ulang untuk memastikan format
-        elseif (is_string($value) && $this->isJson($value)) {
-            $decoded = json_decode($value, true);
-            $this->attributes['dokumen_pendukung'] = json_encode(array_values($decoded));
-        } 
-        // Jika string biasa, buat array
-        elseif (is_string($value)) {
-            $this->attributes['dokumen_pendukung'] = json_encode([$value]);
-        }
-        // Default ke empty array
-        else {
-            $this->attributes['dokumen_pendukung'] = json_encode([]);
-        }
+        parent::boot();
+
+        // Auto-update status berdasarkan tanggal
+        static::saving(function ($beasiswa) {
+            // Jika tanggal tutup sudah lewat, set status ke nonaktif
+            if ($beasiswa->tanggal_tutup && Carbon::parse($beasiswa->tanggal_tutup)->isPast()) {
+                if ($beasiswa->status === 'aktif') {
+                    $beasiswa->status = 'nonaktif';
+                }
+            }
+        });
     }
 
-    // Helper function untuk cek apakah string adalah valid JSON
-    private function isJson($string)
-    {
-        json_decode($string);
-        return json_last_error() === JSON_ERROR_NONE;
-    }
-
-    // Accessor untuk mendapatkan dokumen pendukung dengan label yang readable
-    public function getDokumenPendukungLabelAttribute()
-    {
-        $dokumenMap = [
-            'surat-aktif' => 'Surat Keterangan Aktif Kuliah',
-            'transkrip' => 'Transkrip Nilai', 
-            'rekomendasi' => 'Surat Rekomendasi',
-            'ktp' => 'KTP/Identitas',
-            'kk' => 'Kartu Keluarga',
-            'surat-keterangan-tidak-mampu' => 'Surat Keterangan Tidak Mampu',
-            'sertifikat-prestasi' => 'Sertifikat Prestasi',
-        ];
-
-        if (!$this->dokumen_pendukung || !is_array($this->dokumen_pendukung)) {
-            return [];
-        }
-
-        $labels = [];
-        foreach ($this->dokumen_pendukung as $dokumen) {
-            $labels[] = $dokumenMap[$dokumen] ?? ucwords(str_replace('-', ' ', $dokumen));
-        }
-
-        return $labels;
-    }
-
-    // Method untuk mendapatkan dokumen map (untuk controller)
-    public static function getDokumenMap()
-    {
-        return [
-            'surat-aktif' => 'Surat Keterangan Aktif Kuliah',
-            'transkrip' => 'Transkrip Nilai',
-            'rekomendasi' => 'Surat Rekomendasi',
-            'ktp' => 'KTP/Identitas',
-            'kk' => 'Kartu Keluarga',
-            'surat-keterangan-tidak-mampu' => 'Surat Keterangan Tidak Mampu',
-            'sertifikat-prestasi' => 'Sertifikat Prestasi'
-        ];
-    }
-
-    // Method untuk cek apakah beasiswa masih aktif untuk pendaftaran
-    public function isOpenForRegistration()
-    {
-        return $this->status === 'aktif' && 
-               Carbon::now()->between($this->tanggal_buka, $this->tanggal_tutup);
-    }
-
-    // Method untuk menghitung sisa hari pendaftaran
-    public function getDaysRemaining()
-    {
-        if (!$this->isOpenForRegistration()) {
-            return 0;
-        }
-        
-        return Carbon::now()->diffInDays($this->tanggal_tutup, false);
-    }
-
-    // Method untuk mendapatkan status label dengan warna
-    public function getStatusLabelAttribute()
-    {
-        $statusMap = [
-            'aktif' => ['label' => 'Aktif', 'class' => 'badge bg-success'],
-            'nonaktif' => ['label' => 'Non-aktif', 'class' => 'badge bg-danger'],
-            'draft' => ['label' => 'Draft', 'class' => 'badge bg-warning text-dark']
-        ];
-
-        return $statusMap[$this->status] ?? ['label' => 'Unknown', 'class' => 'badge bg-secondary'];
-    }
-
-    // Method untuk format jumlah dana
-    public function getJumlahDanaFormattedAttribute()
-    {
-        return 'Rp ' . number_format($this->jumlah_dana, 0, ',', '.');
-    }
-
-    // Method untuk mendapatkan periode pendaftaran
-    public function getPeriodePendaftaranAttribute()
-    {
-        return $this->tanggal_buka->format('d/m/Y') . ' - ' . $this->tanggal_tutup->format('d/m/Y');
-    }
-
-    // Relationship dengan pendaftar
+    /**
+     * Relationship dengan Pendaftar
+     */
     public function pendaftar()
     {
         return $this->hasMany(Pendaftar::class);
     }
 
-    // Method untuk cek status aktif
-    public function isActive()
-    {
-        return $this->status === 'aktif';
-    }
-
-    // Scope untuk filter berdasarkan status
+    /**
+     * Scope untuk beasiswa aktif
+     */
     public function scopeActive($query)
     {
-        return $query->where('status', 'aktif');
+        return $query->where('status', 'aktif')
+                    ->where('tanggal_buka', '<=', now())
+                    ->where('tanggal_tutup', '>=', now());
     }
 
-    public function scopeOpen($query)
+    /**
+     * Scope untuk beasiswa yang akan datang
+     */
+    public function scopeUpcoming($query)
     {
         return $query->where('status', 'aktif')
-                    ->where('tanggal_buka', '<=', Carbon::now())
-                    ->where('tanggal_tutup', '>=', Carbon::now());
+                    ->where('tanggal_buka', '>', now());
     }
 
-    // Boot method untuk logging perubahan
-    protected static function boot()
+    /**
+     * Scope untuk beasiswa yang sudah expired
+     */
+    public function scopeExpired($query)
     {
-        parent::boot();
-        
-        static::saving(function ($model) {
-            \Log::info('Saving beasiswa with dokumen_pendukung: ', [
-                'id' => $model->id,
-                'dokumen_pendukung_raw' => $model->attributes['dokumen_pendukung'] ?? null,
-                'dokumen_pendukung_array' => $model->dokumen_pendukung
-            ]);
-        });
+        return $query->where('tanggal_tutup', '<', now());
+    }
 
-        static::saved(function ($model) {
-            \Log::info('Saved beasiswa with dokumen_pendukung: ', [
-                'id' => $model->id,
-                'dokumen_pendukung_raw' => $model->attributes['dokumen_pendukung'] ?? null,
-                'dokumen_pendukung_array' => $model->dokumen_pendukung
-            ]);
+    /**
+     * Cek apakah beasiswa masih aktif dan dapat didaftar
+     */
+    public function isActive()
+    {
+        return $this->status === 'aktif' 
+            && Carbon::parse($this->tanggal_buka)->isPast() 
+            && Carbon::parse($this->tanggal_tutup)->isFuture();
+    }
+
+    /**
+     * Cek apakah beasiswa akan segera dibuka
+     */
+    public function isUpcoming()
+    {
+        return $this->status === 'aktif' 
+            && Carbon::parse($this->tanggal_buka)->isFuture();
+    }
+
+    /**
+     * Cek apakah beasiswa sudah expired
+     */
+    public function isExpired()
+    {
+        return Carbon::parse($this->tanggal_tutup)->isPast();
+    }
+
+    /**
+     * Get status badge class untuk UI
+     */
+    public function getStatusBadgeClassAttribute()
+    {
+        if ($this->isExpired()) {
+            return 'badge-secondary';
+        }
+        
+        switch ($this->status) {
+            case 'aktif':
+                return $this->isActive() ? 'badge-success' : 'badge-warning';
+            case 'nonaktif':
+                return 'badge-danger';
+            default:
+                return 'badge-secondary';
+        }
+    }
+
+    /**
+     * Get status text untuk UI
+     */
+    public function getStatusTextAttribute()
+    {
+        if ($this->isExpired()) {
+            return 'Expired';
+        }
+        
+        if ($this->status === 'aktif') {
+            if ($this->isUpcoming()) {
+                return 'Akan Dibuka';
+            }
+            return $this->isActive() ? 'Aktif' : 'Tidak Aktif';
+        }
+        
+        return ucfirst($this->status);
+    }
+
+    /**
+     * Get formatted jumlah dana
+     */
+    public function getFormattedJumlahDanaAttribute()
+    {
+        return 'Rp ' . number_format($this->jumlah_dana, 0, ',', '.');
+    }
+
+    /**
+     * Get dokumen pendukung dengan label
+     */
+    public function getDokumenPendukungLabelAttribute()
+    {
+        if (!$this->dokumen_pendukung) {
+            return [];
+        }
+
+        $labels = [
+            'ktp' => 'KTP',
+            'kk' => 'Kartu Keluarga',
+            'ijazah' => 'Ijazah Terakhir',
+            'transkrip' => 'Transkrip Nilai',
+            'surat_keterangan_tidak_mampu' => 'Surat Keterangan Tidak Mampu',
+            'slip_gaji_ortu' => 'Slip Gaji Orang Tua',
+            'surat_rekomendasi' => 'Surat Rekomendasi',
+            'sertifikat_prestasi' => 'Sertifikat Prestasi'
+        ];
+
+        $result = [];
+        foreach ($this->dokumen_pendukung as $dokumen) {
+            if (isset($labels[$dokumen])) {
+                $result[] = $labels[$dokumen];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get sisa hari pendaftaran
+     */
+    public function getSisaHariAttribute()
+    {
+        if ($this->isExpired()) {
+            return 0;
+        }
+
+        if ($this->isUpcoming()) {
+            return Carbon::parse($this->tanggal_buka)->diffInDays(now());
+        }
+
+        return Carbon::parse($this->tanggal_tutup)->diffInDays(now());
+    }
+
+    /**
+     * Get total pendaftar
+     */
+    public function getTotalPendaftarAttribute()
+    {
+        return $this->pendaftar()->count();
+    }
+
+    /**
+     * Get pendaftar diterima
+     */
+    public function getPendaftarDiterimaAttribute()
+    {
+        return $this->pendaftar()->where('status', 'diterima')->count();
+    }
+
+    /**
+     * Get pendaftar ditolak
+     */
+    public function getPendaftarDitolakAttribute()
+    {
+        return $this->pendaftar()->where('status', 'ditolak')->count();
+    }
+
+    /**
+     * Get pendaftar pending
+     */
+    public function getPendaftarPendingAttribute()
+    {
+        return $this->pendaftar()->where('status', 'pending')->count();
+    }
+
+    /**
+     * Get persentase keberhasilan
+     */
+    public function getPersentaseKeberhasilanAttribute()
+    {
+        $total = $this->total_pendaftar;
+        if ($total == 0) {
+            return 0;
+        }
+
+        $diterima = $this->pendaftar_diterima;
+        return round(($diterima / $total) * 100, 1);
+    }
+
+    /**
+     * Search scope
+     */
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where(function($q) use ($keyword) {
+            $q->where('nama_beasiswa', 'like', "%{$keyword}%")
+              ->orWhere('deskripsi', 'like', "%{$keyword}%")
+              ->orWhere('persyaratan', 'like', "%{$keyword}%");
         });
-    }}
+    }
+
+    /**
+     * Filter by status scope
+     */
+    public function scopeByStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    /**
+     * Filter by date range scope
+     */
+    public function scopeByDateRange($query, $startDate, $endDate)
+    {
+        return $query->whereBetween('created_at', [$startDate, $endDate]);
+    }
+
+    /**
+     * Order by latest
+     */
+    public function scopeLatest($query)
+    {
+        return $query->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Order by nama
+     */
+    public function scopeOrderByNama($query, $direction = 'asc')
+    {
+        return $query->orderBy('nama_beasiswa', $direction);
+    }
+
+    /**
+     * Order by jumlah dana
+     */
+    public function scopeOrderByDana($query, $direction = 'desc')
+    {
+        return $query->orderBy('jumlah_dana', $direction);
+    }
+
+    /**
+     * Validasi sebelum delete
+     */
+    public function canBeDeleted()
+    {
+        // Tidak bisa dihapus jika ada pendaftar dengan status diterima
+        return !$this->pendaftar()->where('status', 'diterima')->exists();
+    }
+
+    /**
+     * Get warning message for deletion
+     */
+    public function getDeletionWarning()
+    {
+        $pendaftarCount = $this->pendaftar()->count();
+        $diterimaCount = $this->pendaftar()->where('status', 'diterima')->count();
+
+        if ($diterimaCount > 0) {
+            return "Beasiswa ini memiliki {$diterimaCount} pendaftar yang sudah diterima dan tidak dapat dihapus.";
+        }
+
+        if ($pendaftarCount > 0) {
+            return "Menghapus beasiswa ini akan menghapus {$pendaftarCount} data pendaftar. Apakah Anda yakin?";
+        }
+
+        return null;
+    }
+
+    /**
+     * Format tanggal untuk display
+     */
+    public function getFormattedTanggalBukaAttribute()
+    {
+        return Carbon::parse($this->tanggal_buka)->format('d M Y');
+    }
+
+    /**
+     * Format tanggal tutup untuk display
+     */
+    public function getFormattedTanggalTutupAttribute()
+    {
+        return Carbon::parse($this->tanggal_tutup)->format('d M Y');
+    }
+
+    /**
+     * Get periode pendaftaran
+     */
+    public function getPeriodePendaftaranAttribute()
+    {
+        return $this->formatted_tanggal_buka . ' - ' . $this->formatted_tanggal_tutup;
+    }
+
+    /**
+     * Auto-generate slug dari nama beasiswa
+     */
+    public function getSlugAttribute()
+    {
+        return \Str::slug($this->nama_beasiswa);
+    }
+
+    /**
+     * Cek apakah beasiswa baru (dibuat dalam 7 hari terakhir)
+     */
+    public function isNew()
+    {
+        return $this->created_at->diffInDays(now()) <= 7;
+    }
+
+    /**
+     * Cek apakah beasiswa populer (memiliki banyak pendaftar)
+     */
+    public function isPopular()
+    {
+        return $this->total_pendaftar >= 10; // Threshold bisa disesuaikan
+    }
+
+    /**
+     * Get dokumen wajib yang belum diupload oleh pendaftar
+     */
+    public function getMissingDocuments($pendaftar)
+    {
+        $requiredDocs = $this->dokumen_pendukung ?? [];
+        $uploadedDocs = [];
+
+        // Check which documents are uploaded
+        foreach (['ktp', 'kk', 'transkrip'] as $doc) {
+            $fieldName = 'file_' . $doc;
+            if ($pendaftar->$fieldName) {
+                $uploadedDocs[] = $doc;
+            }
+        }
+
+        return array_diff($requiredDocs, $uploadedDocs);
+    }
+}
