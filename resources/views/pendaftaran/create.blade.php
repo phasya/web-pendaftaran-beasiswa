@@ -229,6 +229,9 @@
                                     </div>
                                 </div>
 
+
+                                <br><br>
+
                                 <!-- Terms and Submit -->
                                 <div class="form-group-section">
                                     <div class="terms-section mb-4">

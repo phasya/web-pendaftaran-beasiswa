@@ -50,7 +50,11 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <h6 class="card-title mb-1">Total Pendaftar</h6>
-                        <h4 class="mb-0">{{ $beasiswas->sum(function($b) { return $b->pendaftars->count(); }) }}</h4>
+                        {{-- jumlah beasiswa aktif --}}
+                        <h4 class="mb-0">{{ $aktifCount }}</h4>
+
+                        {{-- total pendaftar --}}
+                        <h4 class="mb-0">{{ $totalPendaftar }}</h4>
                     </div>
                     <div class="align-self-center">
                         <i class="fas fa-users fa-2x opacity-75"></i>
@@ -181,7 +185,7 @@
                             </td>
                             <td class="text-center">
                                 @if($beasiswa->status == 'aktif')
-                                    @if($beasiswa->isActive())
+                                    @if($beasiswa->status == 'aktif' && \Carbon\Carbon::now()->between($beasiswa->tanggal_buka, $beasiswa->tanggal_tutup))
                                         <span class="badge bg-success-soft text-success px-3 py-2">
                                             <i class="fas fa-check-circle me-1"></i>Aktif
                                         </span>
@@ -199,9 +203,10 @@
                             <td class="text-center">
                                 <div class="pendaftar-stats">
                                     <span class="badge bg-info-soft text-info fs-6 px-3 py-2">
-                                        <i class="fas fa-users me-1"></i>{{ $beasiswa->pendaftars->count() }}
+                                        <i class="fas fa-users me-1"></i>{{ $beasiswa->pendaftars?->count() ?? 0 }}
                                     </span>
-                                    @if($beasiswa->pendaftars->count() > 0)
+                                    @if($beasiswa->pendaftars?->count() > 0)
+                                        {{ $beasiswa->pendaftars->count() }}
                                         <br><small class="text-muted mt-1">
                                             <a href="{{ route('admin.pendaftar.index', ['beasiswa' => $beasiswa->id]) }}" class="text-decoration-none">
                                                 Lihat Detail

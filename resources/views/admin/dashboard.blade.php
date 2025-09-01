@@ -322,25 +322,28 @@
         }
 
         /* Stats Cards - darker yellow tones */
-        .card.bg-primary {
-            background: var(--gradient-yellow) !important;
-            color: #fff;
-        }
+        .card.bg-primary, .card.bg-success, .card.bg-info, .card.bg-warning {
+    background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary) 100%);
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
 
-        .card.bg-success {
-            background: linear-gradient(135deg, #FFD54F, #FFA000) !important;
-            color: #fff;
-        }
+.card.bg-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+}
 
-        .card.bg-info {
-            background: linear-gradient(135deg, #FFE082, #FFB300) !important;
-            color: #4e342e;
-        }
+.card.bg-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%) !important;
+}
 
-        .card.bg-warning {
-            background: var(--gradient-yellow) !important;
-            color: #fff;
-        }
+.card.bg-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%) !important;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
 
         /* Softer backgrounds for status cards */
         .bg-success-soft {
@@ -354,7 +357,7 @@
         }
 
         .bg-danger-soft {
-            background: linear-gradient(45deg, #FDECEA, #F8BBD0) !important;
+            background: linear-gradient(45deg, #ffa2a2, #ff3449) !important;
             color: #721c24 !important;
         }
 

@@ -9,6 +9,8 @@ class Pendaftar extends Model
 {
     use HasFactory;
 
+    protected $table = 'pendaftar'; // pastikan sama dengan nama tabel di DB
+
     protected $fillable = [
         'beasiswa_id',
         'nama_lengkap',
@@ -22,6 +24,7 @@ class Pendaftar extends Model
         'status'
     ];
 
+    // Relasi ke Beasiswa
     public function beasiswa()
     {
         return $this->belongsTo(Beasiswa::class);
