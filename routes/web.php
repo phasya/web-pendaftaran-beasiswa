@@ -7,6 +7,7 @@ use App\Http\Controllers\PendaftarController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\BeasiswaController as AdminBeasiswaController;
 use App\Http\Controllers\Admin\PendaftarController as AdminPendaftarController;
+use App\Http\Controllers\BeasiswaController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/persyaratan', [HomeController::class, 'persyaratan'])->name('persyaratan');
@@ -33,4 +34,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('beasiswa', AdminBeasiswaController::class);
     Route::resource('pendaftar', AdminPendaftarController::class)->except(['create', 'store', 'edit', 'update']);
     Route::patch('/pendaftar/{pendaftar}/status', [AdminPendaftarController::class, 'updateStatus'])->name('pendaftar.update-status');
+});
+
+
+Route::prefix('admin')->group(function () {
+    Route::resource('beasiswas', BeasiswaController::class);
 });
