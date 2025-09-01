@@ -3,339 +3,150 @@
 @section('title', 'Tambah Beasiswa')
 
 @section('content')
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <div>
-                <h1 class="h2"><i class="fas fa-plus"></i> Tambah Beasiswa</h1>
-                <p class="text-muted mb-0">
-                    <i class="fas fa-info-circle me-2"></i>Lengkapi form di bawah untuk menambahkan program beasiswa baru
-                </p>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-white py-3">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h6 class="card-title mb-0">
-                                    <i class="fas fa-graduation-cap text-primary me-2"></i>Form Tambah Beasiswa
-                                </h6>
-                            </div>
-                            <div class="col-auto">
-                                <span class="badge bg-info-soft text-info">
-                                    <i class="fas fa-asterisk me-1" style="font-size: 8px;"></i>Required Fields
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-4">
-                        <form action="{{ route('admin.beasiswa.store') }}" method="POST" id="beasiswaForm">
-                            @csrf
-
-                            <!-- Form Section 1: Basic Information -->
-                            <div class="form-section mb-4">
-                                <h6 class="section-title mb-3">
-                                    <i class="fas fa-info-circle text-primary me-2"></i>Informasi Dasar
-                                </h6>
-
-                                <div class="mb-3">
-                                    <label for="nama_beasiswa" class="form-label fw-semibold">
-                                        <i class="fas fa-trophy text-warning me-2"></i>Nama Beasiswa
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0">
-                                            <i class="fas fa-graduation-cap text-muted"></i>
-                                        </span>
-                                        <input type="text" 
-                                               class="form-control border-start-0 @error('nama_beasiswa') is-invalid @enderror" 
-                                               id="nama_beasiswa" 
-                                               name="nama_beasiswa" 
-                                               value="{{ old('nama_beasiswa') }}" 
-                                               placeholder="Contoh: Beasiswa Prestasi Akademik 2025"
-                                               required>
-                                        @error('nama_beasiswa')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="deskripsi" class="form-label fw-semibold">
-                                        <i class="fas fa-align-left text-info me-2"></i>Deskripsi Beasiswa
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
-                                              id="deskripsi" 
-                                              name="deskripsi" 
-                                              rows="4"
-                                              placeholder="Jelaskan tujuan, target penerima, dan manfaat beasiswa ini..."
-                                              required>{{ old('deskripsi') }}</textarea>
-                                    @error('deskripsi')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <small class="form-text text-muted">
-                                        <i class="fas fa-lightbulb me-1"></i>Berikan deskripsi yang jelas dan menarik untuk calon pendaftar
-                                    </small>
-                                </div>
-                            </div>
-
-                            <!-- Form Section 2: Financial & Schedule -->
-                            <div class="form-section mb-4">
-                                <h6 class="section-title mb-3">
-                                    <i class="fas fa-calendar-dollar text-success me-2"></i>Dana & Jadwal
-                                </h6>
-
-                                <div class="mb-3">
-                                    <label for="jumlah_dana" class="form-label fw-semibold">
-                                        <i class="fas fa-money-bill-wave text-success me-2"></i>Jumlah Dana
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0">Rp</span>
-                                        <input type="number" 
-                                               class="form-control border-start-0 @error('jumlah_dana') is-invalid @enderror" 
-                                               id="jumlah_dana" 
-                                               name="jumlah_dana" 
-                                               value="{{ old('jumlah_dana') }}" 
-                                               min="0"
-                                               step="100000"
-                                               placeholder="5000000"
-                                               required>
-                                        @error('jumlah_dana')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <small class="form-text text-muted">
-                                        <i class="fas fa-info-circle me-1"></i>Masukkan jumlah dana dalam Rupiah (contoh: 5000000 untuk 5 juta)
-                                    </small>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="tanggal_buka" class="form-label fw-semibold">
-                                            <i class="fas fa-calendar-plus text-success me-2"></i>Tanggal Buka
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-light border-end-0">
-                                                <i class="fas fa-calendar text-muted"></i>
-                                            </span>
-                                            <input type="date" 
-                                                   class="form-control border-start-0 @error('tanggal_buka') is-invalid @enderror" 
-                                                   id="tanggal_buka" 
-                                                   name="tanggal_buka" 
-                                                   value="{{ old('tanggal_buka') }}" 
-                                                   required>
-                                            @error('tanggal_buka')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="tanggal_tutup" class="form-label fw-semibold">
-                                            <i class="fas fa-calendar-times text-danger me-2"></i>Tanggal Tutup
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-light border-end-0">
-                                                <i class="fas fa-calendar text-muted"></i>
-                                            </span>
-                                            <input type="date" 
-                                                   class="form-control border-start-0 @error('tanggal_tutup') is-invalid @enderror" 
-                                                   id="tanggal_tutup" 
-                                                   name="tanggal_tutup" 
-                                                   value="{{ old('tanggal_tutup') }}" 
-                                                   required>
-                                            @error('tanggal_tutup')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="dateRangeInfo" class="alert alert-info-soft d-none">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    <span id="dateRangeText"></span>
-                                </div>
-                            </div>
-
-                            <!-- Form Section 3: Status & Requirements -->
-                            <div class="form-section mb-4">
-                                <h6 class="section-title mb-3">
-                                    <i class="fas fa-cogs text-warning me-2"></i>Status & Persyaratan
-                                </h6>
-
-                                <div class="mb-3">
-                                    <label for="status" class="form-label fw-semibold">
-                                        <i class="fas fa-toggle-on text-primary me-2"></i>Status Beasiswa
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <select class="form-select @error('status') is-invalid @enderror" 
-                                            id="status" 
-                                            name="status" 
-                                            required>
-                                        <option value="">-- Pilih Status --</option>
-                                        <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>
-                                            <i class="fas fa-check-circle"></i> Aktif (Bisa dilamar)
-                                        </option>
-                                        <option value="nonaktif" {{ old('status') == 'nonaktif' ? 'selected' : '' }}>
-                                            <i class="fas fa-times-circle"></i> Nonaktif (Tidak bisa dilamar)
-                                        </option>
-                                    </select>
-                                    @error('status')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-
-        <!-- dokumen pendukung -->
-
-    <div class="dropdown-document mt-3">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownDocument"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-file-alt me-2"></i>Dokumen Pendukung
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownDocument">
-            <li>
-                <label class="dropdown-item-checkbox">
-                    <input type="checkbox" id="surat-aktif" name="dokumen" value="surat-aktif">
-                    Surat Keterangan Aktif Kuliah
-                </label>
-            </li>
-            <li>
-                <label class="dropdown-item-checkbox">
-                    <input type="checkbox" id="transkrip" name="dokumen" value="transkrip">
-                    Transkrip Nilai
-                </label>
-            </li>
-            <li>
-                <label class="dropdown-item-checkbox">
-                    <input type="checkbox" id="rekomendasi" name="dokumen" value="rekomendasi">
-                    Surat Rekomendasi
-                </label>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Display selected documents -->
-    <div class="mt-3">
-        <h6>Dokumen yang dipilih:</h6>
-        <div id="selectedDocuments" class="text-muted">
-            <em>Belum ada dokumen yang dipilih</em>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div>
+            <h1 class="h2"><i class="fas fa-plus"></i> Tambah Beasiswa</h1>
+            <p class="text-muted mb-0">
+                <i class="fas fa-info-circle me-2"></i>Lengkapi form di bawah untuk menambahkan program beasiswa baru
+            </p>
         </div>
     </div>
-    </div>
 
-        <div class="mb-3">
-            <label for="persyaratan" class="form-label fw-semibold">
-                <i class="fas fa-list-check text-info me-2"></i>Persyaratan Pendaftaran
-                <span class="text-danger">*</span>
-            </label>
-            <textarea class="form-control @error('persyaratan') is-invalid @enderror" id="persyaratan" name="persyaratan"
-                rows="8"
-                placeholder="Contoh:&#10;1. Mahasiswa aktif semester 3 ke atas&#10;2. IPK minimal 3.0&#10;3. Tidak sedang menerima beasiswa lain&#10;4. Melampirkan transkrip nilai terbaru&#10;5. Surat rekomendasi dari dosen"
-                required>{{ old('persyaratan') }}</textarea>
-            @error('persyaratan')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-            <small class="form-text text-muted">
-                <i class="fas fa-lightbulb me-1"></i>Tuliskan persyaratan dengan jelas, gunakan numbering untuk kemudahan
-                membaca
-            </small>
-        </div>
-        </div>
-
-                            <!-- Action Buttons -->
-                            <div class="form-actions bg-light p-3 rounded-3 mt-4">
-                                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                                    <div class="d-flex align-items-center text-muted">
-                                        <i class="fas fa-info-circle me-2"></i>
-                                        <small>Pastikan semua data sudah benar sebelum menyimpan</small>
-                                    </div>
-                                    <div class="d-flex gap-2">
-                                        <a href="{{ route('admin.beasiswa.index') }}" 
-                                           class="btn btn-outline-secondary">
-                                            <i class="fas fa-arrow-left me-2"></i>Kembali
-                                        </a>
-                                        <button type="reset" class="btn btn-outline-warning">
-                                            <i class="fas fa-undo me-2"></i>Reset
-                                        </button>
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-save me-2"></i>Simpan Beasiswa
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-graduation-cap text-primary me-2"></i>Form Tambah Beasiswa
+                    </h6>
                 </div>
+                <div class="card-body p-4">
+                    
+                    {{-- Error Message --}}
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-                <!-- Tips Card -->
-                <div class="card shadow-sm mt-4">
-                    <div class="card-header bg-white py-3">
-                        <h6 class="card-title mb-0">
-                            <i class="fas fa-lightbulb text-warning me-2"></i>Tips Membuat Beasiswa
-                        </h6>
-                    </div>
-                    <div class="card-body">
+                    <form action="{{ route('admin.beasiswa.store') }}" method="POST" id="beasiswaForm">
+                        @csrf
+
+                        {{-- Nama Beasiswa --}}
+                        <div class="mb-3">
+                            <label for="nama_beasiswa" class="form-label fw-semibold">Nama Beasiswa <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('nama_beasiswa') is-invalid @enderror"
+                                id="nama_beasiswa" name="nama_beasiswa" value="{{ old('nama_beasiswa') }}" required>
+                            @error('nama_beasiswa')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- Deskripsi --}}
+                        <div class="mb-3">
+                            <label for="deskripsi" class="form-label fw-semibold">Deskripsi Beasiswa <span class="text-danger">*</span></label>
+                            <textarea class="form-control @error('deskripsi') is-invalid @enderror"
+                                id="deskripsi" name="deskripsi" rows="4" required>{{ old('deskripsi') }}</textarea>
+                            @error('deskripsi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- Jumlah Dana --}}
+                        <div class="mb-3">
+                            <label for="jumlah_dana" class="form-label fw-semibold">Jumlah Dana <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control @error('jumlah_dana') is-invalid @enderror"
+                                id="jumlah_dana" name="jumlah_dana" value="{{ old('jumlah_dana') }}" min="0" required>
+                            @error('jumlah_dana')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- Tanggal Buka & Tutup --}}
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="tip-item mb-3">
-                                    <div class="d-flex">
-                                        <div class="tip-icon me-3">
-                                            <i class="fas fa-check-circle text-success"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1">Nama yang Jelas</h6>
-                                            <small class="text-muted">Gunakan nama yang mudah dipahami dan mencerminkan jenis beasiswa</small>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="tip-item mb-3">
-                                    <div class="d-flex">
-                                        <div class="tip-icon me-3">
-                                            <i class="fas fa-calendar-alt text-info"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1">Periode yang Wajar</h6>
-                                            <small class="text-muted">Berikan waktu yang cukup untuk pendaftaran, minimal 2 minggu</small>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="tanggal_buka" class="form-label fw-semibold">Tanggal Buka <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('tanggal_buka') is-invalid @enderror"
+                                    id="tanggal_buka" name="tanggal_buka" value="{{ old('tanggal_buka') }}" required>
+                                @error('tanggal_buka')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-
-                            <div class="col-md-6">
-                                <div class="tip-item mb-3">
-                                    <div class="d-flex">
-                                        <div class="tip-icon me-3">
-                                            <i class="fas fa-list-ul text-warning"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1">Persyaratan Spesifik</h6>
-                                            <small class="text-muted">Tuliskan persyaratan yang detail dan dapat diverifikasi</small>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="tip-item">
-                                    <div class="d-flex">
-                                        <div class="tip-icon me-3">
-                                            <i class="fas fa-money-bill-wave text-success"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1">Dana yang Realistis</h6>
-                                            <small class="text-muted">Sesuaikan jumlah dana dengan kemampuan dan target penerima</small>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="tanggal_tutup" class="form-label fw-semibold">Tanggal Tutup <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('tanggal_tutup') is-invalid @enderror"
+                                    id="tanggal_tutup" name="tanggal_tutup" value="{{ old('tanggal_tutup') }}" required>
+                                @error('tanggal_tutup')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
-                    </div>
+
+                        {{-- Status --}}
+                        <div class="mb-3">
+                            <label for="status" class="form-label fw-semibold">Status Beasiswa <span class="text-danger">*</span></label>
+                            <select class="form-select @error('status') is-invalid @enderror" name="status" id="status" required>
+                                <option value="">-- Pilih Status --</option>
+                                <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                <option value="nonaktif" {{ old('status') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                            </select>
+                            @error('status')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- Dokumen Pendukung --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Dokumen Pendukung</label>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    Pilih Dokumen
+                                </button>
+                                <ul class="dropdown-menu p-2" style="min-width: 250px;">
+                                    @foreach ($dokumenOptions as $key => $label)
+                                        <li>
+                                            <label class="dropdown-item d-flex align-items-center">
+                                                <input type="checkbox" name="dokumen[]" value="{{ $key }}" class="me-2"
+                                                    {{ is_array(old('dokumen')) && in_array($key, old('dokumen')) ? 'checked' : '' }}>
+                                                {{ $label }}
+                                            </label>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+
+                        {{-- Persyaratan --}}
+                        <div class="mb-3">
+                            <label for="persyaratan" class="form-label fw-semibold">Persyaratan <span class="text-danger">*</span></label>
+                            <textarea class="form-control @error('persyaratan') is-invalid @enderror"
+                                id="persyaratan" name="persyaratan" rows="6" required>{{ old('persyaratan') }}</textarea>
+                            @error('persyaratan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- Tombol --}}
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('admin.beasiswa.index') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Kembali
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Simpan
+                            </button>
+                        </div>
+
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
+
+
 
         <!-- Custom CSS -->
         <style>
@@ -635,5 +446,27 @@
                 });
             }
         });
+
+        function updateSelectedDocuments() {
+    const checkboxes = document.querySelectorAll('input[name="dokumen[]"]:checked');
+    const selectedDiv = document.getElementById('selectedDocuments');
+
+    if (checkboxes.length === 0) {
+        selectedDiv.innerHTML = '<em>Belum ada dokumen yang dipilih</em>';
+    } else {
+        const selectedItems = Array.from(checkboxes).map(checkbox => {
+            return checkbox.parentElement.textContent.trim();
+        });
+        selectedDiv.innerHTML = selectedItems.map(item =>
+            `<span class="badge bg-primary me-1">${item}</span>`
+        ).join('');
+    }
+}
+
+// Event listeners
+document.querySelectorAll('input[name="dokumen[]"]').forEach(checkbox => {
+    checkbox.addEventListener('change', updateSelectedDocuments);
+});
+
         </script>
 @endsection

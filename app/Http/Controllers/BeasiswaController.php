@@ -13,29 +13,36 @@ class BeasiswaController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-{
-    $beasiswas = Beasiswa::latest()->paginate(10);
-    $totalPendaftar = Pendaftar::count();
-    $aktifCount = Beasiswa::where('status', 'aktif')->count();
+    {
+        $beasiswas = Beasiswa::latest()->paginate(10);
+        $totalPendaftar = Pendaftar::count();
+        $aktifCount = Beasiswa::where('status', 'aktif')->count();
 
-    // DEBUG 1: cek isi variabel
-    // Ini akan berhenti di sini dan nampilin hasil
-    // dd($aktifCount);
-
-    // DEBUG 2: kirim data manual (bukan compact biar jelas)
-    return view('admin.beasiswa.index', [
-        'beasiswas' => $beasiswas,
-        'totalPendaftar' => $totalPendaftar,
-        'aktifCount' => $aktifCount
-    ]);
-}
+        return view('admin.beasiswa.index', [
+            'beasiswas' => $beasiswas,
+            'totalPendaftar' => $totalPendaftar,
+            'aktifCount' => $aktifCount
+        ]);
+    }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('admin.beasiswa.create');
+        // Definisikan opsi dokumen untuk form create
+        $dokumenOptions = [
+            'ktp' => 'KTP',
+            'kk' => 'Kartu Keluarga',
+            'ijazah' => 'Ijazah Terakhir',
+            'transkrip' => 'Transkrip Nilai',
+            'surat_keterangan_tidak_mampu' => 'Surat Keterangan Tidak Mampu',
+            'slip_gaji_ortu' => 'Slip Gaji Orang Tua',
+            'surat_rekomendasi' => 'Surat Rekomendasi',
+            'sertifikat_prestasi' => 'Sertifikat Prestasi'
+        ];
+
+        return view('admin.beasiswa.create', compact('dokumenOptions'));
     }
 
     /**
@@ -83,13 +90,33 @@ class BeasiswaController extends Controller
         return view('admin.beasiswa.show', compact('beasiswa'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Beasiswa $beasiswa)
-    {
-        return view('admin.beasiswa.edit', compact('beasiswa'));
-    }
+   /**
+ * Show the form for editing the specified resource.
+ */
+public function edit(Beasiswa $beasiswa)
+{
+    // Definisikan opsi dokumen untuk form edit
+    $dokumenOptions = [
+        'ktp' => 'KTP',
+        'kk' => 'Kartu Keluarga',
+        'ijazah' => 'Ijazah Terakhir',
+        'transkrip' => 'Transkrip Nilai',
+        'surat_keterangan_tidak_mampu' => 'Surat Keterangan Tidak Mampu',
+        'slip_gaji_ortu' => 'Slip Gaji Orang Tua',
+        'surat_rekomendasi' => 'Surat Rekomendasi',
+        'sertifikat_prestasi' => 'Sertifikat Prestasi'
+    ];
+
+    // Ambil dokumen yang sudah dipilih sebelumnya
+// Perbaikan baris di method edit
+$selectedDokumen = is_array($beasiswa->dokumen_pendukung)
+    ? $beasiswa->dokumen_pendukung
+    : (json_decode($beasiswa->dokumen_pendukung, true) ?? []);
+
+
+    // Kirim semua variabel yang dibutuhkan ke view
+    return view('admin.beasiswa.edit', compact('beasiswa', 'dokumenOptions', 'selectedDokumen'));
+}
 
     /**
      * Update the specified resource in storage.
