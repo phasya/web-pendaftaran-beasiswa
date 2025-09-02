@@ -6,11 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+public function up()
 {
     Schema::table('pendaftars', function (Blueprint $table) {
-        $table->unsignedBigInteger('user_id')->after('id');
-        $table->foreign('user_id')->references('id')->on('users');
+        // Cek apakah kolom sudah ada sebelum menambahkan
+        if (!Schema::hasColumn('pendaftars', 'user_id')) {
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
+        }
     });
 }
 

@@ -71,14 +71,16 @@ class PendaftarController extends Controller
     }
 
     public function show(Pendaftar $pendaftar)
-    {
-        try {
-            $pendaftar->load('beasiswa');
-            return view('admin.pendaftaran.show', compact('pendaftar'));
-        } catch (Exception $e) {
-            return back()->with('error', 'Gagal memuat detail pendaftar: ' . $e->getMessage());
-        }
+{
+    try {
+        $pendaftar->load('beasiswa');
+        $beasiswa = $pendaftar->beasiswa; // Tambahkan ini untuk view
+        
+        return view('admin.pendaftaran.show', compact('pendaftar', 'beasiswa'));
+    } catch (Exception $e) {
+        return back()->with('error', 'Gagal memuat detail pendaftar: ' . $e->getMessage());
     }
+}
 
     public function updateStatus(Request $request, Pendaftar $pendaftar)
     {
@@ -515,4 +517,5 @@ class PendaftarController extends Controller
         
         return true;
     }
+    
 }
