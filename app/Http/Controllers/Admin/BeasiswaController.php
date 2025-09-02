@@ -76,8 +76,8 @@ class BeasiswaController extends Controller
                 'tanggal_tutup' => 'required|date|after:tanggal_buka',
                 'status' => 'required|in:aktif,nonaktif',
                 'persyaratan' => 'required|string|min:10',
-                'dokumen' => 'nullable|array|max:8',
-                'dokumen.*' => 'string|in:ktp,kk,ijazah,transkrip,surat_keterangan_tidak_mampu,slip_gaji_ortu,surat_rekomendasi,sertifikat_prestasi',
+                'dokumen_pendukung' => 'nullable|array|max:8',
+                'dokumen_pendukung.*' => 'string|in:ktp,kk,ijazah,transkrip,surat_keterangan_tidak_mampu,slip_gaji_ortu,surat_rekomendasi,sertifikat_prestasi',
             ], [
                 'nama_beasiswa.required' => 'Nama beasiswa wajib diisi',
                 'nama_beasiswa.unique' => 'Nama beasiswa sudah ada, gunakan nama lain',
@@ -105,7 +105,7 @@ class BeasiswaController extends Controller
                 'tanggal_tutup' => $validated['tanggal_tutup'],
                 'status' => $validated['status'],
                 'persyaratan' => $validated['persyaratan'],
-                'dokumen_pendukung' => json_encode($request->input('dokumen', [])),
+                'dokumen_pendukung' => json_encode($request->input('dokumen_pendukung', [])),
             ]);
 
             DB::commit();
@@ -156,19 +156,7 @@ class BeasiswaController extends Controller
             ];
 
             // Handle dokumen_pendukung dengan error handling yang baik
-            $selectedDokumen = [];
-            if ($beasiswa->dokumen_pendukung) {
-                if (is_array($beasiswa->dokumen_pendukung)) {
-                    $selectedDokumen = $beasiswa->dokumen_pendukung;
-                } else {
-                    try {
-                        $decoded = json_decode($beasiswa->dokumen_pendukung, true);
-                        $selectedDokumen = is_array($decoded) ? $decoded : [];
-                    } catch (Exception $e) {
-                        $selectedDokumen = [];
-                    }
-                }
-            }
+            $selectedDokumen = $this->parseJsonDokumen($beasiswa->dokumen_pendukung);
 
             return view('admin.beasiswa.edit', compact('beasiswa', 'dokumenOptions', 'selectedDokumen'));
         } catch (Exception $e) {
@@ -187,8 +175,8 @@ class BeasiswaController extends Controller
                 'tanggal_tutup' => 'required|date|after:tanggal_buka',
                 'status' => 'required|in:aktif,nonaktif',
                 'persyaratan' => 'required|string|min:10',
-                'dokumen' => 'nullable|array|max:8',
-                'dokumen.*' => 'string|in:ktp,kk,ijazah,transkrip,surat_keterangan_tidak_mampu,slip_gaji_ortu,surat_rekomendasi,sertifikat_prestasi',
+                'dokumen_pendukung' => 'nullable|array|max:8',
+                'dokumen_pendukung.*' => 'string|in:ktp,kk,ijazah,transkrip,surat_keterangan_tidak_mampu,slip_gaji_ortu,surat_rekomendasi,sertifikat_prestasi',
             ], [
                 'nama_beasiswa.required' => 'Nama beasiswa wajib diisi',
                 'nama_beasiswa.unique' => 'Nama beasiswa sudah ada, gunakan nama lain',
@@ -214,7 +202,7 @@ class BeasiswaController extends Controller
                 'tanggal_tutup' => $validated['tanggal_tutup'],
                 'status' => $validated['status'],
                 'persyaratan' => $validated['persyaratan'],
-                'dokumen_pendukung' => json_encode($request->input('dokumen', [])),
+                'dokumen_pendukung' => json_encode($request->input('dokumen_pendukung', [])),
             ]);
 
             DB::commit();
@@ -240,13 +228,7 @@ class BeasiswaController extends Controller
             // Hapus semua file dokumen pendaftar terlebih dahulu
             $pendaftars = $beasiswa->pendaftar;
             foreach ($pendaftars as $pendaftar) {
-                // Hapus file jika ada
-                $files = ['file_transkrip', 'file_ktp', 'file_kk'];
-                foreach ($files as $file) {
-                    if ($pendaftar->$file && \Storage::exists('public/documents/' . $pendaftar->$file)) {
-                        \Storage::delete('public/documents/' . $pendaftar->$file);
-                    }
-                }
+                $this->deleteDocumentFiles($pendaftar);
             }
 
             // Hapus pendaftar
@@ -353,6 +335,54 @@ class BeasiswaController extends Controller
             return response()->stream($callback, 200, $headers);
         } catch (Exception $e) {
             return back()->with('error', 'Gagal mengexport data: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Helper method untuk parsing JSON dokumen
+     */
+    private function parseJsonDokumen($dokumenPendukung)
+    {
+        $selectedDokumen = [];
+        
+        if (!empty($dokumenPendukung)) {
+            if (is_array($dokumenPendukung)) {
+                $selectedDokumen = $dokumenPendukung;
+            } else {
+                try {
+                    $decoded = json_decode($dokumenPendukung, true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                        $selectedDokumen = $decoded;
+                    }
+                } catch (Exception $e) {
+                    // Log error if needed
+                    \Log::warning('Error parsing dokumen_pendukung JSON: ' . $e->getMessage());
+                }
+            }
+        }
+        
+        return $selectedDokumen;
+    }
+
+    /**
+     * Helper method untuk menghapus file dokumen
+     */
+    private function deleteDocumentFiles($pendaftar)
+    {
+        $files = [
+            'file_transkrip' => $pendaftar->file_transkrip,
+            'file_ktp' => $pendaftar->file_ktp,
+            'file_kk' => $pendaftar->file_kk,
+        ];
+
+        foreach ($files as $field => $fileName) {
+            if (!empty($fileName) && \Storage::exists('public/documents/' . $fileName)) {
+                try {
+                    \Storage::delete('public/documents/' . $fileName);
+                } catch (Exception $e) {
+                    \Log::warning("Gagal menghapus file {$fileName}: " . $e->getMessage());
+                }
+            }
         }
     }
 }

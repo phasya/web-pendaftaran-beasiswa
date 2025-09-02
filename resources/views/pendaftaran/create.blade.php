@@ -180,10 +180,11 @@
                                     </div>
                                 </div>
 
+                                <!-- Document Requirements Section -->
                                 <div class="requirements-section mb-4">
                                     <label class="text-muted small fw-semibold">DOKUMEN PENDUKUNG YANG DIPERLUKAN</label>
                                     <div class="bg-light p-3 rounded-3 mt-2">
-                                        @if($beasiswa->dokumen_pendukung && count($beasiswa->dokumen_pendukung) > 0)
+                                        @if(method_exists($beasiswa, 'getDokumenPendukungLabelAttribute') && $beasiswa->dokumen_pendukung_label && count($beasiswa->dokumen_pendukung_label) > 0)
                                             <div class="row">
                                                 @foreach($beasiswa->dokumen_pendukung_label as $dokumen)
                                                     <div class="col-md-6 mb-2">
@@ -195,13 +196,59 @@
                                                 @endforeach
                                             </div>
                                         @else
-                                            <p class="text-muted mb-0 fst-italic">
-                                                <i class="fas fa-info-circle me-2"></i>
-                                                Tidak ada dokumen pendukung khusus yang diperlukan
-                                            </p>
+                                            <div class="row">
+                                                <div class="col-md-4 mb-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-id-card text-primary me-2"></i>
+                                                        <span>KTP</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-users text-primary me-2"></i>
+                                                        <span>Kartu Keluarga</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-file-alt text-primary me-2"></i>
+                                                        <span>Transkrip Nilai</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endif
                                     </div>
                                 </div>
+
+                                <!-- File Upload Section -->
+                                <div class="form-group-section mb-4">
+                                    <h6 class="form-group-title">
+                                        <i class="fas fa-upload text-success me-2"></i>Upload Dokumen
+                                    </h6>
+                                    <div class="form-group-content">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <div class="file-upload-card">
+                                                    <label for="file_ktp" class="file-label">
+                                                        <div class="file-icon">
+                                                            <i class="fas fa-id-card text-info"></i>
+                                                        </div>
+                                                        <div class="file-info">
+                                                            <h6 class="file-title">KTP *</h6>
+                                                            <small class="file-desc">PDF/JPG/PNG, Max: 5MB</small>
+                                                        </div>
+                                                    </label>
+                                                    <input type="file" 
+                                                           class="form-control file-input @error('file_ktp') is-invalid @enderror" 
+                                                           id="file_ktp" 
+                                                           name="file_ktp" 
+                                                           accept=".pdf,.jpg,.jpeg,.png" 
+                                                           required>
+                                                    @error('file_ktp')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
 
                                             <div class="col-md-4 mb-3">
                                                 <div class="file-upload-card">
@@ -225,12 +272,32 @@
                                                     @enderror
                                                 </div>
                                             </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <div class="file-upload-card">
+                                                    <label for="file_transkrip" class="file-label">
+                                                        <div class="file-icon">
+                                                            <i class="fas fa-file-alt text-warning"></i>
+                                                        </div>
+                                                        <div class="file-info">
+                                                            <h6 class="file-title">Transkrip Nilai *</h6>
+                                                            <small class="file-desc">PDF/JPG/PNG, Max: 5MB</small>
+                                                        </div>
+                                                    </label>
+                                                    <input type="file" 
+                                                           class="form-control file-input @error('file_transkrip') is-invalid @enderror" 
+                                                           id="file_transkrip" 
+                                                           name="file_transkrip" 
+                                                           accept=".pdf,.jpg,.jpeg,.png" 
+                                                           required>
+                                                    @error('file_transkrip')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
-
-                                <br><br>
 
                                 <!-- Terms and Submit -->
                                 <div class="form-group-section">
@@ -301,7 +368,7 @@
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
                                         <i class="fas fa-info text-info me-2"></i>
-                                        <small>Ukuran maksimal file adalah 2MB per dokumen</small>
+                                        <small>Ukuran maksimal file adalah 5MB per dokumen</small>
                                     </li>
                                     <li class="mb-2">
                                         <i class="fas fa-info text-info me-2"></i>
@@ -324,13 +391,9 @@
     <style>
         :root {
             --gold-primary: #FBC02D;
-            /* warm golden yellow */
             --gold-secondary: #FFA000;
-            /* amber */
             --gold-dark: #FF8F00;
-            /* darker amber */
             --gold-light: #FFF8E1;
-            /* soft cream */
         }
 
         /* Badge */
@@ -388,13 +451,30 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
+        .info-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+
         /* Form group */
         .form-group-section {
             background: var(--gold-light);
             border-radius: 12px;
             padding: 1.5rem;
             border-left: 4px solid var(--gold-primary);
-            margin-bottom: 1.5rem;
+        }
+
+        .form-group-title {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 1rem;
         }
 
         .form-group-content {
@@ -429,6 +509,11 @@
             text-align: center;
             transition: all 0.3s ease;
             cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .file-upload-card:hover {
@@ -437,16 +522,111 @@
             box-shadow: 0 4px 15px rgba(251, 192, 45, 0.1);
         }
 
+        .file-upload-card.has-file {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            cursor: pointer;
+            width: 100%;
+            margin: 0;
+        }
+
+        .file-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-info {
+            text-align: center;
+        }
+
+        .file-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.25rem;
+        }
+
+        .file-desc {
+            color: #6c757d;
+            font-size: 0.75rem;
+        }
+
         /* Buttons */
         .btn-primary {
             background: linear-gradient(45deg, var(--gold-primary), var(--gold-dark));
             border: none;
             color: white;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 10px;
         }
 
         .btn-primary:hover {
             background: linear-gradient(45deg, var(--gold-dark), #E65100);
             box-shadow: 0 6px 20px rgba(255, 160, 0, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-secondary {
+            border: 2px solid #6c757d;
+            color: #6c757d;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Form Check */
+        .form-check-input:checked {
+            background-color: var(--gold-primary);
+            border-color: var(--gold-primary);
+        }
+
+        /* Progress Bar */
+        .progress {
+            background-color: #e9ecef;
+            border-radius: 10px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(45deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Requirements Section */
+        .requirements-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+
+        .requirements-content {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            border-left: 3px solid var(--gold-primary);
+        }
+
+        /* Terms Section */
+        .terms-section {
+            background: #fff3cd;
+            border-radius: 10px;
+            padding: 1.5rem;
+            border-left: 4px solid #ffc107;
         }
 
         /* Tip Cards */
@@ -459,6 +639,64 @@
         .tip-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Loading animation */
+        .btn-submit.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .file-upload-card {
+                margin-bottom: 1rem;
+                height: auto;
+                min-height: 120px;
+            }
+
+            .card-body {
+                padding: 2rem 1rem;
+            }
+
+            .form-group-section {
+                padding: 1rem;
+            }
+
+            .form-group-content {
+                padding: 1rem;
+            }
+
+            .info-section {
+                padding: 1rem;
+            }
+
+            .d-flex.gap-2 {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* Focus states */
+        .focused .modern-input,
+        .focused .modern-textarea {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 0.25rem rgba(251, 192, 45, 0.2);
+        }
+
+        /* Animation for file upload */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .file-upload-card.has-file {
+            animation: pulse 0.3s ease-in-out;
         }
     </style>
 
@@ -478,9 +716,11 @@
                 if (this.files && this.files[0]) {
                     card.classList.add('has-file');
                     fileTitle.textContent = originalTitle + ' ✓';
+                    fileTitle.style.color = '#28a745';
                 } else {
                     card.classList.remove('has-file');
                     fileTitle.textContent = originalTitle;
+                    fileTitle.style.color = '#495057';
                 }
             });
         });
@@ -512,14 +752,10 @@
         // Phone number formatting
         const phoneInput = document.getElementById('no_hp');
         phoneInput.addEventListener('input', function() {
-            // Remove non-digits
             let value = this.value.replace(/\D/g, '');
-
-            // Limit length
             if (value.length > 13) {
                 value = value.substring(0, 13);
             }
-
             this.value = value;
         });
 
@@ -548,17 +784,6 @@
             updateCounter();
         }
 
-        // Auto-save form data (in memory only - no localStorage)
-        const formElements = form.querySelectorAll('input[type="text"], input[type="email"], textarea');
-        const formData = {};
-
-        // Save form data in memory
-        formElements.forEach(element => {
-            element.addEventListener('input', function() {
-                formData[this.name] = this.value;
-            });
-        });
-
         // Smooth scroll to error fields
         const errorFields = document.querySelectorAll('.is-invalid');
         if (errorFields.length > 0) {
@@ -568,52 +793,158 @@
             });
         }
 
-        // File size validation
+        // File size and type validation
         fileInputs.forEach(input => {
             input.addEventListener('change', function() {
                 const file = this.files[0];
                 const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
                 const card = this.closest('.file-upload-card');
+                const fileTitle = card.querySelector('.file-title');
+                const originalTitle = fileTitle.textContent.replace(' ✓', '');
 
-                if (file && file.size > maxSize) {
-                    alert('Ukuran file terlalu besar. Maksimal 2MB.');
-                    this.value = '';
-                    card.classList.remove('has-file');
-                    return;
+                if (file) {
+                    // Check file size
+                    if (file.size > maxSize) {
+                        alert('Ukuran file terlalu besar. Maksimal 5MB.');
+                        this.value = '';
+                        card.classList.remove('has-file');
+                        fileTitle.textContent = originalTitle;
+                        fileTitle.style.color = '#495057';
+                        return;
+                    }
+
+                    // Check file type
+                    if (!allowedTypes.includes(file.type)) {
+                        alert('Tipe file tidak didukung. Hanya PDF, JPG, JPEG, dan PNG yang diperbolehkan.');
+                        this.value = '';
+                        card.classList.remove('has-file');
+                        fileTitle.textContent = originalTitle;
+                        fileTitle.style.color = '#495057';
+                        return;
+                    }
                 }
             });
         });
 
         // Progress indicator
-        const sections = document.querySelectorAll('.form-group-section');
         const progressBar = document.createElement('div');
         progressBar.className = 'progress mb-4';
         progressBar.style.height = '6px';
-        progressBar.innerHTML = '<div class="progress-bar bg-success" style="width: 0%"></div>';
+        progressBar.innerHTML = '<div class="progress-bar" style="width: 0%"></div>';
 
         const formSection = document.querySelector('.form-section');
-        formSection.insertBefore(progressBar, formSection.firstChild);
+        const firstChild = formSection.querySelector('.section-title').nextElementSibling;
+        formSection.insertBefore(progressBar, firstChild);
 
         function updateProgress() {
-            const totalFields = form.querySelectorAll('input[required], textarea[required]').length;
-            const filledFields = form.querySelectorAll('input[required]:valid, textarea[required]:valid').length;
-            const progress = (filledFields / totalFields) * 100;
-
+            const requiredFields = form.querySelectorAll('input[required], textarea[required]');
+            const filledFields = Array.from(requiredFields).filter(field => {
+                if (field.type === 'file') {
+                    return field.files && field.files.length > 0;
+                }
+                return field.value.trim() !== '';
+            });
+            
+            const progress = (filledFields.length / requiredFields.length) * 100;
             progressBar.querySelector('.progress-bar').style.width = progress + '%';
         }
 
         // Update progress on input
-        formElements.forEach(element => {
+        const allInputs = form.querySelectorAll('input, textarea');
+        allInputs.forEach(element => {
             element.addEventListener('input', updateProgress);
             element.addEventListener('change', updateProgress);
         });
 
-        fileInputs.forEach(input => {
-            input.addEventListener('change', updateProgress);
-        });
-
         // Initial progress update
         updateProgress();
+
+        // NIM validation
+        const nimInput = document.getElementById('nim');
+        nimInput.addEventListener('input', function() {
+            let value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+            if (value.length > 15) {
+                value = value.substring(0, 15);
+            }
+            this.value = value;
+        });
+
+        // Email validation enhancement
+        const emailInput = document.getElementById('email');
+        emailInput.addEventListener('blur', function() {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (this.value && !emailPattern.test(this.value)) {
+                this.classList.add('is-invalid');
+                let feedback = this.parentNode.querySelector('.invalid-feedback');
+                if (!feedback || !feedback.textContent.includes('Format email')) {
+                    if (!feedback) {
+                        feedback = document.createElement('div');
+                        feedback.className = 'invalid-feedback';
+                        this.parentNode.appendChild(feedback);
+                    }
+                    feedback.textContent = 'Format email tidak valid';
+                }
+            } else if (this.value) {
+                this.classList.remove('is-invalid');
+                const feedback = this.parentNode.querySelector('.invalid-feedback');
+                if (feedback && feedback.textContent.includes('Format email')) {
+                    feedback.remove();
+                }
+            }
+        });
+
+        // Auto-resize textarea
+        if (textareaElement) {
+            textareaElement.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+            });
+        }
+
+        // Prevent form double submission
+        let isSubmitting = false;
+        form.addEventListener('submit', function(e) {
+            if (isSubmitting) {
+                e.preventDefault();
+                return false;
+            }
+            isSubmitting = true;
+        });
+
+        // Real-time validation feedback
+        const requiredInputs = document.querySelectorAll('input[required], textarea[required]');
+        requiredInputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.type === 'file') {
+                    if (!this.files || this.files.length === 0) {
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
+                    }
+                } else {
+                    if (this.value.trim() === '') {
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
+                    }
+                }
+            });
+
+            input.addEventListener('input', function() {
+                if (this.classList.contains('is-invalid')) {
+                    if (this.type === 'file') {
+                        if (this.files && this.files.length > 0) {
+                            this.classList.remove('is-invalid');
+                        }
+                    } else {
+                        if (this.value.trim() !== '') {
+                            this.classList.remove('is-invalid');
+                        }
+                    }
+                }
+            });
+        });
     });
     </script>
 @endsection

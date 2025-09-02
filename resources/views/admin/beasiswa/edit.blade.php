@@ -190,18 +190,32 @@
                             @enderror
                         </div>
 
-                         <div class="mb-3">
-                <label class="form-label">Dokumen Pendukung</label><br>
-                @foreach($dokumenOptions as $value => $label)
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="dokumen_pendukung[]" value="{{ $value }}"
-                            id="dokumen_{{ $value }}" {{ in_array($value, $selectedDokumen) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="dokumen_{{ $value }}">
-                            {{ $label }}
-                        </label>
-                    </div>
-                @endforeach
-            </div>
+                        <!-- Dokumen Pendukung Section -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-file-alt text-info me-2"></i>Dokumen Pendukung
+                            </label>
+                            <div class="row">
+                                @foreach($dokumenOptions as $value => $label)
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                   type="checkbox" 
+                                                   name="dokumen_pendukung[]" 
+                                                   value="{{ $value }}"
+                                                   id="dokumen_{{ $value }}" 
+                                                   {{ in_array($value, $selectedDokumen) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="dokumen_{{ $value }}">
+                                                <i class="fas fa-file-alt me-1 text-muted"></i>{{ $label }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle me-1"></i>Pilih dokumen yang wajib dilampirkan oleh pendaftar
+                            </small>
+                        </div>
 
                         <div class="mb-3">
                             <label for="persyaratan" class="form-label fw-semibold">
@@ -447,6 +461,28 @@
     color: #495057;
 }
 
+/* Form check styling */
+.form-check {
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.form-check:hover {
+    background-color: #f8f9fa;
+}
+
+.form-check-input:checked {
+    background-color: var(--mint-primary, #00c9a7);
+    border-color: var(--mint-primary, #00c9a7);
+}
+
+.form-check-label {
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .form-section {
@@ -464,138 +500,3 @@
     .d-flex.gap-2 {
         flex-direction: column;
         width: 100%;
-    }
-    
-    .btn {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-/* Custom mint-blue variables */
-:root {
-    --mint-primary: #00c9a7;
-    --mint-secondary: #00bcd4;
-    --mint-dark: #00a693;
-    --mint-light: #4dd0e1;
-    --mint-blue: #0891b2;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const tanggalBuka = document.getElementById('tanggal_buka');
-    const tanggalTutup = document.getElementById('tanggal_tutup');
-    const dateRangeInfo = document.getElementById('dateRangeInfo');
-    const dateRangeText = document.getElementById('dateRangeText');
-    const jumlahDanaInput = document.getElementById('jumlah_dana');
-    
-    // Date range calculator
-    function calculateDateRange() {
-        if (tanggalBuka.value && tanggalTutup.value) {
-            const startDate = new Date(tanggalBuka.value);
-            const endDate = new Date(tanggalTutup.value);
-            const timeDiff = endDate - startDate;
-            const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-            
-            if (daysDiff > 0) {
-                dateRangeInfo.classList.remove('d-none');
-                dateRangeText.textContent = `Periode pendaftaran: ${daysDiff} hari (${startDate.toLocaleDateString('id-ID')} - ${endDate.toLocaleDateString('id-ID')})`;
-                
-                if (daysDiff < 7) {
-                    dateRangeInfo.className = 'alert alert-warning';
-                    dateRangeText.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>' + dateRangeText.textContent + ' - Periode terlalu singkat!';
-                } else {
-                    dateRangeInfo.className = 'alert alert-info-soft';
-                    dateRangeText.innerHTML = '<i class="fas fa-info-circle me-2"></i>' + dateRangeText.textContent;
-                }
-            } else {
-                dateRangeInfo.className = 'alert alert-danger';
-                dateRangeInfo.classList.remove('d-none');
-                dateRangeText.innerHTML = '<i class="fas fa-times-circle me-2"></i>Tanggal tutup harus setelah tanggal buka!';
-            }
-        } else {
-            dateRangeInfo.classList.add('d-none');
-        }
-    }
-    
-    // Initial calculation on page load
-    calculateDateRange();
-    
-    // Event listeners
-    tanggalBuka.addEventListener('change', calculateDateRange);
-    tanggalTutup.addEventListener('change', calculateDateRange);
-    
-    // Form validation
-    document.getElementById('beasiswaForm').addEventListener('submit', function(e) {
-        const startDate = new Date(tanggalBuka.value);
-        const endDate = new Date(tanggalTutup.value);
-        
-        if (endDate <= startDate) {
-            e.preventDefault();
-            alert('Tanggal tutup harus setelah tanggal buka!');
-            return false;
-        }
-        
-        // Show loading state
-        const submitBtn = this.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
-        submitBtn.disabled = true;
-        
-        // Re-enable after 3 seconds (in case of validation errors)
-        setTimeout(() => {
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-        }, 3000);
-    });
-    
-    // Auto-resize textarea
-    document.querySelectorAll('textarea').forEach(textarea => {
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
-        
-        // Initial resize for existing content
-        textarea.style.height = 'auto';
-        textarea.style.height = (textarea.scrollHeight) + 'px';
-    });
-    
-    // Show changes indicator
-    const originalValues = {};
-    document.querySelectorAll('input, select, textarea').forEach(field => {
-        originalValues[field.name] = field.value;
-        
-        field.addEventListener('change', function() {
-            if (this.value !== originalValues[this.name]) {
-                this.classList.add('changed');
-            } else {
-                this.classList.remove('changed');
-            }
-        });
-    });
-    
-    // Tooltip initialization
-    if (typeof bootstrap !== 'undefined') {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-    }
-});
-</script>
-
-<style>
-/* Additional style for changed fields indicator */
-.form-control.changed,
-.form-select.changed {
-    border-left: 4px solid #ffc107 !important;
-    background-color: #fff3cd;
-}
-
-.changed + .input-group-text {
-    background-color: #fff3cd;
-}
-</style>
-@endsection

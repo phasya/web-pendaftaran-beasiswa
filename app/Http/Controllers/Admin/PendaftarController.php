@@ -8,10 +8,13 @@ use App\Models\Pendaftar;
 use App\Models\Beasiswa;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Exception;
 
 class PendaftarController extends Controller
 {
+    private $documentPath = 'public/documents/';
+
     public function index(Request $request)
     {
         try {
@@ -91,13 +94,29 @@ class PendaftarController extends Controller
 
             DB::beginTransaction();
 
+            // Get current user ID if auth is available
+            $userId = null;
+            $userName = 'Admin';
+            
+            if (auth()->check()) {
+                $userId = auth()->id();
+                $userName = auth()->user()->name;
+            }
+
             // Update status dan keterangan
-            $pendaftar->update([
+            $updateData = [
                 'status' => $validated['status'],
                 'keterangan' => $validated['keterangan'] ?? null,
                 'tanggal_verifikasi' => now(),
-                'verified_by' => auth()->user()->name ?? 'Admin', // Jika ada auth
-            ]);
+                'verified_by' => $userName,
+            ];
+
+            // Add verified_by_id if user is authenticated
+            if ($userId) {
+                $updateData['verified_by_id'] = $userId;
+            }
+
+            $pendaftar->update($updateData);
 
             DB::commit();
 
@@ -124,22 +143,7 @@ class PendaftarController extends Controller
             $namaPendaftar = $pendaftar->nama_lengkap;
 
             // Hapus file dokumen
-            $files = [
-                'file_transkrip' => $pendaftar->file_transkrip,
-                'file_ktp' => $pendaftar->file_ktp,
-                'file_kk' => $pendaftar->file_kk,
-            ];
-
-            foreach ($files as $field => $fileName) {
-                if ($fileName && Storage::exists('public/documents/' . $fileName)) {
-                    try {
-                        Storage::delete('public/documents/' . $fileName);
-                    } catch (Exception $e) {
-                        // Log error tapi jangan hentikan proses
-                        \Log::warning("Gagal menghapus file {$fileName}: " . $e->getMessage());
-                    }
-                }
-            }
+            $this->deleteDocumentFiles($pendaftar);
 
             // Hapus data pendaftar
             $pendaftar->delete();
@@ -169,22 +173,34 @@ class PendaftarController extends Controller
             $fieldName = 'file_' . $fileType;
             $fileName = $pendaftar->$fieldName;
 
-            if (!$fileName) {
+            if (empty($fileName)) {
                 return back()->with('error', 'File ' . $fileType . ' tidak ditemukan.');
             }
 
-            $filePath = 'public/documents/' . $fileName;
+            $filePath = $this->documentPath . $fileName;
 
             if (!Storage::exists($filePath)) {
                 return back()->with('error', 'File tidak ada di server.');
             }
 
             // Generate nama file yang user-friendly
-            $originalName = $pendaftar->nama_lengkap . '_' . $pendaftar->nim . '_' . $fileType . '.' . 
-                           pathinfo($fileName, PATHINFO_EXTENSION);
+            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $originalName = sprintf('%s_%s_%s.%s', 
+                $pendaftar->nama_lengkap, 
+                $pendaftar->nim, 
+                $fileType, 
+                $extension
+            );
+
+            // Sanitize filename
+            $originalName = preg_replace('/[^A-Za-z0-9_.-]/', '_', $originalName);
 
             return Storage::download($filePath, $originalName);
         } catch (Exception $e) {
+            Log::error('Download file error: ' . $e->getMessage(), [
+                'pendaftar_id' => $pendaftar->id,
+                'file_type' => $fileType ?? 'unknown'
+            ]);
             return back()->with('error', 'Gagal mengunduh file: ' . $e->getMessage());
         }
     }
@@ -196,7 +212,7 @@ class PendaftarController extends Controller
     {
         try {
             $validated = $request->validate([
-                'ids' => 'required|array',
+                'ids' => 'required|array|min:1',
                 'ids.*' => 'exists:pendaftars,id',
                 'status' => 'required|in:pending,diterima,ditolak',
                 'keterangan' => 'nullable|string|max:500'
@@ -204,12 +220,22 @@ class PendaftarController extends Controller
 
             DB::beginTransaction();
 
-            $updatedCount = Pendaftar::whereIn('id', $validated['ids'])->update([
+            // Get current user info
+            $userId = auth()->check() ? auth()->id() : null;
+            $userName = auth()->check() ? auth()->user()->name : 'Admin';
+
+            $updateData = [
                 'status' => $validated['status'],
                 'keterangan' => $validated['keterangan'] ?? null,
                 'tanggal_verifikasi' => now(),
-                'verified_by' => auth()->user()->name ?? 'Admin',
-            ]);
+                'verified_by' => $userName,
+            ];
+
+            if ($userId) {
+                $updateData['verified_by_id'] = $userId;
+            }
+
+            $updatedCount = Pendaftar::whereIn('id', $validated['ids'])->update($updateData);
 
             DB::commit();
 
@@ -226,6 +252,10 @@ class PendaftarController extends Controller
 
         } catch (Exception $e) {
             DB::rollback();
+            Log::error('Bulk update status error: ' . $e->getMessage(), [
+                'request_data' => $request->all()
+            ]);
+            
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal mengupdate status: ' . $e->getMessage()
@@ -240,7 +270,7 @@ class PendaftarController extends Controller
     {
         try {
             $validated = $request->validate([
-                'ids' => 'required|array',
+                'ids' => 'required|array|min:1',
                 'ids.*' => 'exists:pendaftars,id'
             ]);
 
@@ -251,22 +281,8 @@ class PendaftarController extends Controller
 
             foreach ($pendaftars as $pendaftar) {
                 // Hapus file dokumen
-                $files = [
-                    'file_transkrip' => $pendaftar->file_transkrip,
-                    'file_ktp' => $pendaftar->file_ktp, 
-                    'file_kk' => $pendaftar->file_kk,
-                ];
-
-                foreach ($files as $field => $fileName) {
-                    if ($fileName && Storage::exists('public/documents/' . $fileName)) {
-                        try {
-                            Storage::delete('public/documents/' . $fileName);
-                        } catch (Exception $e) {
-                            \Log::warning("Gagal menghapus file {$fileName}: " . $e->getMessage());
-                        }
-                    }
-                }
-
+                $this->deleteDocumentFiles($pendaftar);
+                
                 $pendaftar->delete();
                 $deletedCount++;
             }
@@ -280,6 +296,10 @@ class PendaftarController extends Controller
 
         } catch (Exception $e) {
             DB::rollback();
+            Log::error('Bulk delete error: ' . $e->getMessage(), [
+                'request_data' => $request->all()
+            ]);
+            
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal menghapus data: ' . $e->getMessage()
@@ -354,6 +374,7 @@ class PendaftarController extends Controller
 
             return response()->stream($callback, 200, $headers);
         } catch (Exception $e) {
+            Log::error('Export error: ' . $e->getMessage());
             return back()->with('error', 'Gagal mengexport data: ' . $e->getMessage());
         }
     }
@@ -371,11 +392,14 @@ class PendaftarController extends Controller
                 'ditolak' => Pendaftar::where('status', 'ditolak')->count(),
                 'today' => Pendaftar::whereDate('created_at', today())->count(),
                 'this_week' => Pendaftar::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
-                'this_month' => Pendaftar::whereMonth('created_at', now()->month)->count(),
+                'this_month' => Pendaftar::whereMonth('created_at', now()->month)
+                                       ->whereYear('created_at', now()->year)
+                                       ->count(),
             ];
 
             return response()->json($stats);
         } catch (Exception $e) {
+            Log::error('Get stats error: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Gagal mengambil statistik: ' . $e->getMessage()
             ], 500);
@@ -397,30 +421,98 @@ class PendaftarController extends Controller
             $fieldName = 'file_' . $fileType;
             $fileName = $pendaftar->$fieldName;
 
-            if (!$fileName) {
+            if (empty($fileName)) {
                 return response()->json(['error' => 'File tidak ditemukan'], 404);
             }
 
-            $filePath = 'public/documents/' . $fileName;
+            $filePath = $this->documentPath . $fileName;
 
             if (!Storage::exists($filePath)) {
                 return response()->json(['error' => 'File tidak ada di server'], 404);
             }
 
             $fileUrl = Storage::url('documents/' . $fileName);
-            $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $fileSize = Storage::size($filePath);
             
             return response()->json([
                 'success' => true,
                 'file_url' => $fileUrl,
                 'file_name' => $fileName,
                 'file_type' => $fileExtension,
-                'file_size' => Storage::size($filePath)
+                'file_size' => $this->formatFileSize($fileSize),
+                'is_image' => in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']),
+                'is_pdf' => $fileExtension === 'pdf'
             ]);
         } catch (Exception $e) {
+            Log::error('Preview file error: ' . $e->getMessage(), [
+                'pendaftar_id' => $pendaftar->id,
+                'file_type' => $fileType ?? 'unknown'
+            ]);
+            
             return response()->json([
                 'error' => 'Gagal memuat file: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Helper method untuk menghapus file dokumen
+     */
+    private function deleteDocumentFiles($pendaftar)
+    {
+        $files = [
+            'file_transkrip' => $pendaftar->file_transkrip,
+            'file_ktp' => $pendaftar->file_ktp,
+            'file_kk' => $pendaftar->file_kk,
+        ];
+
+        foreach ($files as $field => $fileName) {
+            if (!empty($fileName) && Storage::exists($this->documentPath . $fileName)) {
+                try {
+                    Storage::delete($this->documentPath . $fileName);
+                } catch (Exception $e) {
+                    Log::warning("Gagal menghapus file {$fileName}: " . $e->getMessage(), [
+                        'pendaftar_id' => $pendaftar->id,
+                        'file_field' => $field
+                    ]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper method untuk format ukuran file
+     */
+    private function formatFileSize($bytes)
+    {
+        if ($bytes >= 1073741824) {
+            return number_format($bytes / 1073741824, 2) . ' GB';
+        } elseif ($bytes >= 1048576) {
+            return number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            return number_format($bytes / 1024, 2) . ' KB';
+        } else {
+            return $bytes . ' bytes';
+        }
+    }
+
+    /**
+     * Validate file type and size
+     */
+    private function validateFile($file, $maxSize = 2048)
+    {
+        $allowedMimes = ['pdf', 'jpg', 'jpeg', 'png'];
+        $fileMime = $file->getClientOriginalExtension();
+        
+        if (!in_array(strtolower($fileMime), $allowedMimes)) {
+            throw new Exception('Jenis file tidak diizinkan. Hanya PDF, JPG, JPEG, PNG yang diperbolehkan.');
+        }
+        
+        if ($file->getSize() > ($maxSize * 1024)) {
+            throw new Exception('Ukuran file terlalu besar. Maksimal ' . $maxSize . 'KB.');
+        }
+        
+        return true;
     }
 }
