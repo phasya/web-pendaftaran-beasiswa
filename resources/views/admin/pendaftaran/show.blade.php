@@ -111,7 +111,7 @@
                 <!-- Documents Section -->
                 <div class="detail-section mb-4">
                     <h6 class="section-title mb-3">
-                        <i class="fas fa-folder-open text-info me-2"></i>Dokumen Pendukung
+                        <i class="fas fa-folder-open text-info me-2"></i>~ Pendukung
                     </h6>
                     <div class="row">
                         <div class="col-md-4 mb-3">

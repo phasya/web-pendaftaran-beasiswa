@@ -210,6 +210,221 @@
                         </div>
                     </div>
 
+                    <!-- Add this section after the "Status & Persyaratan" section in create.blade.php -->
+
+<!-- Form Section 4: File Requirements -->
+<div class="form-section mb-4">
+    <h6 class="section-title mb-3">
+        <i class="fas fa-file-upload text-info me-2"></i>Persyaratan File Upload
+    </h6>
+    
+    <div class="mb-3">
+        <label class="form-label fw-semibold">
+            <i class="fas fa-paperclip text-primary me-2"></i>File yang Diperlukan
+        </label>
+        <small class="text-muted d-block mb-3">
+            <i class="fas fa-info-circle me-1"></i>Pilih jenis file yang harus atau bisa diupload oleh pendaftar
+        </small>
+        
+        <div id="fileRequirementsContainer">
+            @if(isset($fileTypes) && $fileTypes->count() > 0)
+                <div class="row">
+                    @foreach($fileTypes as $fileType)
+                    <div class="col-md-6 mb-3">
+                        <div class="file-requirement-item border rounded p-3 h-100">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input file-requirement-check" 
+                                       type="checkbox" 
+                                       name="file_requirements[]" 
+                                       value="{{ $fileType->id }}" 
+                                       id="file_type_{{ $fileType->id }}"
+                                       {{ old('file_requirements') && in_array($fileType->id, old('file_requirements')) ? 'checked' : '' }}>
+                                <label class="form-check-label fw-semibold" for="file_type_{{ $fileType->id }}">
+                                    <i class="fas fa-file-alt text-info me-2"></i>{{ $fileType->nama_file_type }}
+                                </label>
+                            </div>
+                            
+                            @if($fileType->deskripsi)
+                            <div class="file-description mb-2">
+                                <small class="text-muted">{{ $fileType->deskripsi }}</small>
+                            </div>
+                            @endif
+                            
+                            <div class="file-specs">
+                                <small class="text-muted d-block">
+                                    <i class="fas fa-file-code me-1"></i>Format: 
+                                    @foreach($fileType->ekstensi_array as $ext)
+                                        <span class="badge bg-light text-dark me-1">{{ strtoupper($ext) }}</span>
+                                    @endforeach
+                                </small>
+                                <small class="text-muted d-block mt-1">
+                                    <i class="fas fa-weight me-1"></i>Max: {{ $fileType->ukuran_mb }} MB
+                                </small>
+                            </div>
+                            
+                            <!-- Requirement specific settings -->
+                            <div class="requirement-settings mt-3" style="display: none;">
+                                <div class="border-top pt-3">
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" 
+                                               type="checkbox" 
+                                               name="file_required[{{ $fileType->id }}]" 
+                                               id="required_{{ $fileType->id }}"
+                                               {{ old('file_required.'.$fileType->id, $fileType->wajib) ? 'checked' : '' }}>
+                                        <label class="form-check-label small fw-semibold" for="required_{{ $fileType->id }}">
+                                            <i class="fas fa-exclamation-circle text-warning me-1"></i>Wajib
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="mb-0">
+                                        <input type="text" 
+                                               class="form-control form-control-sm" 
+                                               name="file_notes[{{ $fileType->id }}]" 
+                                               placeholder="Catatan khusus (opsional)"
+                                               value="{{ old('file_notes.'.$fileType->id) }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                
+                <div class="mt-3">
+                    <div class="alert alert-info-soft">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Info:</strong> Centang file yang diperlukan untuk beasiswa ini. 
+                        Anda bisa mengatur apakah file tersebut wajib atau opsional untuk setiap beasiswa.
+                    </div>
+                </div>
+            @else
+                <div class="alert alert-warning-soft">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Belum ada file type yang tersedia.</strong><br>
+                    <a href="{{ route('admin.file-types.create') }}" class="btn btn-sm btn-warning mt-2">
+                        <i class="fas fa-plus me-1"></i>Tambah File Type Baru
+                    </a>
+                </div>
+            @endif
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                    <i class="fas fa-lightbulb me-1"></i>
+                    File requirements bisa diubah setelah beasiswa dibuat
+                </small>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="selectAllFiles()">
+                    <i class="fas fa-check-double me-1"></i>Pilih Semua
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Add this JavaScript to the existing script section
+
+// Function to handle file requirement selection
+document.addEventListener('DOMContentLoaded', function() {
+    const fileRequirementChecks = document.querySelectorAll('.file-requirement-check');
+    
+    fileRequirementChecks.forEach(checkbox => {
+        const requirementSettings = checkbox.closest('.file-requirement-item').querySelector('.requirement-settings');
+        
+        // Show/hide settings based on checkbox state
+        function toggleSettings() {
+            if (checkbox.checked) {
+                requirementSettings.style.display = 'block';
+                // Add visual feedback
+                checkbox.closest('.file-requirement-item').classList.add('border-primary', 'bg-light');
+            } else {
+                requirementSettings.style.display = 'none';
+                // Remove visual feedback
+                checkbox.closest('.file-requirement-item').classList.remove('border-primary', 'bg-light');
+            }
+        }
+        
+        // Initial state
+        toggleSettings();
+        
+        // Event listener
+        checkbox.addEventListener('change', toggleSettings);
+    });
+});
+
+// Function to select/deselect all files
+function selectAllFiles() {
+    const checkboxes = document.querySelectorAll('.file-requirement-check');
+    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = !allChecked;
+        checkbox.dispatchEvent(new Event('change'));
+    });
+    
+    // Update button text
+    const button = event.target;
+    if (allChecked) {
+        button.innerHTML = '<i class="fas fa-check-double me-1"></i>Pilih Semua';
+    } else {
+        button.innerHTML = '<i class="fas fa-minus-square me-1"></i>Hapus Semua';
+    }
+}
+</script>
+
+<style>
+/* Additional CSS for file requirements */
+.file-requirement-item {
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+}
+
+.file-requirement-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+
+.file-requirement-item.border-primary {
+    border-color: var(--mint-primary, #00c9a7) !important;
+    border-width: 2px !important;
+}
+
+.file-requirement-item.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+.file-specs .badge {
+    font-size: 0.65rem;
+}
+
+.requirement-settings {
+    background-color: #f8f9fa;
+    border-radius: 0.375rem;
+    margin: -0.5rem;
+    padding: 0.5rem;
+}
+
+.requirement-settings .border-top {
+    border-color: #dee2e6 !important;
+}
+
+.alert-warning-soft {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .file-requirement-item {
+        margin-bottom: 1rem !important;
+    }
+}
+</style>
+
                     <!-- Action Buttons -->
                     <div class="form-actions bg-light p-3 rounded-3 mt-4">
                         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
