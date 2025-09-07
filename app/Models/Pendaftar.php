@@ -9,31 +9,36 @@ class Pendaftar extends Model
 {
     use HasFactory;
 
-    // Hapus baris ini atau ubah ke 'pendaftars'
-    // protected $table = 'pendaftar';
-    protected $table = 'pendaftars'; // Gunakan nama tabel yang konsisten
+    protected $table = 'pendaftar';
 
     protected $fillable = [
         'beasiswa_id',
         'nama_lengkap',
-        'nim',
         'email',
-        'no_hp',
+        'no_telepon',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'alamat',
+        'pendidikan_terakhir',
+        'nama_institusi',
+        'jurusan',
+        'ipk',
+        'tahun_lulus',
+        'pekerjaan',
+        'penghasilan',
         'alasan_mendaftar',
-        'file_transkrip',
-        'file_ktp', 
-        'file_kk',
+        'dokumen_pendukung',
         'status',
         'tanggal_daftar',
-        'keterangan',
-        'tanggal_verifikasi',
-        'verified_by',
-        'verified_by_id'
+        'keterangan'
     ];
 
     protected $casts = [
+        'tanggal_lahir' => 'date',
         'tanggal_daftar' => 'datetime',
-        'tanggal_verifikasi' => 'datetime',
+        'ipk' => 'decimal:2',
+        'penghasilan' => 'decimal:2',
+        'dokumen_pendukung' => 'array'
     ];
 
     // Relasi dengan beasiswa
@@ -81,7 +86,7 @@ class Pendaftar extends Model
     }
 
     // Get formatted registration number
-    public function getNomorPendaftaranAttribute()
+    public function getMemorPendaftaranAttribute()
     {
         return 'REG-' . $this->beasiswa_id . '-' . str_pad($this->id, 6, '0', STR_PAD_LEFT);
     }
@@ -89,7 +94,31 @@ class Pendaftar extends Model
     // Get formatted tanggal daftar
     public function getFormattedTanggalDaftarAttribute()
     {
-        return $this->tanggal_daftar ? $this->tanggal_daftar->format('d/m/Y H:i') : '';
+        return $this->tanggal_daftar->format('d/m/Y H:i');
+    }
+
+    // Get jenis kelamin text
+    public function getJenisKelaminTextAttribute()
+    {
+        return $this->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan';
+    }
+
+    // Get formatted IPK
+    public function getFormattedIpkAttribute()
+    {
+        return number_format($this->ipk, 2, ',', '.');
+    }
+
+    // Get formatted penghasilan
+    public function getFormattedPenghasilanAttribute()
+    {
+        return 'Rp ' . number_format($this->penghasilan, 0, ',', '.');
+    }
+
+    // Get age from tanggal_lahir
+    public function getUmurAttribute()
+    {
+        return $this->tanggal_lahir->age ?? 0;
     }
 
     // Check if can be deleted
@@ -115,4 +144,4 @@ class Pendaftar extends Model
     {
         return $query->orderBy('created_at', 'desc');
     }
-}   
+}

@@ -1,312 +1,403 @@
-@extends('layouts.admin')
-
-@section('title', 'Tambah Beasiswa Baru')
+@extends('layouts.app')@section('title', 'Daftar Beasiswa - ' . $beasiswa->nama_beasiswa)
 
 @section('content')
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <div>
-            <h1 class="h2"><i class="fas fa-plus-circle"></i> Tambah Beasiswa Baru</h1>
-            <p class="text-muted mb-0">
-                <i class="fas fa-info-circle me-2"></i>Buat beasiswa baru untuk mahasiswa
-            </p>
-        </div>
-    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <!-- Header Section -->
+                <div class="text-center mb-4">
+                    <h2 class="display-6 text-primary fw-bold">
+                        <i class="fas fa-graduation-cap me-2"></i>Pendaftaran Beasiswa
+                    </h2>
+                    <p class="text-muted lead">Lengkapi formulir di bawah untuk mendaftar beasiswa</p>
+                </div>
 
-    <div class="row">
-        <div class="col-lg-8 mx-auto">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="card-title mb-0">
-                                <i class="fas fa-graduation-cap text-primary me-2"></i>Form Tambah Beasiswa
-                            </h6>
-                        </div>
-                        <div class="col-auto">
-                            <span class="badge bg-primary-soft text-primary">
-                                <i class="fas fa-plus me-1" style="font-size: 8px;"></i>Create Mode
-                            </span>
+                <!-- Main Registration Card -->
+                <div class="card shadow-lg border-0">
+                    <div class="card-header py-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h4 class="card-title mb-1">
+                                    <i class="fas fa-trophy text-warning me-2"></i>{{ $beasiswa->nama_beasiswa }}
+                                </h4>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar-alt me-1"></i>Batas pendaftaran: {{ \Carbon\Carbon::parse($beasiswa->tanggal_tutup)->format('d M Y') }}
+                                </small>
+                            </div>
+                            <div class="scholarship-amount">
+                                <span class="badge bg-success-custom px-3 py-2">
+                                    <i class="fas fa-money-bill-wave me-1"></i>Rp {{ number_format($beasiswa->jumlah_dana, 0, ',', '.') }}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-body p-4">
-                    <form action="{{ route('admin.beasiswa.store') }}" method="POST" id="beasiswaForm">
-                        @csrf
 
-                        <!-- Form Section 1: Basic Information -->
-                        <div class="form-section mb-4">
-                            <h6 class="section-title mb-3">
-                                <i class="fas fa-info-circle text-primary me-2"></i>Informasi Dasar
-                            </h6>
-
-                            <div class="mb-3">
-                                <label for="nama_beasiswa" class="form-label fw-semibold">
-                                    <i class="fas fa-trophy text-warning me-2"></i>Nama Beasiswa
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <i class="fas fa-graduation-cap text-muted"></i>
-                                    </span>
-                                    <input type="text"
-                                        class="form-control border-start-0 @error('nama_beasiswa') is-invalid @enderror"
-                                        id="nama_beasiswa" name="nama_beasiswa" value="{{ old('nama_beasiswa') }}"
-                                        placeholder="Contoh: Beasiswa Prestasi Akademik 2025" required>
-                                    @error('nama_beasiswa')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="deskripsi" class="form-label fw-semibold">
-                                    <i class="fas fa-align-left text-info me-2"></i>Deskripsi Beasiswa
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi"
-                                    name="deskripsi" rows="4"
-                                    placeholder="Jelaskan tujuan, target penerima, dan manfaat beasiswa ini..."
-                                    required>{{ old('deskripsi') }}</textarea>
-                                @error('deskripsi')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <small class="form-text text-muted">
-                                    <i class="fas fa-lightbulb me-1"></i>Berikan deskripsi yang jelas dan menarik untuk
-                                    calon pendaftar
-                                </small>
-                            </div>
-                        </div>
-
-                        <!-- Form Section 2: Financial & Schedule -->
-                        <div class="form-section mb-4">
-                            <h6 class="section-title mb-3">
-                                <i class="fas fa-calendar-dollar text-success me-2"></i>Dana & Jadwal
-                            </h6>
-
-                            <div class="mb-3">
-                                <label for="jumlah_dana" class="form-label fw-semibold">
-                                    <i class="fas fa-money-bill-wave text-success me-2"></i>Jumlah Dana
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">Rp</span>
-                                    <input type="number"
-                                        class="form-control border-start-0 @error('jumlah_dana') is-invalid @enderror"
-                                        id="jumlah_dana" name="jumlah_dana" value="{{ old('jumlah_dana') }}" min="100000"
-                                        step="100000" placeholder="5000000" required>
-                                    @error('jumlah_dana')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <small class="form-text text-muted">
-                                    <i class="fas fa-info-circle me-1"></i>Masukkan jumlah dana dalam Rupiah (minimal Rp
-                                    100.000)
-                                </small>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="tanggal_buka" class="form-label fw-semibold">
-                                        <i class="fas fa-calendar-plus text-success me-2"></i>Tanggal Buka
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0">
-                                            <i class="fas fa-calendar text-muted"></i>
-                                        </span>
-                                        <input type="date"
-                                            class="form-control border-start-0 @error('tanggal_buka') is-invalid @enderror"
-                                            id="tanggal_buka" name="tanggal_buka" value="{{ old('tanggal_buka') }}"
-                                            min="{{ date('Y-m-d') }}" required>
-                                        @error('tanggal_buka')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="tanggal_tutup" class="form-label fw-semibold">
-                                        <i class="fas fa-calendar-times text-danger me-2"></i>Tanggal Tutup
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0">
-                                            <i class="fas fa-calendar text-muted"></i>
-                                        </span>
-                                        <input type="date"
-                                            class="form-control border-start-0 @error('tanggal_tutup') is-invalid @enderror"
-                                            id="tanggal_tutup" name="tanggal_tutup" value="{{ old('tanggal_tutup') }}"
-                                            required>
-                                        @error('tanggal_tutup')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="dateRangeInfo" class="alert alert-info-soft d-none">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <span id="dateRangeText"></span>
-                            </div>
-                        </div>
-
-                        <!-- Form Section 3: Status & Requirements -->
-                        <div class="form-section mb-4">
-                            <h6 class="section-title mb-3">
-                                <i class="fas fa-cogs text-warning me-2"></i>Status & Persyaratan
-                            </h6>
-
-                            <div class="mb-3">
-                                <label for="status" class="form-label fw-semibold">
-                                    <i class="fas fa-toggle-on text-primary me-2"></i>Status Beasiswa
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select class="form-select @error('status') is-invalid @enderror" id="status" name="status"
-                                    required>
-                                    <option value="">Pilih Status</option>
-                                    <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>
-                                        Aktif (Bisa dilamar)
-                                    </option>
-                                    <option value="nonaktif" {{ old('status') == 'nonaktif' ? 'selected' : '' }}>
-                                        Nonaktif (Tidak bisa dilamar)
-                                    </option>
-                                </select>
-                                @error('status')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <small class="form-text text-muted">
-                                    <i class="fas fa-info-circle me-1"></i>Status aktif berarti beasiswa dapat dilamar oleh
-                                    mahasiswa
-                                </small>
-                            </div>
-
-                            <!-- Dokumen Pendukung Section -->
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">
-                                    <i class="fas fa-file-alt text-info me-2"></i>Dokumen Pendukung
-                                </label>
+                    <div class="card-body p-5">
+                        <!-- Scholarship Info Section -->
+                        <div class="info-section mb-5">
+                            <h5 class="section-title mb-3">
+                                <i class="fas fa-info-circle text-info me-2"></i>Informasi Beasiswa
+                            </h5>
+                            <div class="info-box">
                                 <div class="row">
-                                    @foreach($dokumenOptions as $value => $label)
-                                        <div class="col-md-6 mb-2">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="dokumen_pendukung[]"
-                                                    value="{{ $value }}" id="dokumen_{{ $value }}" {{ (is_array(old('dokumen_pendukung')) && in_array($value, old('dokumen_pendukung'))) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="dokumen_{{ $value }}">
-                                                    <i class="fas fa-file-alt me-1 text-muted"></i>{{ $label }}
+                                    <div class="col-md-6 mb-3">
+                                        <div class="info-item">
+                                            <label class="info-label">Dana Beasiswa</label>
+                                            <p class="info-value text-success fw-bold">
+                                                Rp {{ number_format($beasiswa->jumlah_dana, 0, ',', '.') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="info-item">
+                                            <label class="info-label">Batas Waktu Pendaftaran</label>
+                                            <p class="info-value text-danger fw-bold">
+                                                {{ \Carbon\Carbon::parse($beasiswa->tanggal_tutup)->format('d M Y') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="requirements-section">
+                                    <label class="info-label">Persyaratan</label>
+                                    <div class="requirements-content">
+                                        {!! nl2br(e($beasiswa->persyaratan)) !!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Registration Form -->
+                        <div class="form-section">
+                            <h5 class="section-title mb-4">
+                                <i class="fas fa-edit text-primary me-2"></i>Formulir Pendaftaran
+                            </h5>
+
+                            <form method="POST" action="{{ route('pendaftar.store', $beasiswa) }}" enctype="multipart/form-data" id="registrationForm">
+                                @csrf
+
+                                <!-- Personal Information -->
+                                <div class="form-group-section mb-4">
+                                    <h6 class="form-group-title">
+                                        <i class="fas fa-user-circle text-info me-2"></i>Data Personal
+                                    </h6>
+                                    <div class="form-group-content">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="nama_lengkap" class="form-label">
+                                                    <i class="fas fa-user me-1"></i>Nama Lengkap *
                                                 </label>
+                                                <input type="text" 
+                                                       class="form-control modern-input @error('nama_lengkap') is-invalid @enderror" 
+                                                       id="nama_lengkap" 
+                                                       name="nama_lengkap" 
+                                                       value="{{ old('nama_lengkap') }}" 
+                                                       placeholder="Masukkan nama lengkap"
+                                                       required>
+                                                @error('nama_lengkap')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="nim" class="form-label">
+                                                    <i class="fas fa-id-badge me-1"></i>NIM *
+                                                </label>
+                                                <input type="text" 
+                                                       class="form-control modern-input @error('nim') is-invalid @enderror" 
+                                                       id="nim" 
+                                                       name="nim" 
+                                                       value="{{ old('nim') }}" 
+                                                       placeholder="Masukkan NIM"
+                                                       pattern="[0-9]+"
+                                                       title="NIM hanya boleh berisi angka"
+                                                       required>
+                                                @error('nim')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
-                                    @endforeach
-                                </div>
-                                <small class="form-text text-muted">
-                                    <i class="fas fa-info-circle me-1"></i>Pilih dokumen yang wajib dilampirkan oleh
-                                    pendaftar
-                                </small>
-                            </div>
 
-                            <div class="mb-3">
-                                <label for="persyaratan" class="form-label fw-semibold">
-                                    <i class="fas fa-list-check text-info me-2"></i>Persyaratan Pendaftaran
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <textarea class="form-control @error('persyaratan') is-invalid @enderror" id="persyaratan"
-                                    name="persyaratan" rows="8"
-                                    placeholder="Contoh:&#10;1. Mahasiswa aktif semester 3 ke atas&#10;2. IPK minimal 3.0&#10;3. Tidak sedang menerima beasiswa lain&#10;4. Melampirkan transkrip nilai terbaru&#10;5. Surat rekomendasi dari dosen"
-                                    required>{{ old('persyaratan') }}</textarea>
-                                @error('persyaratan')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <small class="form-text text-muted">
-                                    <i class="fas fa-lightbulb me-1"></i>Tuliskan persyaratan dengan jelas, gunakan
-                                    numbering untuk kemudahan membaca
-                                </small>
-                            </div>
-                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="email" class="form-label">
+                                                    <i class="fas fa-envelope me-1"></i>Email *
+                                                </label>
+                                                <input type="email" 
+                                                       class="form-control modern-input @error('email') is-invalid @enderror" 
+                                                       id="email" 
+                                                       name="email" 
+                                                       value="{{ old('email') }}" 
+                                                       placeholder="contoh@email.com"
+                                                       required>
+                                                @error('email')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
 
-                        <!-- Action Buttons -->
-                        <div class="form-actions bg-light p-3 rounded-3 mt-4">
-                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                                <div class="d-flex align-items-center text-muted">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    <small>Pastikan semua data sudah benar sebelum menyimpan</small>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="no_hp" class="form-label">
+                                                    <i class="fas fa-phone me-1"></i>No. HP *
+                                                </label>
+                                                <input type="text" 
+                                                       class="form-control modern-input @error('no_hp') is-invalid @enderror" 
+                                                       id="no_hp" 
+                                                       name="no_hp" 
+                                                       value="{{ old('no_hp') }}" 
+                                                       placeholder="08xxxxxxxxxx"
+                                                       pattern="[0-9]{10,15}"
+                                                       title="Nomor HP hanya boleh berisi angka (10-15 digit)"
+                                                       required>
+                                                @error('no_hp')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="d-flex gap-2">
-                                    <a href="{{ route('admin.beasiswa.index') }}" class="btn btn-outline-secondary">
-                                        <i class="fas fa-arrow-left me-2"></i>Kembali
-                                    </a>
-                                    <button type="reset" class="btn btn-outline-warning">
-                                        <i class="fas fa-undo me-2"></i>Reset
-                                    </button>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-2"></i>Simpan Beasiswa
-                                    </button>
+
+                                <!-- Reason Section -->
+                                <div class="form-group-section mb-4">
+                                    <h6 class="form-group-title">
+                                        <i class="fas fa-comment-alt text-warning me-2"></i>Motivasi
+                                    </h6>
+                                    <div class="form-group-content">
+                                        <div class="mb-3">
+                                            <label for="alasan_mendaftar" class="form-label">
+                                                <i class="fas fa-quote-left me-1"></i>Alasan Mendaftar *
+                                            </label>
+                                            <textarea class="form-control modern-textarea @error('alasan_mendaftar') is-invalid @enderror" 
+                                                      id="alasan_mendaftar" 
+                                                      name="alasan_mendaftar" 
+                                                      rows="5" 
+                                                      placeholder="Jelaskan alasan dan motivasi Anda mendaftar beasiswa ini... (minimal 50 karakter)"
+                                                      minlength="50"
+                                                      maxlength="1000"
+                                                      required>{{ old('alasan_mendaftar') }}</textarea>
+                                            <div class="form-text">
+                                                <i class="fas fa-lightbulb text-warning me-1"></i>
+                                                Jelaskan secara detail mengapa Anda layak mendapatkan beasiswa ini (minimal 50 karakter)
+                                            </div>
+                                            @error('alasan_mendaftar')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+
+                                <!-- Document Requirements Info -->
+                                @php
+                                    $dokumenPendukung = [];
+                                    if ($beasiswa->dokumen_pendukung) {
+                                        if (is_array($beasiswa->dokumen_pendukung)) {
+                                            $dokumenPendukung = $beasiswa->dokumen_pendukung;
+                                        } else {
+                                            $decoded = json_decode($beasiswa->dokumen_pendukung, true);
+                                            $dokumenPendukung = is_array($decoded) ? $decoded : [];
+                                        }
+                                    }
+
+                                    $dokumenLabels = [
+                                        'ktp' => 'KTP',
+                                        'kk' => 'Kartu Keluarga',
+                                        'ijazah' => 'Ijazah Terakhir',
+                                        'transkrip' => 'Transkrip Nilai',
+                                        'surat_keterangan_tidak_mampu' => 'Surat Keterangan Tidak Mampu',
+                                        'slip_gaji_ortu' => 'Slip Gaji Orang Tua',
+                                        'surat_rekomendasi' => 'Surat Rekomendasi',
+                                        'sertifikat_prestasi' => 'Sertifikat Prestasi'
+                                    ];
+                                @endphp
+
+                                @if(count($dokumenPendukung) > 0)
+                                    <div class="requirements-section mb-4">
+                                        <label class="text-muted small fw-semibold">DOKUMEN PENDUKUNG YANG DIPERLUKAN</label>
+                                        <div class="bg-light p-3 rounded-3 mt-2">
+                                            <div class="row">
+                                                @foreach($dokumenPendukung as $dokumen)
+                                                    @if(isset($dokumenLabels[$dokumen]))
+                                                        <div class="col-md-6 mb-2">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="fas fa-file-alt text-primary me-2"></i>
+                                                                <span>{{ $dokumenLabels[$dokumen] }}</span>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <!-- File Upload Section -->
+                                <div class="form-group-section mb-4">
+                                    <h6 class="form-group-title">
+                                        <i class="fas fa-upload text-danger me-2"></i>Upload Dokumen
+                                    </h6>
+                                    <div class="form-group-content">
+                                        <div class="row">
+                                            <!-- Required Documents -->
+                                            <div class="col-md-4 mb-3">
+                                                <div class="file-upload-card">
+                                                    <label for="file_transkrip" class="file-label">
+                                                        <div class="file-icon">
+                                                            <i class="fas fa-file-pdf text-danger"></i>
+                                                        </div>
+                                                        <div class="file-info">
+                                                            <h6 class="file-title">Transkrip Nilai *</h6>
+                                                            <small class="file-desc">PDF, Max: 5MB</small>
+                                                        </div>
+                                                    </label>
+                                                    <input type="file" 
+                                                           class="form-control file-input @error('file_transkrip') is-invalid @enderror" 
+                                                           id="file_transkrip" 
+                                                           name="file_transkrip" 
+                                                           accept=".pdf" 
+                                                           required>
+                                                    @error('file_transkrip')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <div class="file-upload-card">
+                                                    <label for="file_ktp" class="file-label">
+                                                        <div class="file-icon">
+                                                            <i class="fas fa-id-card text-primary"></i>
+                                                        </div>
+                                                        <div class="file-info">
+                                                            <h6 class="file-title">KTP *</h6>
+                                                            <small class="file-desc">PDF/JPG/PNG, Max: 2MB</small>
+                                                        </div>
+                                                    </label>
+                                                    <input type="file" 
+                                                           class="form-control file-input @error('file_ktp') is-invalid @enderror" 
+                                                           id="file_ktp" 
+                                                           name="file_ktp" 
+                                                           accept=".pdf,.jpg,.jpeg,.png" 
+                                                           required>
+                                                    @error('file_ktp')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <div class="file-upload-card">
+                                                    <label for="file_kk" class="file-label">
+                                                        <div class="file-icon">
+                                                            <i class="fas fa-users text-success"></i>
+                                                        </div>
+                                                        <div class="file-info">
+                                                            <h6 class="file-title">Kartu Keluarga *</h6>
+                                                            <small class="file-desc">PDF/JPG/PNG, Max: 2MB</small>
+                                                        </div>
+                                                    </label>
+                                                    <input type="file" 
+                                                           class="form-control file-input @error('file_kk') is-invalid @enderror" 
+                                                           id="file_kk" 
+                                                           name="file_kk" 
+                                                           accept=".pdf,.jpg,.jpeg,.png" 
+                                                           required>
+                                                    @error('file_kk')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <strong>Perhatian:</strong>
+                                            <ul class="mb-0 mt-2">
+                                                <li>Pastikan semua file dapat dibaca dengan jelas</li>
+                                                <li>File PDF untuk transkrip, file gambar atau PDF untuk KTP dan KK</li>
+                                                <li>Ukuran maksimal: Transkrip 5MB, KTP & KK 2MB</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Terms and Submit -->
+                                <div class="form-group-section">
+                                    <div class="terms-section mb-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="terms" required>
+                                            <label class="form-check-label" for="terms">
+                                                Saya menyatakan bahwa data yang saya berikan adalah <strong>benar dan valid</strong>. 
+                                                Saya bersedia menerima konsekuensi jika terbukti memberikan data palsu.
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-column flex-md-row gap-3 justify-content-between align-items-center">
+                                        <div class="form-info">
+                                            <small class="text-muted">
+                                                <i class="fas fa-shield-alt me-1"></i>
+                                                Data Anda akan dijaga kerahasiaannya
+                                            </small>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('home') }}" class="btn btn-outline-secondary">
+                                                <i class="fas fa-arrow-left me-2"></i>Kembali
+                                            </a>
+                                            <button type="submit" class="btn btn-primary btn-submit">
+                                                <i class="fas fa-paper-plane me-2"></i>Daftar Sekarang
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Tips Card -->
-            <div class="card shadow-sm mt-4">
-                <div class="card-header bg-white py-3">
-                    <h6 class="card-title mb-0">
-                        <i class="fas fa-lightbulb text-warning me-2"></i>Tips Membuat Beasiswa
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="tip-item mb-3">
-                                <div class="d-flex">
-                                    <div class="tip-icon me-3">
-                                        <i class="fas fa-target text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1">Target yang Jelas</h6>
-                                        <small class="text-muted">Tentukan target penerima dan tujuan beasiswa dengan
-                                            spesifik</small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="tip-item mb-3">
-                                <div class="d-flex">
-                                    <div class="tip-icon me-3">
-                                        <i class="fas fa-calendar-check text-success"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1">Jadwal yang Realistis</h6>
-                                        <small class="text-muted">Berikan waktu yang cukup untuk pendaftaran dan
-                                            seleksi</small>
-                                    </div>
-                                </div>
+                <!-- Tips Section -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card tip-card border-primary">
+                            <div class="card-body">
+                                <h6 class="card-title text-primary">
+                                    <i class="fas fa-lightbulb me-2"></i>Tips Sukses
+                                </h6>
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-2">
+                                        <i class="fas fa-check text-success me-2"></i>
+                                        <small>Pastikan dokumen berkualitas baik dan jelas</small>
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-check text-success me-2"></i>
+                                        <small>Tulis alasan mendaftar dengan jujur dan meyakinkan</small>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-check text-success me-2"></i>
+                                        <small>Periksa kembali semua data sebelum mengirim</small>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <div class="tip-item mb-3">
-                                <div class="d-flex">
-                                    <div class="tip-icon me-3">
-                                        <i class="fas fa-list-ul text-info"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1">Persyaratan yang Mudah Dipahami</h6>
-                                        <small class="text-muted">Gunakan bahasa yang jelas dan mudah dimengerti</small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="tip-item">
-                                <div class="d-flex">
-                                    <div class="tip-icon me-3">
-                                        <i class="fas fa-money-bill text-warning"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1">Nominal yang Sesuai</h6>
-                                        <small class="text-muted">Sesuaikan jumlah dana dengan kebutuhan mahasiswa</small>
-                                    </div>
-                                </div>
+                    <div class="col-md-6">
+                        <div class="card tip-card border-warning">
+                            <div class="card-body">
+                                <h6 class="card-title text-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>Perhatian
+                                </h6>
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-2">
+                                        <i class="fas fa-info text-info me-2"></i>
+                                        <small>Pastikan koneksi internet stabil saat mengupload</small>
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-info text-info me-2"></i>
+                                        <small>Proses seleksi membutuhkan waktu 1-2 minggu</small>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-info text-info me-2"></i>
+                                        <small>Anda akan dihubungi melalui email atau telepon</small>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -315,656 +406,492 @@
         </div>
     </div>
 
-    <!-- Custom CSS -->
     <style>
-        /* Status Badge Colors */
-        .bg-primary-soft {
-            background-color: #cce7ff !important;
-            color: #0066cc !important;
+        :root {
+            --gold-primary: #FBC02D;
+            --gold-secondary: #FFA000;
+            --gold-dark: #FF8F00;
+            --gold-light: #FFF8E1;
         }
 
-        .bg-success-soft {
-            background-color: #d1edff !important;
+        .bg-success-custom {
+            background: linear-gradient(45deg, var(--gold-primary), var(--gold-dark)) !important;
+            color: white !important;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
-        .bg-warning-soft {
-            background-color: #fff3cd !important;
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
-        .bg-danger-soft {
-            background-color: #f8d7da !important;
-        }
-
-        .bg-info-soft {
-            background-color: #d1ecf1 !important;
-        }
-
-        .bg-secondary-soft {
-            background-color: #e2e3e5 !important;
-        }
-
-        /* Alert styling */
-        .alert-info-soft {
-            background-color: #d1ecf1;
-            border: 1px solid #bee5eb;
-            color: #0c5460;
-            border-radius: 8px;
-        }
-
-        /* Form sections */
-        .form-section {
-            border-left: 4px solid var(--mint-primary, #00c9a7);
-            padding-left: 1rem;
-            margin-left: 0.5rem;
+        .card-header {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: white;
+            border-bottom: none;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 1.5rem 2rem;
         }
 
         .section-title {
             font-weight: 600;
             color: #495057;
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--gold-primary);
+            display: inline-block;
         }
 
-        /* Input group styling */
-        .input-group-text {
-            background-color: #f8f9fa;
-            border-color: #ced4da;
-            color: #6c757d;
+        .info-section {
+            background: var(--gold-light);
+            border-radius: 12px;
+            padding: 2rem;
+            border-left: 4px solid var(--gold-primary);
         }
 
-        .form-control,
-        .form-select {
-            border-radius: 0.375rem;
+        .info-box {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group-section {
+            background: var(--gold-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--gold-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group-content {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .modern-input,
+        .modern-textarea {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
-        .form-control:focus,
-        .form-select:focus {
-            border-color: var(--mint-primary, #00c9a7);
-            box-shadow: 0 0 0 0.2rem rgba(0, 201, 167, 0.25);
+        .modern-input:focus,
+        .modern-textarea:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 0.25rem rgba(251, 192, 45, 0.2);
         }
 
-        /* Form labels */
-        .form-label {
-            color: #495057;
+        .file-upload-card {
+            background: white;
+            border: 2px dashed #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .file-upload-card:hover {
+            border-color: var(--gold-primary);
+            background: #fffdf5;
+            box-shadow: 0 4px 15px rgba(251, 192, 45, 0.1);
+        }
+
+        .file-upload-card.has-file {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+
+        .file-input {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .file-label {
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+
+        .file-icon {
+            font-size: 2rem;
             margin-bottom: 0.5rem;
         }
 
-        /* Button enhancements */
-        .btn {
-            border-radius: 0.375rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
+        .file-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .file-desc {
+            color: #6c757d;
+            font-size: 0.75rem;
         }
 
         .btn-primary {
-            background: linear-gradient(45deg, var(--mint-primary, #00c9a7), var(--mint-blue, #0891b2));
+            background: linear-gradient(45deg, var(--gold-primary), var(--gold-dark));
             border: none;
+            color: white;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(45deg, var(--mint-dark, #00a693), var(--mint-secondary, #00bcd4));
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 201, 167, 0.4);
+            background: linear-gradient(45deg, var(--gold-dark), #E65100);
+            box-shadow: 0 6px 20px rgba(255, 160, 0, 0.3);
         }
 
-        .btn-warning {
-            background: linear-gradient(45deg, #ffc107, #ff9800);
-            border: none;
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background: linear-gradient(45deg, #e0a800, #f57c00);
-            color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
-        }
-
-        .btn-outline-secondary:hover,
-        .btn-outline-warning:hover {
-            transform: translateY(-1px);
-        }
-
-        /* Form actions */
-        .form-actions {
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-            border: 1px solid #dee2e6;
-        }
-
-        /* Tips section */
-        .tip-item {
+        .tip-card {
+            border-radius: 12px;
             transition: all 0.3s ease;
-            padding: 0.75rem;
-            border-radius: 8px;
+            border-width: 2px;
         }
 
-        .tip-item:hover {
-            background-color: #f8f9fa;
-            transform: translateX(5px);
+        .tip-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .tip-icon {
-            width: 20px;
-            text-align: center;
-        }
-
-        /* Card consistency */
-        .card {
+        .alert-info {
+            background: linear-gradient(45deg, #e3f2fd, #bbdefb);
             border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            border-bottom: 2px solid #dee2e6;
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-        }
-
-        .card-title {
-            font-weight: 600;
-            font-size: 0.875rem;
-            color: #495057;
-        }
-
-        /* Form check styling */
-        .form-check {
-            padding: 0.5rem 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .form-check:hover {
-            background-color: #f8f9fa;
-        }
-
-        .form-check-input:checked {
-            background-color: var(--mint-primary, #00c9a7);
-            border-color: var(--mint-primary, #00c9a7);
-        }
-
-        .form-check-label {
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-
-        /* Progress bar for form completion */
-        .form-progress {
-            height: 6px;
-            background-color: #e9ecef;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 1rem;
-        }
-
-        .form-progress-bar {
-            height: 100%;
-            background: linear-gradient(45deg, var(--mint-primary, #00c9a7), var(--mint-blue, #0891b2));
-            transition: width 0.3s ease;
-            border-radius: 3px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .form-section {
-                border-left: none;
-                border-top: 3px solid var(--mint-primary, #00c9a7);
-                padding-left: 0;
-                padding-top: 1rem;
-                margin-left: 0;
-            }
-
-            .form-actions {
-                padding: 1.5rem;
-            }
-
-            .d-flex.gap-2 {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        /* Custom mint-blue variables */
-        :root {
-            --mint-primary: #00c9a7;
-            --mint-secondary: #00bcd4;
-            --mint-dark: #00a693;
-            --mint-light: #4dd0e1;
-            --mint-blue: #0891b2;
-        }
-
-        /* Field validation styling */
-        .is-valid {
-            border-color: #28a745;
-        }
-
-        .is-valid:focus {
-            border-color: #28a745;
-            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-        }
-
-        .was-validated .form-control:valid,
-        .was-validated .form-select:valid {
-            border-color: #28a745;
-        }
-
-        .was-validated .form-control:valid:focus,
-        .was-validated .form-select:valid:focus {
-            border-color: #28a745;
-            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+            border-left: 4px solid #2196f3;
         }
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('beasiswaForm');
-            const tanggalBuka = document.getElementById('tanggal_buka');
-            const tanggalTutup = document.getElementById('tanggal_tutup');
-            const dateRangeInfo = document.getElementById('dateRangeInfo');
-            const dateRangeText = document.getElementById('dateRangeText');
-            const jumlahDanaInput = document.getElementById('jumlah_dana');
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('registrationForm');
+        const submitBtn = document.querySelector('.btn-submit');
 
-            // Create progress bar
-            const progressBar = document.createElement('div');
-            progressBar.className = 'form-progress mb-3';
-            progressBar.innerHTML = '<div class="form-progress-bar" style="width: 0%"></div>';
-            form.insertBefore(progressBar, form.firstChild);
+        // File upload handling
+        const fileInputs = document.querySelectorAll('.file-input');
+        fileInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const card = this.closest('.file-upload-card');
+                const fileTitle = card.querySelector('.file-title');
+                const originalTitle = fileTitle.textContent.replace(' ✓', '');
 
-            // Date range calculator
-            function calculateDateRange() {
-                if (tanggalBuka.value && tanggalTutup.value) {
-                    const startDate = new Date(tanggalBuka.value);
-                    const endDate = new Date(tanggalTutup.value);
-                    const timeDiff = endDate - startDate;
-                    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                if (this.files && this.files[0]) {
+                    // Validate file size
+                    const file = this.files[0];
+                    const maxSizes = {
+                        'file_transkrip': 5 * 1024 * 1024, // 5MB
+                        'file_ktp': 2 * 1024 * 1024, // 2MB
+                        'file_kk': 2 * 1024 * 1024 // 2MB
+                    };
 
-                    if (daysDiff > 0) {
-                        dateRangeInfo.classList.remove('d-none');
-                        dateRangeText.textContent = `Periode pendaftaran: ${daysDiff} hari (${startDate.toLocaleDateString('id-ID')} - ${endDate.toLocaleDateString('id-ID')})`;
+                    const maxSize = maxSizes[this.name];
 
-                        if (daysDiff < 7) {
-                            dateRangeInfo.className = 'alert alert-warning';
-                            dateRangeText.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>' + dateRangeText.textContent + ' - Periode terlalu singkat!';
-                        } else if (daysDiff > 90) {
-                            dateRangeInfo.className = 'alert alert-info';
-                            dateRangeText.innerHTML = '<i class="fas fa-info-circle me-2"></i>' + dateRangeText.textContent + ' - Periode cukup panjang.';
-                        } else {
-                            dateRangeInfo.className = 'alert alert-info-soft';
-                            dateRangeText.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + dateRangeText.textContent + ' - Periode ideal.';
-                        }
-                    } else {
-                        dateRangeInfo.className = 'alert alert-danger';
-                        dateRangeInfo.classList.remove('d-none');
-                        dateRangeText.innerHTML = '<i class="fas fa-times-circle me-2"></i>Tanggal tutup harus setelah tanggal buka!';
+                    if (file.size > maxSize) {
+                        const maxSizeMB = Math.round(maxSize / (1024 * 1024));
+                        alert(`Ukuran file terlalu besar. Maksimal ${maxSizeMB}MB`);
+                        this.value = '';
+                        card.classList.remove('has-file');
+                        fileTitle.textContent = originalTitle;
+                        return;
                     }
+
+                    // Validate file type
+                    const allowedTypes = {
+                        'file_transkrip': ['application/pdf'],
+                        'file_ktp': ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
+                        'file_kk': ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png']
+                    };
+
+                    if (!allowedTypes[this.name].includes(file.type)) {
+                        alert('Jenis file tidak diizinkan. Silakan pilih file yang sesuai.');
+                        this.value = '';
+                        card.classList.remove('has-file');
+                        fileTitle.textContent = originalTitle;
+                        return;
+                    }
+
+                    card.classList.add('has-file');
+                    fileTitle.innerHTML = originalTitle + ' <i class="fas fa-check text-success ms-1"></i>';
                 } else {
-                    dateRangeInfo.classList.add('d-none');
+                    card.classList.remove('has-file');
+                    fileTitle.textContent = originalTitle;
                 }
+            });
+        });
+
+        // Form validation
+        form.addEventListener('submit', function(e) {
+            const termsCheckbox = document.getElementById('terms');
+            const requiredFiles = ['file_transkrip', 'file_ktp', 'file_kk'];
+            let isValid = true;
+
+            // Check terms agreement
+            if (!termsCheckbox.checked) {
+                e.preventDefault();
+                alert('Anda harus menyetujui syarat dan ketentuan terlebih dahulu.');
+                termsCheckbox.focus();
+                return;
             }
 
-            // Set minimum date for tanggal_tutup when tanggal_buka changes
-            tanggalBuka.addEventListener('change', function () {
-                if (this.value) {
-                    const nextDay = new Date(this.value);
-                    nextDay.setDate(nextDay.getDate() + 1);
-                    tanggalTutup.min = nextDay.toISOString().split('T')[0];
-
-                    // Clear tanggal_tutup if it's before the new minimum
-                    if (tanggalTutup.value && new Date(tanggalTutup.value) <= new Date(this.value)) {
-                        tanggalTutup.value = '';
-                    }
+            // Check required files
+            requiredFiles.forEach(fieldName => {
+                const fileInput = document.getElementById(fieldName);
+                if (!fileInput.files || !fileInput.files[0]) {
+                    isValid = false;
+                    fileInput.closest('.file-upload-card').style.borderColor = '#dc3545';
                 }
-                calculateDateRange();
             });
 
-            tanggalTutup.addEventListener('change', calculateDateRange);
-
-            // Format currency input
-            if (jumlahDanaInput) {
-                jumlahDanaInput.addEventListener('input', function () {
-                    // Remove non-numeric characters
-                    let value = this.value.replace(/[^\d]/g, '');
-                    this.value = value;
-                });
-
-                jumlahDanaInput.addEventListener('blur', function () {
-                    if (this.value) {
-                        const value = parseInt(this.value);
-                        if (value < 100000) {
-                            this.setCustomValidity('Jumlah dana minimal Rp 100.000');
-                            this.classList.add('is-invalid');
-                        } else {
-                            this.setCustomValidity('');
-                            this.classList.remove('is-invalid');
-                            this.classList.add('is-valid');
-                        }
-                    }
-                });
+            if (!isValid) {
+                e.preventDefault();
+                alert('Semua dokumen wajib diupload.');
+                return;
             }
 
-            // Form progress tracking
-            function updateProgress() {
-                const requiredFields = form.querySelectorAll('input[required], select[required], textarea[required]');
-                const filledFields = Array.from(requiredFields).filter(field => {
-                    if (field.type === 'checkbox') {
-                        return form.querySelectorAll('input[name="' + field.name + '"]:checked').length > 0;
-                    }
-                    return field.value.trim() !== '';
-                });
-
-                const progress = (filledFields.length / requiredFields.length) * 100;
-                const progressBarElement = progressBar.querySelector('.form-progress-bar');
-                progressBarElement.style.width = progress + '%';
-
-                // Change color based on progress
-                if (progress < 30) {
-                    progressBarElement.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
-                } else if (progress < 70) {
-                    progressBarElement.style.background = 'linear-gradient(45deg, #ffc107, #e0a800)';
-                } else {
-                    progressBarElement.style.background = 'linear-gradient(45deg, var(--mint-primary, #00c9a7), var(--mint-blue, #0891b2))';
-                }
+            // Check text length
+            const alasanTextarea = document.getElementById('alasan_mendaftar');
+            if (alasanTextarea.value.trim().length < 50) {
+                e.preventDefault();
+                alert('Alasan mendaftar minimal 50 karakter.');
+                alasanTextarea.focus();
+                return;
             }
 
-            // Add progress tracking to all form fields
-            form.querySelectorAll('input, select, textarea').forEach(field => {
-                field.addEventListener('input', updateProgress);
-                field.addEventListener('change', updateProgress);
-            });
+            // Loading state
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengirim...';
 
-            // Initial progress update
-            updateProgress();
-
-            // Form validation
-            form.addEventListener('submit', function (e) {
-                const startDate = new Date(tanggalBuka.value);
-                const endDate = new Date(tanggalTutup.value);
-
-                // Validate dates
-                if (endDate <= startDate) {
-                    e.preventDefault();
-                    alert('Tanggal tutup harus setelah tanggal buka!');
-                    tanggalTutup.focus();
-                    return false;
-                }
-
-                // Validate dana amount
-                const danaValue = parseInt(jumlahDanaInput.value);
-                if (danaValue < 100000) {
-                    e.preventDefault();
-                    alert('Jumlah dana minimal Rp 100.000!');
-                    jumlahDanaInput.focus();
-                    return false;
-                }
-
-                // Validate required fields
-                const requiredFields = form.querySelectorAll('input[required], select[required], textarea[required]');
-                let hasEmptyField = false;
-
-                requiredFields.forEach(field => {
-                    if (field.type === 'checkbox') {
-                        const checkboxGroup = form.querySelectorAll('input[name="' + field.name + '"]:checked');
-                        if (checkboxGroup.length === 0 && field.hasAttribute('data-required-group')) {
-                            hasEmptyField = true;
-                        }
-                    } else if (!field.value.trim()) {
-                        hasEmptyField = true;
-                        field.classList.add('is-invalid');
-                    } else {
-                        field.classList.remove('is-invalid');
-                        field.classList.add('is-valid');
-                    }
-                });
-
-                if (hasEmptyField) {
-                    e.preventDefault();
-                    alert('Mohon lengkapi semua field yang wajib diisi!');
-                    return false;
-                }
-
-                // Show loading state
-                const submitBtn = this.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
-                submitBtn.disabled = true;
-
-                // Show progress message
-                const progressAlert = document.createElement('div');
-                progressAlert.className = 'alert alert-info mt-3';
-                progressAlert.innerHTML = `
+            // Show progress message
+            const progressAlert = document.createElement('div');
+            progressAlert.className = 'alert alert-info mt-3';
+            progressAlert.innerHTML = `
                 <div class="d-flex align-items-center">
                     <div class="spinner-border spinner-border-sm me-3" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                     <div>
-                        <strong>Sedang menyimpan beasiswa...</strong><br>
+                        <strong>Sedang memproses pendaftaran...</strong><br>
                         <small>Mohon tunggu, jangan tutup halaman ini.</small>
                     </div>
                 </div>
             `;
-                form.appendChild(progressAlert);
-
-                // Re-enable after 5 seconds (in case of server error)
-                setTimeout(() => {
-                    if (submitBtn.disabled) {
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                        progressAlert.remove();
-                    }
-                }, 5000);
-            });
-
-            // Auto-resize textarea
-            document.querySelectorAll('textarea').forEach(textarea => {
-                function autoResize() {
-                    textarea.style.height = 'auto';
-                    textarea.style.height = (textarea.scrollHeight) + 'px';
-                }
-
-                textarea.addEventListener('input', autoResize);
-                autoResize(); // Initial resize
-            });
-
-            // Real-time validation
-            form.querySelectorAll('input, select, textarea').forEach(field => {
-                field.addEventListener('blur', function () {
-                    validateField(this);
-                });
-
-                field.addEventListener('input', function () {
-                    // Remove error styling on input
-                    this.classList.remove('is-invalid');
-                    const feedback = this.parentNode.querySelector('.invalid-feedback');
-                    if (feedback && !feedback.textContent.includes('{{')) {
-                        feedback.style.display = 'none';
-                    }
-                });
-            });
-
-            function validateField(field) {
-                let isValid = true;
-                let message = '';
-
-                if (field.hasAttribute('required') && !field.value.trim()) {
-                    isValid = false;
-                    message = 'Field ini wajib diisi';
-                } else if (field.type === 'email' && field.value) {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(field.value)) {
-                        isValid = false;
-                        message = 'Format email tidak valid';
-                    }
-                } else if (field.name === 'jumlah_dana' && field.value) {
-                    const value = parseInt(field.value);
-                    if (value < 100000) {
-                        isValid = false;
-                        message = 'Jumlah dana minimal Rp 100.000';
-                    }
-                }
-
-                if (!isValid) {
-                    field.classList.add('is-invalid');
-                    field.classList.remove('is-valid');
-
-                    let feedback = field.parentNode.querySelector('.custom-invalid-feedback');
-                    if (!feedback) {
-                        feedback = document.createElement('div');
-                        feedback.className = 'invalid-feedback custom-invalid-feedback';
-                        field.parentNode.appendChild(feedback);
-                    }
-                    feedback.textContent = message;
-                    feedback.style.display = 'block';
-                } else if (field.value.trim()) {
-                    field.classList.remove('is-invalid');
-                    field.classList.add('is-valid');
-
-                    const feedback = field.parentNode.querySelector('.custom-invalid-feedback');
-                    if (feedback) {
-                        feedback.style.display = 'none';
-                    }
-                }
-            }
-
-            // Character counter for textarea
-            const persyaratanTextarea = document.getElementById('persyaratan');
-            if (persyaratanTextarea) {
-                const counterDiv = document.createElement('div');
-                counterDiv.className = 'form-text text-end mt-1';
-                persyaratanTextarea.parentNode.appendChild(counterDiv);
-
-                function updateCounter() {
-                    const length = persyaratanTextarea.value.length;
-                    counterDiv.textContent = `${length} karakter`;
-
-                    if (length < 10) {
-                        counterDiv.className = 'form-text text-end mt-1 text-danger';
-                        counterDiv.innerHTML = `${length} karakter <small>(minimal 10 karakter)</small>`;
-                    } else if (length > 1000) {
-                        counterDiv.className = 'form-text text-end mt-1 text-warning';
-                    } else {
-                        counterDiv.className = 'form-text text-end mt-1 text-muted';
-                    }
-                }
-
-                persyaratanTextarea.addEventListener('input', updateCounter);
-                updateCounter(); // Initial count
-            }
-
-            // Checkbox counter
-            const checkboxes = document.querySelectorAll('input[name="dokumen_pendukung[]"]');
-            const checkboxContainer = checkboxes[0]?.closest('.mb-3');
-
-            if (checkboxContainer) {
-                const counterDiv = document.createElement('div');
-                counterDiv.className = 'form-text mt-2';
-                checkboxContainer.appendChild(counterDiv);
-
-                function updateCheckboxCounter() {
-                    const checkedCount = document.querySelectorAll('input[name="dokumen_pendukung[]"]:checked').length;
-                    if (checkedCount === 0) {
-                        counterDiv.innerHTML = '<i class="fas fa-info-circle me-1 text-muted"></i>Tidak ada dokumen pendukung dipilih (opsional)';
-                        counterDiv.className = 'form-text mt-2 text-muted';
-                    } else {
-                        counterDiv.innerHTML = `<i class="fas fa-check-circle me-1 text-success"></i>${checkedCount} dokumen pendukung dipilih`;
-                        counterDiv.className = 'form-text mt-2 text-success';
-                    }
-                }
-
-                checkboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', updateCheckboxCounter);
-                });
-
-                updateCheckboxCounter(); // Initial count
-            }
-
-            // Reset form functionality
-            document.querySelector('button[type="reset"]').addEventListener('click', function (e) {
-                if (confirm('Yakin ingin mereset semua data?')) {
-                    // Clear all validation states
-                    form.classList.remove('was-validated');
-                    form.querySelectorAll('.is-valid, .is-invalid').forEach(field => {
-                        field.classList.remove('is-valid', 'is-invalid');
-                    });
-
-                    // Reset progress bar
-                    setTimeout(updateProgress, 100);
-
-                    // Reset date range info
-                    setTimeout(calculateDateRange, 100);
-                } else {
-                    e.preventDefault();
-                }
-            });
-
-            // Auto-save to localStorage (for draft functionality)
-            const STORAGE_KEY = 'beasiswa_draft_' + Date.now();
-            let draftTimer;
-
-            function saveDraft() {
-                const formData = new FormData(form);
-                const draftData = {};
-
-                for (let [key, value] of formData.entries()) {
-                    if (draftData[key]) {
-                        if (Array.isArray(draftData[key])) {
-                            draftData[key].push(value);
-                        } else {
-                            draftData[key] = [draftData[key], value];
-                        }
-                    } else {
-                        draftData[key] = value;
-                    }
-                }
-
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(draftData));
-            }
-
-            form.querySelectorAll('input, select, textarea').forEach(field => {
-                field.addEventListener('input', function () {
-                    clearTimeout(draftTimer);
-                    draftTimer = setTimeout(saveDraft, 2000); // Save draft after 2 seconds of inactivity
-                });
-            });
-
-            // Clear draft on successful submit
-            form.addEventListener('submit', function () {
-                localStorage.removeItem(STORAGE_KEY);
-            });
-
-            // Show auto-save indicator
-            let saveIndicatorTimer;
-            const saveIndicator = document.createElement('small');
-            saveIndicator.className = 'text-muted ms-2';
-            saveIndicator.style.opacity = '0';
-            saveIndicator.innerHTML = '<i class="fas fa-save text-success"></i> Draft tersimpan otomatis';
-
-            const firstSectionTitle = document.querySelector('.section-title');
-            if (firstSectionTitle) {
-                firstSectionTitle.appendChild(saveIndicator);
-            }
-
-            function showSaveIndicator() {
-                clearTimeout(saveIndicatorTimer);
-                saveIndicator.style.opacity = '1';
-                saveIndicatorTimer = setTimeout(() => {
-                    saveIndicator.style.opacity = '0';
-                }, 2000);
-            }
-
-            // Show save indicator when draft is saved
-            const originalSaveDraft = saveDraft;
-            saveDraft = function () {
-                originalSaveDraft();
-                showSaveIndicator();
-            };
+            form.appendChild(progressAlert);
         });
+
+        // Phone number formatting
+        const phoneInput = document.getElementById('no_hp');
+        phoneInput.addEventListener('input', function() {
+            // Remove non-digits
+            let value = this.value.replace(/\D/g, '');
+
+            // Limit length
+            if (value.length > 15) {
+                value = value.substring(0, 15);
+            }
+
+            this.value = value;
+        });
+
+        // NIM validation
+        const nimInput = document.getElementById('nim');
+        nimInput.addEventListener('input', function() {
+            // Remove non-digits
+            let value = this.value.replace(/\D/g, '');
+            this.value = value;
+        });
+
+        // Character counter for textarea
+        const textareaElement = document.getElementById('alasan_mendaftar');
+        if (textareaElement) {
+            const maxLength = 1000;
+            const counterElement = document.createElement('div');
+            counterElement.className = 'form-text text-end mt-2';
+            textareaElement.parentNode.appendChild(counterElement);
+
+            function updateCounter() {
+                const length = textareaElement.value.length;
+                const remaining = maxLength - length;
+                counterElement.textContent = `${length}/${maxLength} karakter`;
+
+                if (length < 50) {
+                    counterElement.className = 'form-text text-end mt-2 text-danger';
+                    counterElement.innerHTML = `${length}/${maxLength} karakter <small>(minimal 50 karakter)</small>`;
+                } else if (remaining < 100) {
+                    counterElement.className = 'form-text text-end mt-2 text-warning';
+                } else if (remaining < 0) {
+                    counterElement.className = 'form-text text-end mt-2 text-danger';
+                } else {
+                    counterElement.className = 'form-text text-end mt-2 text-muted';
+                }
+            }
+
+            textareaElement.addEventListener('input', updateCounter);
+            updateCounter();
+        }
+
+        // Real-time form validation
+        const inputs = form.querySelectorAll('input[required], textarea[required]');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+
+            input.addEventListener('input', function() {
+                // Remove error styling on input
+                this.classList.remove('is-invalid');
+                const feedback = this.parentNode.querySelector('.invalid-feedback');
+                if (feedback && !feedback.textContent.includes('{{')) {
+                    feedback.style.display = 'none';
+                }
+            });
+        });
+
+        function validateField(field) {
+            let isValid = true;
+            let message = '';
+
+            if (field.type === 'email') {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(field.value)) {
+                    isValid = false;
+                    message = 'Format email tidak valid';
+                }
+            }
+
+            if (field.name === 'nim') {
+                if (field.value.length < 8) {
+                    isValid = false;
+                    message = 'NIM minimal 8 karakter';
+                } else if (!/^[0-9]+$/.test(field.value)) {
+                    isValid = false;
+                    message = 'NIM hanya boleh berisi angka';
+                }
+            }
+
+            if (field.name === 'no_hp') {
+                if (field.value.length < 10) {
+                    isValid = false;
+                    message = 'Nomor HP minimal 10 digit';
+                } else if (!/^[0-9]+$/.test(field.value)) {
+                    isValid = false;
+                    message = 'Nomor HP hanya boleh berisi angka';
+                }
+            }
+
+            if (field.name === 'nama_lengkap') {
+                if (field.value.length < 3) {
+                    isValid = false;
+                    message = 'Nama minimal 3 karakter';
+                }
+            }
+
+            if (field.name === 'alasan_mendaftar') {
+                if (field.value.length < 50) {
+                    isValid = false;
+                    message = 'Alasan mendaftar minimal 50 karakter';
+                }
+            }
+
+            // Show/hide validation feedback
+            if (!isValid && field.value.length > 0) {
+                field.classList.add('is-invalid');
+                let feedback = field.parentNode.querySelector('.custom-feedback');
+                if (!feedback) {
+                    feedback = document.createElement('div');
+                    feedback.className = 'invalid-feedback custom-feedback';
+                    field.parentNode.appendChild(feedback);
+                }
+                feedback.textContent = message;
+                feedback.style.display = 'block';
+            } else {
+                field.classList.remove('is-invalid');
+                const feedback = field.parentNode.querySelector('.custom-feedback');
+                if (feedback) {
+                    feedback.style.display = 'none';
+                }
+            }
+        }
+
+        // Progress indicator
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress mb-4';
+        progressBar.style.height = '6px';
+        progressBar.innerHTML = '<div class="progress-bar" style="width: 0%; background: linear-gradient(45deg, var(--gold-primary), var(--gold-dark));"></div>';
+
+        const formSection = document.querySelector('.form-section');
+        formSection.insertBefore(progressBar, formSection.firstChild);
+
+        function updateProgress() {
+            const totalFields = form.querySelectorAll('input[required], textarea[required]').length;
+            const filledFields = Array.from(form.querySelectorAll('input[required], textarea[required]')).filter(field => {
+                if (field.type === 'file') {
+                    return field.files && field.files.length > 0;
+                } else if (field.type === 'checkbox') {
+                    return field.checked;
+                } else {
+                    return field.value.trim().length > 0;
+                }
+            }).length;
+
+            const progress = (filledFields / totalFields) * 100;
+            progressBar.querySelector('.progress-bar').style.width = progress + '%';
+        }
+
+        // Update progress on input
+        inputs.forEach(input => {
+            input.addEventListener('input', updateProgress);
+            input.addEventListener('change', updateProgress);
+        });
+
+        fileInputs.forEach(input => {
+            input.addEventListener('change', updateProgress);
+        });
+
+        document.getElementById('terms').addEventListener('change', updateProgress);
+
+        // Initial progress update
+        updateProgress();
+
+        // Scroll to error fields if any
+        const errorFields = document.querySelectorAll('.is-invalid');
+        if (errorFields.length > 0) {
+            errorFields[0].scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+        }
+
+        // Auto-save notification (visual feedback only)
+        let autoSaveTimer;
+        const autoSaveIndicator = document.createElement('small');
+        autoSaveIndicator.className = 'text-muted ms-2';
+        autoSaveIndicator.style.opacity = '0';
+        autoSaveIndicator.innerHTML = '<i class="fas fa-check text-success"></i> Data tersimpan';
+
+        const formTitle = document.querySelector('.section-title');
+        formTitle.appendChild(autoSaveIndicator);
+
+        function showAutoSave() {
+            clearTimeout(autoSaveTimer);
+            autoSaveIndicator.style.opacity = '1';
+            autoSaveTimer = setTimeout(() => {
+                autoSaveIndicator.style.opacity = '0';
+            }, 2000);
+        }
+
+        // Show auto-save feedback on input
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                setTimeout(showAutoSave, 1000);
+            });
+        });
+    });
     </script>
 @endsection

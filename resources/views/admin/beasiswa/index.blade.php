@@ -15,63 +15,64 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="row mb-4 g-3 stats-card">
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 bg-primary text-white h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <div class="mb-1 text-uppercase fw-semibold small opacity-75">Total Beasiswa</div>
-                        <div class="h3 mb-0 fw-bold">
-                            {{ isset($beasiswas) && method_exists($beasiswas, 'total') ? $beasiswas->total() : 0 }}
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1">Total Beasiswa</h6>
+                            <h4 class="mb-0">{{ $beasiswas->total() ?? 0 }}</h4>
                         </div>
-                    </div>
-                    <div class="ms-3">
-                        <i class="fas fa-graduation-cap fa-2x opacity-75"></i>
+                        <div class="align-self-center">
+                            <i class="fas fa-graduation-cap fa-2x opacity-75"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 bg-success text-white h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <div class="mb-1 text-uppercase fw-semibold small opacity-75">Beasiswa Aktif</div>
-                        <div class="h3 mb-0 fw-bold">
-                            {{ isset($beasiswas) && method_exists($beasiswas, 'where') ? $beasiswas->where('status', 'aktif')->count() : 0 }}
+        <div class="col-md-3">
+            <div class="card border-0 bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1">Beasiswa Aktif</h6>
+                            <h4 class="mb-0">{{ $beasiswas->where('status', 'aktif')->count() }}</h4>
                         </div>
-                    </div>
-                    <div class="ms-3">
-                        <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 bg-info text-white h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <div class="mb-1 text-uppercase fw-semibold small opacity-75">Total Pendaftar</div>
-                        <div class="h3 mb-0 fw-bold">
-                            {{ isset($totalPendaftar) ? $totalPendaftar : 0 }}
+        <div class="col-md-3">
+            <div class="card border-0 bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1">Total Pendaftar</h6>
+                            {{-- total pendaftar --}}
+                            <h6>Total Pendaftar: {{ $totalPendaftar ?? 'Tidak ada data' }}</h6>
                         </div>
-                    </div>
-                    <div class="ms-3">
-                        <i class="fas fa-users fa-2x opacity-75"></i>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x opacity-75"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 bg-warning text-white h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <div class="mb-1 text-uppercase fw-semibold small opacity-75">Total Dana</div>
-                        <div class="h5 mb-0 fw-bold">
-                            Rp {{ isset($beasiswas) && method_exists($beasiswas, 'sum') ? number_format($beasiswas->sum('jumlah_dana'), 0, ',', '.') : 0 }}
+        <div class="col-md-3">
+            <div class="card border-0 bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1">Total Dana</h6>
+                            <h4 class="mb-0 small">Rp {{ number_format($beasiswas->sum('jumlah_dana'), 0, ',', '.') }}</h4>
                         </div>
-                    </div>
-                    <div class="ms-3">
-                        <i class="fas fa-money-bill-wave fa-2x opacity-75"></i>
+                        <div class="align-self-center">
+                            <i class="fas fa-money-bill-wave fa-2x opacity-75"></i>
+                        </div>
                     </div>
                 </div>
             </div>

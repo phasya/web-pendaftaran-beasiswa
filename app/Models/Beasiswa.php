@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Exception;
 
 class Beasiswa extends Model
 {
@@ -14,6 +13,8 @@ class Beasiswa extends Model
     /**
      * The attributes that are mass assignable.
      */
+    protected $table = 'beasiswas';
+
     protected $fillable = [
         'nama_beasiswa',
         'deskripsi',
@@ -172,48 +173,32 @@ class Beasiswa extends Model
     /**
      * Get dokumen pendukung dengan label
      */
-    /**
- * Get dokumen pendukung dengan label
- */
-public function getDokumenPendukungLabelAttribute()
-{
-    // Pastikan dokumen_pendukung adalah array
-    $dokumenArray = [];
-    
-    if (!empty($this->dokumen_pendukung)) {
-        if (is_array($this->dokumen_pendukung)) {
-            $dokumenArray = $this->dokumen_pendukung;
-        } else if (is_string($this->dokumen_pendukung)) {
-            // Jika string, decode JSON
-            try {
-                $decoded = json_decode($this->dokumen_pendukung, true);
-                $dokumenArray = is_array($decoded) ? $decoded : [];
-            } catch (Exception $e) {
-                $dokumenArray = [];
+    public function getDokumenPendukungLabelAttribute()
+    {
+        if (!$this->dokumen_pendukung) {
+            return [];
+        }
+
+        $labels = [
+            'ktp' => 'KTP',
+            'kk' => 'Kartu Keluarga',
+            'ijazah' => 'Ijazah Terakhir',
+            'transkrip' => 'Transkrip Nilai',
+            'surat_keterangan_tidak_mampu' => 'Surat Keterangan Tidak Mampu',
+            'slip_gaji_ortu' => 'Slip Gaji Orang Tua',
+            'surat_rekomendasi' => 'Surat Rekomendasi',
+            'sertifikat_prestasi' => 'Sertifikat Prestasi'
+        ];
+
+        $result = [];
+        foreach ($this->dokumen_pendukung as $dokumen) {
+            if (isset($labels[$dokumen])) {
+                $result[] = $labels[$dokumen];
             }
         }
+
+        return $result;
     }
-
-    $labels = [
-        'ktp' => 'KTP',
-        'kk' => 'Kartu Keluarga',
-        'ijazah' => 'Ijazah Terakhir',
-        'transkrip' => 'Transkrip Nilai',
-        'surat_keterangan_tidak_mampu' => 'Surat Keterangan Tidak Mampu',
-        'slip_gaji_ortu' => 'Slip Gaji Orang Tua',
-        'surat_rekomendasi' => 'Surat Rekomendasi',
-        'sertifikat_prestasi' => 'Sertifikat Prestasi'
-    ];
-
-    $result = [];
-    foreach ($dokumenArray as $dokumen) {
-        if (isset($labels[$dokumen])) {
-            $result[] = $labels[$dokumen];
-        }
-    }
-
-    return $result;
-}
 
     /**
      * Get sisa hari pendaftaran
@@ -423,6 +408,4 @@ public function getDokumenPendukungLabelAttribute()
 
         return array_diff($requiredDocs, $uploadedDocs);
     }
-
-    
 }

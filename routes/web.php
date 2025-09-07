@@ -7,7 +7,6 @@ use App\Http\Controllers\PendaftarController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\BeasiswaController as AdminBeasiswaController;
 use App\Http\Controllers\Admin\PendaftarController as AdminPendaftarController;
-use App\Http\Controllers\Admin\FileTypeController; // TAMBAHKAN INI
 
 // ====================
 // HALAMAN UTAMA USER
@@ -57,9 +56,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Update status pendaftar (Diterima/Ditolak)
     Route::patch('/pendaftar/{pendaftar}/status', [AdminPendaftarController::class, 'updateStatus'])->name('pendaftar.update-status');
-    
-    // Routes untuk File Types - TAMBAHAN BARU
-    Route::resource('file-types', FileTypeController::class);
-    Route::patch('/file-types/{fileType}/toggle-status', [FileTypeController::class, 'toggleStatus'])->name('file-types.toggle-status');
-    Route::get('/api/file-types', [FileTypeController::class, 'getFileTypes'])->name('api.file-types');
 });
+
+// ====================
+// HAPUS ROUTE BERMASALAH
+// ====================
+// ❌ Ini yang bikin error, jadi jangan dipakai lagi:
+// Route::prefix('admin')->group(function () {
+//     Route::resource('beasiswas', BeasiswaController::class); 
+// });
