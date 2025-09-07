@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('pendaftars', function (Blueprint $table) {
+        Schema::create('pendaftar', function (Blueprint $table) {
             $table->id();
             $table->foreignId('beasiswa_id')->constrained()->onDelete('cascade');
             $table->string('nama_lengkap');

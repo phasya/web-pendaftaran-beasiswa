@@ -29,17 +29,17 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/beasiswa/{beasiswa}/daftar', [PendaftarController::class, 'create'])->name('pendaftar.create');
 Route::post('/beasiswa/{beasiswa}/daftar', [PendaftarController::class, 'store'])->name('pendaftar.store');
 
+// Status & utilitas pendaftaran
+Route::post('/pendaftar/check-status', [PendaftarController::class, 'checkStatus'])->name('pendaftar.check-status');
+Route::post('/pendaftar/cancel', [PendaftarController::class, 'cancel'])->name('pendaftar.cancel');
+Route::get('/pendaftar/{pendaftar}/download/{fileType}', [PendaftarController::class, 'downloadFile'])->name('pendaftar.download');
+
 // ====================
 // TEST ERROR 404
 // ====================
 Route::get('/test-404', function () {
     abort(404);
 })->name('test.404');
-
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('beasiswa', \App\Http\Controllers\Admin\BeasiswaController::class);
-});
-
 
 // ====================
 // ADMIN (DENGAN MIDDLEWARE)
@@ -59,9 +59,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 });
 
 // ====================
-// HAPUS ROUTE BERMASALAH
+// ROUTE DEBUGGING (OPTIONAL - REMOVE IN PRODUCTION)
 // ====================
-// ❌ Ini yang bikin error, jadi jangan dipakai lagi:
-// Route::prefix('admin')->group(function () {
-//     Route::resource('beasiswas', BeasiswaController::class); 
-// });
+Route::get('/debug-routes', function () {
+    if (app()->environment('local')) {
+        return response()->json([
+            'pendaftar_create' => route('pendaftar.create', ['beasiswa' => 1]),
+            'pendaftar_store' => route('pendaftar.store', ['beasiswa' => 1]),
+            'admin_beasiswa_index' => route('admin.beasiswa.index'),
+        ]);
+    }
+    abort(404);
+});

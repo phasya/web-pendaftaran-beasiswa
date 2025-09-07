@@ -74,7 +74,8 @@
                                 <i class="fas fa-edit text-primary me-2"></i>Formulir Pendaftaran
                             </h5>
 
-                            <form method="POST" action="{{ route('pendaftar.store', $beasiswa) }}" enctype="multipart/form-data" id="registrationForm">
+                            <form method="POST" action="{{ route('pendaftar.store', $beasiswa->id) }}" enctype="multipart/form-data"
+                                id="registrationForm">
                                 @csrf
 
                                 <!-- Personal Information -->

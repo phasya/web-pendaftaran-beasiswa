@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
 {
-    Schema::table('pendaftars', function (Blueprint $table) {
+    Schema::table('pendaftar', function (Blueprint $table) {
         $table->unsignedBigInteger('user_id')->after('id');
         $table->foreign('user_id')->references('id')->on('users');
     });
@@ -16,7 +16,7 @@ return new class extends Migration
 
 public function down()
 {
-    Schema::table('pendaftars', function (Blueprint $table) {
+    Schema::table('pendaftar', function (Blueprint $table) {
         $table->dropForeign(['user_id']);
         $table->dropColumn('user_id');
     });
