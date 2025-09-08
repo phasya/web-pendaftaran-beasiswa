@@ -56,6 +56,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Update status pendaftar (Diterima/Ditolak)
     Route::patch('/pendaftar/{pendaftar}/status', [AdminPendaftarController::class, 'updateStatus'])->name('pendaftar.update-status');
+
+    Route::post('/beasiswa/{beasiswa}/daftar', [PendaftarController::class, 'store'])->name('pendaftar.store');
+
 });
 
 // ====================
@@ -71,3 +74,14 @@ Route::get('/debug-routes', function () {
     }
     abort(404);
 });
+
+
+
+// CRUD Beasiswa (untuk admin)
+Route::prefix('admin')->group(function () {
+    Route::resource('beasiswa', BeasiswaController::class);
+});
+
+// Form pendaftaran untuk tiap beasiswa
+Route::get('/beasiswa/{beasiswa}/daftar', [PendaftarController::class, 'create'])->name('pendaftar.create');
+Route::post('/beasiswa/{beasiswa}/daftar', [PendaftarController::class, 'store'])->name('pendaftar.store');
