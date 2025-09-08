@@ -63,11 +63,19 @@ class Beasiswa extends Model
     }
 
     /**
-     * Relationship dengan Pendaftar
+     * Relationship dengan Pendaftar - CHANGED: Menggunakan nama plural
+     */
+    public function pendaftars()
+    {
+        return $this->hasMany(Pendaftar::class, 'beasiswa_id');
+    }
+
+    /**
+     * Alias untuk backward compatibility - ADDED
      */
     public function pendaftar()
     {
-        return $this->hasMany(Pendaftar::class);
+        return $this->pendaftars();
     }
 
     /**
@@ -175,7 +183,7 @@ class Beasiswa extends Model
      */
     public function getDokumenPendukungLabelAttribute()
     {
-        if (!$this->dokumen_pendukung) {
+        if (!$this->dokumen_pendukung || !is_array($this->dokumen_pendukung)) {
             return [];
         }
 
@@ -217,35 +225,35 @@ class Beasiswa extends Model
     }
 
     /**
-     * Get total pendaftar
+     * Get total pendaftar - CHANGED: Menggunakan relasi plural
      */
     public function getTotalPendaftarAttribute()
     {
-        return $this->pendaftar()->count();
+        return $this->pendaftars()->count();
     }
 
     /**
-     * Get pendaftar diterima
+     * Get pendaftar diterima - CHANGED: Menggunakan relasi plural
      */
     public function getPendaftarDiterimaAttribute()
     {
-        return $this->pendaftar()->where('status', 'diterima')->count();
+        return $this->pendaftars()->where('status', 'diterima')->count();
     }
 
     /**
-     * Get pendaftar ditolak
+     * Get pendaftar ditolak - CHANGED: Menggunakan relasi plural
      */
     public function getPendaftarDitolakAttribute()
     {
-        return $this->pendaftar()->where('status', 'ditolak')->count();
+        return $this->pendaftars()->where('status', 'ditolak')->count();
     }
 
     /**
-     * Get pendaftar pending
+     * Get pendaftar pending - CHANGED: Menggunakan relasi plural
      */
     public function getPendaftarPendingAttribute()
     {
-        return $this->pendaftar()->where('status', 'pending')->count();
+        return $this->pendaftars()->where('status', 'pending')->count();
     }
 
     /**
@@ -315,21 +323,21 @@ class Beasiswa extends Model
     }
 
     /**
-     * Validasi sebelum delete
+     * Validasi sebelum delete - CHANGED: Menggunakan relasi plural
      */
     public function canBeDeleted()
     {
         // Tidak bisa dihapus jika ada pendaftar dengan status diterima
-        return !$this->pendaftar()->where('status', 'diterima')->exists();
+        return !$this->pendaftars()->where('status', 'diterima')->exists();
     }
 
     /**
-     * Get warning message for deletion
+     * Get warning message for deletion - CHANGED: Menggunakan relasi plural
      */
     public function getDeletionWarning()
     {
-        $pendaftarCount = $this->pendaftar()->count();
-        $diterimaCount = $this->pendaftar()->where('status', 'diterima')->count();
+        $pendaftarCount = $this->pendaftars()->count();
+        $diterimaCount = $this->pendaftars()->where('status', 'diterima')->count();
 
         if ($diterimaCount > 0) {
             return "Beasiswa ini memiliki {$diterimaCount} pendaftar yang sudah diterima dan tidak dapat dihapus.";

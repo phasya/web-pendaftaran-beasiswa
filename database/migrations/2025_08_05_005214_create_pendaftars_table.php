@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pendaftar', function (Blueprint $table) {
+        Schema::create('pendaftars', function (Blueprint $table) {
             $table->id();
             $table->foreignId('beasiswa_id')->constrained('beasiswas')->onDelete('cascade');
             $table->string('nama_lengkap');
@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('file_transkrip')->nullable();
             $table->string('file_ktp')->nullable();
             $table->string('file_kk')->nullable();
+            $table->string('dokumen_ktp')->nullable(); 
+            $table->string('dokumen_transkrip')->nullable();
+            $table->string('dokumen_ijazah')->nullable();
             $table->enum('status', ['pending', 'diterima', 'ditolak', 'dibatalkan'])->default('pending');
             $table->timestamp('tanggal_daftar')->nullable();
             $table->text('keterangan')->nullable();
@@ -45,6 +48,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pendaftar');
+        Schema::dropIfExists('pendaftars');
     }
 };

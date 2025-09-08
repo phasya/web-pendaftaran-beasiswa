@@ -181,62 +181,59 @@
                                     </div>
                                 </div>
 
-                                <div class="requirements-section mb-4">
-                                    <label class="text-muted small fw-semibold">DOKUMEN PENDUKUNG YANG DIPERLUKAN</label>
-                                    <div class="bg-light p-3 rounded-3 mt-2">
-    @if (is_array($beasiswa->dokumen_pendukung) || is_countable($beasiswa->dokumen_pendukung)) {
-    $count = count($beasiswa->dokumen_pendukung);
-} else {
-    $count = 0;
-}                                            <div class="row">
-                                                @foreach($beasiswa->dokumen_pendukung_label as $dokumen)
-                                                    <div class="col-md-6 mb-2">
-                                                        <div class="d-flex align-items-center">
-                                                            <i class="fas fa-file-alt text-primary me-2"></i>
-                                                            <span>{{ $dokumen }}</span>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @else
-                                            <p class="text-muted mb-0 fst-italic">
-                                                <i class="fas fa-info-circle me-2"></i>
-                                                Tidak ada dokumen pendukung khusus yang diperlukan
-                                            </p>
-                                        @endif
-                                    </div>
-                                </div>
+                                <!-- Ganti bagian file upload statis dengan ini -->
+                                <div class="form-group-section mb-4">
+                                    <h6 class="form-group-title">
+                                        <i class="fas fa-upload text-warning me-2"></i>Upload Dokumen
+                                    </h6>
+                                    @php
+                                        $dokumenPendukung = is_string($beasiswa->dokumen_pendukung)
+                                            ? json_decode($beasiswa->dokumen_pendukung, true)
+                                            : $beasiswa->dokumen_pendukung;
+                                    @endphp
 
-                                            <div class="col-md-4 mb-3">
-                                                <div class="file-upload-card">
-                                                    <label for="file_kk" class="file-label">
-                                                        <div class="file-icon">
-                                                            <i class="fas fa-users text-success"></i>
-                                                        </div>
-                                                        <div class="file-info">
-                                                            <h6 class="file-title">Kartu Keluarga *</h6>
-                                                            <small class="file-desc">PDF/JPG/PNG, Max: 5MB</small>
-                                                        </div>
-                                                    </label>
-                                                    <input type="file" 
-                                                           class="form-control file-input @error('file_kk') is-invalid @enderror" 
-                                                           id="file_kk" 
-                                                           name="file_kk" 
-                                                           accept=".pdf,.jpg,.jpeg,.png" 
-                                                           required>
-                                                    @error('file_kk')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="form-group-content">
+                                        @if(!empty($dokumenPendukung) && count($dokumenPendukung) > 0)
+    <div class="row">
+        @foreach($dokumenPendukung as $index => $dokumen)
+            <div class="col-md-6 mb-3">
+                <div class="file-upload-card">
+                    <label for="dokumen_{{ $dokumen }}" class="file-label">
+                        <div class="file-icon">
+                            <i class="fas fa-file-alt text-primary"></i>
+                        </div>
+                        <div class="file-info">
+                            <h6 class="file-title">
+                                {{ $beasiswa->dokumen_pendukung_label[$index] ?? 'Dokumen ' . ($index+1) }} *
+                            </h6>
+                            <small class="file-desc">PDF/JPG/PNG, Max: 5MB</small>
+                        </div>
+                    </label>
+                    <input type="file" 
+                           class="form-control file-input @error('dokumen_' . $dokumen) is-invalid @enderror"
+                           id="dokumen_{{ $dokumen }}" 
+                           name="dokumen_{{ $dokumen }}" 
+                           accept=".pdf,.jpg,.jpeg,.png"
+                           required>
+                    @error('dokumen_' . $dokumen)
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        @endforeach
+    </div>
+@else
+    <p class="text-muted">Tidak ada dokumen pendukung yang diperlukan untuk beasiswa ini.</p>
+@endif
+
                                     </div>
-                                </div>
+                                </div>  
 
 
                                 <br><br>
 
                                 <!-- Terms and Submit -->
+
                                 <div class="form-group-section">
                                     <div class="terms-section mb-4">
                                         <div class="form-check">

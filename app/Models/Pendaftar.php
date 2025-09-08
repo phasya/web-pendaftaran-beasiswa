@@ -4,47 +4,41 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pendaftar extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $table = 'pendaftar';
+    // Hapus protected $table karena Laravel akan otomatis gunakan 'pendaftars'
+    // protected $table = 'pendaftars';
 
     protected $fillable = [
         'beasiswa_id',
         'nama_lengkap',
+        'nim',
         'email',
-        'no_telepon',
-        'tanggal_lahir',
-        'jenis_kelamin',
-        'alamat',
-        'pendidikan_terakhir',
-        'nama_institusi',
-        'jurusan',
-        'ipk',
-        'tahun_lulus',
-        'pekerjaan',
-        'penghasilan',
+        'no_hp',
         'alasan_mendaftar',
-        'dokumen_pendukung',
+        'file_transkrip',
+        'file_ktp',
+        'file_kk',
         'status',
         'tanggal_daftar',
         'keterangan'
     ];
 
     protected $casts = [
-        'tanggal_lahir' => 'date',
         'tanggal_daftar' => 'datetime',
-        'ipk' => 'decimal:2',
-        'penghasilan' => 'decimal:2',
-        'dokumen_pendukung' => 'array'
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     // Relasi dengan beasiswa
     public function beasiswa()
     {
-        return $this->belongsTo(Beasiswa::class);
+        return $this->belongsTo(Beasiswa::class, 'beasiswa_id');
     }
 
     // Status options
@@ -53,7 +47,8 @@ class Pendaftar extends Model
         return [
             'pending' => 'Pending',
             'diterima' => 'Diterima', 
-            'ditolak' => 'Ditolak'
+            'ditolak' => 'Ditolak',
+            'dibatalkan' => 'Dibatalkan'
         ];
     }
 
@@ -65,6 +60,8 @@ class Pendaftar extends Model
                 return 'bg-success';
             case 'ditolak':
                 return 'bg-danger';
+            case 'dibatalkan':
+                return 'bg-secondary';
             case 'pending':
             default:
                 return 'bg-warning';
@@ -79,6 +76,8 @@ class Pendaftar extends Model
                 return 'Diterima';
             case 'ditolak':
                 return 'Ditolak';
+            case 'dibatalkan':
+                return 'Dibatalkan';
             case 'pending':
             default:
                 return 'Pending';
@@ -86,7 +85,7 @@ class Pendaftar extends Model
     }
 
     // Get formatted registration number
-    public function getMemorPendaftaranAttribute()
+    public function getNomorPendaftaranAttribute()
     {
         return 'REG-' . $this->beasiswa_id . '-' . str_pad($this->id, 6, '0', STR_PAD_LEFT);
     }
@@ -94,31 +93,7 @@ class Pendaftar extends Model
     // Get formatted tanggal daftar
     public function getFormattedTanggalDaftarAttribute()
     {
-        return $this->tanggal_daftar->format('d/m/Y H:i');
-    }
-
-    // Get jenis kelamin text
-    public function getJenisKelaminTextAttribute()
-    {
-        return $this->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan';
-    }
-
-    // Get formatted IPK
-    public function getFormattedIpkAttribute()
-    {
-        return number_format($this->ipk, 2, ',', '.');
-    }
-
-    // Get formatted penghasilan
-    public function getFormattedPenghasilanAttribute()
-    {
-        return 'Rp ' . number_format($this->penghasilan, 0, ',', '.');
-    }
-
-    // Get age from tanggal_lahir
-    public function getUmurAttribute()
-    {
-        return $this->tanggal_lahir->age ?? 0;
+        return $this->tanggal_daftar ? $this->tanggal_daftar->format('d/m/Y H:i') : $this->created_at->format('d/m/Y H:i');
     }
 
     // Check if can be deleted
@@ -143,5 +118,28 @@ class Pendaftar extends Model
     public function scopeLatest($query)
     {
         return $query->orderBy('created_at', 'desc');
+    }
+
+    // Scope untuk search
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where(function($q) use ($keyword) {
+            $q->where('nama_lengkap', 'like', "%{$keyword}%")
+              ->orWhere('nim', 'like', "%{$keyword}%")
+              ->orWhere('email', 'like', "%{$keyword}%")
+              ->orWhere('no_hp', 'like', "%{$keyword}%");
+        });
+    }
+
+    // Boot method untuk auto-set tanggal_daftar
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($pendaftar) {
+            if (!$pendaftar->tanggal_daftar) {
+                $pendaftar->tanggal_daftar = now();
+            }
+        });
     }
 }

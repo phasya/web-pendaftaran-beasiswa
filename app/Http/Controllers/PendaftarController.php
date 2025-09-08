@@ -11,6 +11,7 @@ use Exception;
 
 class PendaftarController extends Controller
 {
+    
     public function create(Beasiswa $beasiswa)
     {
         try {
@@ -61,17 +62,17 @@ class PendaftarController extends Controller
                                ->with('error', 'Pendaftaran beasiswa belum dibuka.');
             }
 
-            // Validasi input
-            $validated = $request->validate([
+            // Dynamic validation rules based on beasiswa requirements
+            $rules = [
                 'nama_lengkap' => 'required|string|max:255|min:3',
                 'nim' => 'required|string|max:20|min:8|unique:pendaftars,nim|regex:/^[0-9]+$/',
                 'email' => 'required|email|max:255|unique:pendaftars,email',
                 'no_hp' => 'required|string|max:15|min:10|regex:/^[0-9]+$/',
                 'alasan_mendaftar' => 'required|string|min:50|max:1000',
-                'file_transkrip' => 'required|file|mimes:pdf|max:5120', // 5MB
-                'file_ktp' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048', // 2MB
-                'file_kk' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048', // 2MB
-            ], [
+            ];
+
+            // Custom messages
+            $messages = [
                 'nama_lengkap.required' => 'Nama lengkap wajib diisi',
                 'nama_lengkap.min' => 'Nama lengkap minimal 3 karakter',
                 'nama_lengkap.max' => 'Nama lengkap maksimal 255 karakter',
@@ -89,16 +90,33 @@ class PendaftarController extends Controller
                 'alasan_mendaftar.required' => 'Alasan mendaftar wajib diisi',
                 'alasan_mendaftar.min' => 'Alasan mendaftar minimal 50 karakter',
                 'alasan_mendaftar.max' => 'Alasan mendaftar maksimal 1000 karakter',
-                'file_transkrip.required' => 'File transkrip wajib diupload',
-                'file_transkrip.mimes' => 'File transkrip harus berformat PDF',
-                'file_transkrip.max' => 'Ukuran file transkrip maksimal 5MB',
-                'file_ktp.required' => 'File KTP wajib diupload',
-                'file_ktp.mimes' => 'File KTP harus berformat PDF, JPG, JPEG, atau PNG',
-                'file_ktp.max' => 'Ukuran file KTP maksimal 2MB',
-                'file_kk.required' => 'File Kartu Keluarga wajib diupload',
-                'file_kk.mimes' => 'File Kartu Keluarga harus berformat PDF, JPG, JPEG, atau PNG',
-                'file_kk.max' => 'Ukuran file Kartu Keluarga maksimal 2MB',
-            ]);
+            ];
+
+            // Add dynamic file validation based on beasiswa requirements
+            $fileFields = [];
+            if ($beasiswa->dokumen_pendukung && is_array($beasiswa->dokumen_pendukung)) {
+                foreach ($beasiswa->dokumen_pendukung as $dokumen) {
+                    $fieldName = "dokumen_{$dokumen}";
+                    $rules[$fieldName] = 'required|file|mimes:pdf,jpg,jpeg,png|max:5120'; // 5MB
+                    $fileFields[] = $fieldName;
+                    
+                    // Add custom messages for each document type
+                    $documentLabel = $this->getDocumentLabel($dokumen);
+                    $messages[$fieldName . '.required'] = "File {$documentLabel} wajib diupload";
+                    $messages[$fieldName . '.mimes'] = "File {$documentLabel} harus berformat PDF, JPG, JPEG, atau PNG";
+                    $messages[$fieldName . '.max'] = "Ukuran file {$documentLabel} maksimal 5MB";
+                }
+            } else {
+                // Fallback: if no specific documents required, require KK only (as per current form)
+                $rules['file_kk'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:5120';
+                $fileFields[] = 'file_kk';
+                $messages['file_kk.required'] = 'File Kartu Keluarga wajib diupload';
+                $messages['file_kk.mimes'] = 'File Kartu Keluarga harus berformat PDF, JPG, JPEG, atau PNG';
+                $messages['file_kk.max'] = 'Ukuran file Kartu Keluarga maksimal 5MB';
+            }
+
+            // Validate the request
+            $validated = $request->validate($rules, $messages);
 
             DB::beginTransaction();
 
@@ -110,47 +128,50 @@ class PendaftarController extends Controller
             // Upload files dengan nama yang unik
             $timestamp = time();
             $nimSanitized = preg_replace('/[^a-zA-Z0-9]/', '', $validated['nim']);
-            
-            $transkripName = $timestamp . '_' . $nimSanitized . '_transkrip.' . $request->file('file_transkrip')->getClientOriginalExtension();
-            $ktpName = $timestamp . '_' . $nimSanitized . '_ktp.' . $request->file('file_ktp')->getClientOriginalExtension();
-            $kkName = $timestamp . '_' . $nimSanitized . '_kk.' . $request->file('file_kk')->getClientOriginalExtension();
+            $uploadedFiles = [];
 
-            // Validasi ukuran file sebelum upload
-            $maxSizes = [
-                'file_transkrip' => 5120, // 5MB
-                'file_ktp' => 2048, // 2MB  
-                'file_kk' => 2048, // 2MB
-            ];
+            foreach ($fileFields as $fieldName) {
+                if ($request->hasFile($fieldName)) {
+                    $file = $request->file($fieldName);
+                    
+                    // Validasi ukuran file
+                    if ($file->getSize() > (5120 * 1024)) { // 5MB in bytes
+                        throw new Exception("Ukuran file {$fieldName} terlalu besar. Maksimal 5MB");
+                    }
 
-            foreach ($maxSizes as $field => $maxSize) {
-                if ($request->file($field)->getSize() > ($maxSize * 1024)) {
-                    throw new Exception("Ukuran file {$field} terlalu besar. Maksimal " . ($maxSize/1024) . "MB");
+                    // Generate unique filename
+                    $extension = $file->getClientOriginalExtension();
+                    $fileName = $timestamp . '_' . $nimSanitized . '_' . $fieldName . '.' . $extension;
+                    
+                    // Upload file
+                    try {
+                        $file->storeAs('public/documents', $fileName);
+                        $uploadedFiles[$fieldName] = $fileName;
+                    } catch (Exception $e) {
+                        throw new Exception("Gagal mengupload file {$fieldName}: " . $e->getMessage());
+                    }
                 }
             }
 
-            // Upload files
-            try {
-                $request->file('file_transkrip')->storeAs('public/documents', $transkripName);
-                $request->file('file_ktp')->storeAs('public/documents', $ktpName);
-                $request->file('file_kk')->storeAs('public/documents', $kkName);
-            } catch (Exception $e) {
-                throw new Exception('Gagal mengupload file: ' . $e->getMessage());
-            }
-
-            // Buat data pendaftar
-            $pendaftar = Pendaftar::create([
+            // Prepare data for database
+            $pendaftarData = [
                 'beasiswa_id' => $beasiswa->id,
                 'nama_lengkap' => $validated['nama_lengkap'],
                 'nim' => $validated['nim'],
                 'email' => $validated['email'],
                 'no_hp' => $validated['no_hp'],
                 'alasan_mendaftar' => $validated['alasan_mendaftar'],
-                'file_transkrip' => $transkripName,
-                'file_ktp' => $ktpName,
-                'file_kk' => $kkName,
                 'status' => 'pending',
                 'tanggal_daftar' => now(),
-            ]);
+            ];
+
+            // Add uploaded files to data
+            foreach ($uploadedFiles as $fieldName => $fileName) {
+                $pendaftarData[$fieldName] = $fileName;
+            }
+
+            // Create pendaftar record
+            $pendaftar = Pendaftar::create($pendaftarData);
 
             DB::commit();
 
@@ -162,21 +183,37 @@ class PendaftarController extends Controller
             DB::rollback();
             
             // Hapus file yang sudah terupload jika ada error
-            $filesToDelete = [
-                isset($transkripName) ? 'public/documents/' . $transkripName : null,
-                isset($ktpName) ? 'public/documents/' . $ktpName : null,
-                isset($kkName) ? 'public/documents/' . $kkName : null,
-            ];
-
-            foreach ($filesToDelete as $file) {
-                if ($file && Storage::exists($file)) {
-                    Storage::delete($file);
+            if (isset($uploadedFiles)) {
+                foreach ($uploadedFiles as $fileName) {
+                    $filePath = 'public/documents/' . $fileName;
+                    if (Storage::exists($filePath)) {
+                        Storage::delete($filePath);
+                    }
                 }
             }
 
             return back()->withInput()
                          ->with('error', 'Gagal mendaftar beasiswa: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Get human readable label for document type
+     */
+    private function getDocumentLabel($dokumen)
+    {
+        $labels = [
+            'ktp' => 'KTP',
+            'kk' => 'Kartu Keluarga', 
+            'ijazah' => 'Ijazah Terakhir',
+            'transkrip' => 'Transkrip Nilai',
+            'surat_keterangan_tidak_mampu' => 'Surat Keterangan Tidak Mampu',
+            'slip_gaji_ortu' => 'Slip Gaji Orang Tua',
+            'surat_rekomendasi' => 'Surat Rekomendasi',
+            'sertifikat_prestasi' => 'Sertifikat Prestasi',
+        ];
+
+        return $labels[$dokumen] ?? ucfirst(str_replace('_', ' ', $dokumen));
     }
 
     /**
@@ -210,13 +247,8 @@ class PendaftarController extends Controller
     public function downloadFile(Pendaftar $pendaftar, $fileType)
     {
         try {
-            $allowedTypes = ['transkrip', 'ktp', 'kk'];
-            
-            if (!in_array($fileType, $allowedTypes)) {
-                return back()->with('error', 'Jenis file tidak valid.');
-            }
-
-            $fieldName = 'file_' . $fileType;
+            // Allow dynamic file types based on what was uploaded
+            $fieldName = str_starts_with($fileType, 'dokumen_') ? $fileType : 'file_' . $fileType;
             $fileName = $pendaftar->$fieldName;
 
             if (!$fileName) {
