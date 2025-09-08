@@ -10,10 +10,14 @@ return new class extends Migration
     {
         Schema::create('beasiswas', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
+            $table->string('nama_beasiswa');
+            $table->text('deskripsi');
+            $table->decimal('jumlah_dana', 15, 2);
+            $table->date('tanggal_buka');
             $table->date('tanggal_tutup');
-            $table->text('deskripsi')->nullable();
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
+            $table->text('persyaratan');
+            $table->string('dokumen_pendukung')->nullable(); // Tambah ini
             $table->timestamps();
         });
     }

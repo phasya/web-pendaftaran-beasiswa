@@ -184,8 +184,11 @@
                                 <div class="requirements-section mb-4">
                                     <label class="text-muted small fw-semibold">DOKUMEN PENDUKUNG YANG DIPERLUKAN</label>
                                     <div class="bg-light p-3 rounded-3 mt-2">
-                                        @if($beasiswa->dokumen_pendukung && count($beasiswa->dokumen_pendukung) > 0)
-                                            <div class="row">
+    @if (is_array($beasiswa->dokumen_pendukung) || is_countable($beasiswa->dokumen_pendukung)) {
+    $count = count($beasiswa->dokumen_pendukung);
+} else {
+    $count = 0;
+}                                            <div class="row">
                                                 @foreach($beasiswa->dokumen_pendukung_label as $dokumen)
                                                     <div class="col-md-6 mb-2">
                                                         <div class="d-flex align-items-center">
